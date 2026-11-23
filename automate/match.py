@@ -44,6 +44,9 @@ class Match:
     in_place: bool = False
     world: np.ndarray = None   # where the selected part would sit, in world coords
     parts: list = field(default_factory=list)  # for in place matches spanning several parts
+    clearance: float = 0.0
+    confidence: str = "high"   # low when the selection alone leaves 2+ dof, so lots of things fit
+    partial: list = field(default_factory=list)  # in place: selected surfaces with no contact
 
     @property
     def target_faces(self):
@@ -56,6 +59,7 @@ class Match:
         g = ", ".join(f"{x:+.3f}" for x in self.gaps)
         where = " (in place)" if self.in_place else ""
         sym = f" x{self.symmetry} sym" if self.symmetry > 1 else ""
+        sym += f" conf={self.confidence}" + (f" partial(no contact: {self.partial})" if self.partial else "")
         return (f"{self.instance}{where}: faces {self.target_faces} | fit={self.fit} motion={self.motion} "
                 f"dof={self.dof} gaps=[{g}]{sym}")
 
@@ -374,12 +378,17 @@ class Matcher:
         else:
             blocked = k == 0
         m.stops = stops
+        # exact: faces coincide, or the part is seated against a stop so the clearance is only there
+        # to get it in. sliding: a real gap and nothing stopping the motion
+        # a gap on a cone pair isnt clearance, the cone just isnt pushed fully home
+        line = all(abs(g) <= self.p.exact for g, (s, _) in zip(m.gaps, m.targets) if s.kind != "cone")
         if lo < -self.p.exact:
             m.fit = "interference"
-        elif k == 0 or blocked:
+        elif line or k == 0 or blocked:
             m.fit = "exact"
         else:
             m.fit = "sliding"
+        m.clearance = max(m.gaps)
         return m
 
     # ---------- the two passes
@@ -461,6 +470,8 @@ class Matcher:
         m = Match(sel_inst.id, sel_inst.part.name, [(s, t) for s, t, *_ in contacts], np.eye(4),
                   [c[2] for c in contacts], [c[3] for c in contacts], in_place=True)
         m.world = Ws
+        touched = {id(c[0]) for c in contacts}
+        m.partial = [s.ids for s in sel if id(s) not in touched]
         m.parts = sorted({c[4].id for c in contacts})
         m.instance = ", ".join(m.parts)
         m.part = ", ".join(sorted({c[4].part.name for c in contacts}))
@@ -482,6 +493,9 @@ class Matcher:
         band = self.gap_band(sel)
         found = self.pose_free(inst, sel, band)
         here = self.in_place(inst, sel, band)
+        conf = "low" if pose.dof(sel)[0] >= 2 else "high"
+        for m in found + ([here] if here else []):
+            m.confidence = conf
         if here:
             touching = {(k, tuple(v)) for k, v in here.target_faces.items()}
             for m in found:
