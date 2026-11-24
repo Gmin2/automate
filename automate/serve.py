@@ -131,11 +131,18 @@ def handler(models):
     return H
 
 
-def serve(paths, port=8765, examples=None):
+def serve(paths, port=8765, examples=None, host="127.0.0.1", preload=False):
     examples = examples or {}
     models = {Path(p).name: Model(p, examples.get(Path(p).name, [])) for p in paths}
     if not WEB.exists():
         print("no web/dist yet: run `pnpm install && pnpm build` in web/, or `pnpm dev` there for the dev server")
-    srv = ThreadingHTTPServer(("127.0.0.1", port), handler(models))
-    print(f"viewer on http://127.0.0.1:{port}  ({', '.join(models)})")
+    if preload:
+        # read every file and describe every face before taking requests, so nobody waits on a cold load
+        for m in models.values():
+            t = time.time()
+            for part in m.load().asm.parts.values():
+                describe_part(part)
+            print(f"ready {m.path.name} in {time.time() - t:.1f}s", flush=True)
+    srv = ThreadingHTTPServer((host, port), handler(models))
+    print(f"viewer on http://{host}:{port}  ({', '.join(models)})", flush=True)
     srv.serve_forever()

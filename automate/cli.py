@@ -165,6 +165,8 @@ def main(argv=None):
     sp = sub.add_parser("serve", help="open the 3d viewer, for one or more assemblies")
     sp.add_argument("assembly", nargs="+")
     sp.add_argument("--port", type=int, default=8765)
+    sp.add_argument("--host", default="127.0.0.1")
+    sp.add_argument("--preload", action="store_true", help="load and describe every file before serving")
     lp = sub.add_parser("faces", help="list a part's faces")
     lp.add_argument("assembly")
     lp.add_argument("part", nargs="?")
@@ -175,7 +177,7 @@ def main(argv=None):
         from .serve import serve
         ex = Path(__file__).resolve().parent.parent / "examples.json"
         examples = json.loads(ex.read_text()) if ex.exists() else {}
-        serve(args.assembly, args.port, examples)
+        serve(args.assembly, args.port, examples, args.host, args.preload)
         return
     if args.cmd == "match":
         if not args.part and not args.part_step:
