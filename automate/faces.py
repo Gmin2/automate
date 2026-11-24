@@ -1,6 +1,6 @@
 """face descriptors: every face reduced to an analytic primitive in its part frame"""
 import math
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 import numpy as np
 from OCP.BRepAdaptor import BRepAdaptor_Surface
@@ -10,13 +10,10 @@ from OCP.BRepTools import BRepTools
 from OCP.GeomAbs import GeomAbs_SurfaceType as ST
 from OCP.GProp import GProp_GProps
 from OCP.ShapeAnalysis import ShapeAnalysis_CanonicalRecognition
-from OCP.TopAbs import TopAbs_EDGE, TopAbs_FACE, TopAbs_IN, TopAbs_ON
+from OCP.TopAbs import TopAbs_EDGE, TopAbs_IN, TopAbs_ON
 from OCP.TopExp import TopExp, TopExp_Explorer
 from OCP.collections import IndexedMap_TopoDS_Shape_TopTools_ShapeMapHasher as ShapeMap
-from OCP.collections import IndexedDataMap_TopoDS_Shape_List_TopoDS_Shape_TopTools_ShapeMapHasher as EdgeFaces
 from OCP.gp import gp_Cone, gp_Cylinder, gp_Pln, gp_Pnt, gp_Pnt2d, gp_Sphere, gp_Vec
-
-ANALYTIC = ("plane", "cyl", "cone", "sphere")
 
 
 def _v(p):
@@ -43,10 +40,6 @@ class Face:
     surf: int = -1           # merged surface id within the part
     geom: object = None      # gp_Pln / gp_Cylinder / ... in the part frame
     topo: object = None      # the TopoDS_Face
-
-    @property
-    def size(self):
-        return float(np.ptp(self.pts, axis=0).max()) if len(self.pts) else 0.0
 
 
 def _samples(face, n=9):
