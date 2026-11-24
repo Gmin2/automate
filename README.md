@@ -1,43 +1,32 @@
 # automate
 
-pick a few faces on one part of a STEP assembly. this finds every other place in the assembly where
-those faces fit, which part each one is on, and whether its an exact fit or a sliding one.
+you pick a few faces on one part of a CAD assembly. this tool finds every other place in the assembly where those faces would fit, tells you which part each place is on, and says if its an exact fit or a sliding one.
 
-**try it:** https://autometa-app.vercel.app
-(the lathe and the test parts. open examples, pick one, press find mates)
+**try it:** https://autometa-app.vercel.app. open examples, pick the chuck key, press find mates.
 
 ![the viewer: chuck key tip picked, all three pinion sockets found, a see-through key at each](docs/viewer-chuck-key.jpg)
+
+on the lathe from the assignment, the four flat sides of the chuck key tip find all three pinion sockets on the chuck. each one is an exact fit with 0.2 mm of gap, and the socket the key already sits in is marked.
 
 ## how it works
 
 ![flow from the step file and picked faces to every place they fit](docs/flow.svg)
 
-1. every face in the file becomes a plane, cylinder, cone or ball with its exact size and direction
-2. only faces that could touch stay in: flat against flat, shaft in a hole of the same size, cone in cone
-3. the picked faces are matched as a group. angles and distances between them have to show up again on the target
-4. each match gets the move that puts the part there, then three checks: small enough gap, faces really overlap, solids dont crash
-5. what the part can still do decides the fit (below)
-6. a square key drops into a square socket 8 ways. those count as one match
+a STEP file stores the exact shape of every face, so the tool reads each one as a plane, cylinder, cone or ball with its real size and direction. no meshes, no guessing.
 
-## what it compares
+then it only looks at faces that could actually touch the ones you picked. a shaft only pairs with a hole of about the same size, and a flat face only pairs with a flat face pointing back at it. this is also what stops a key from matching another key.
 
-- **type and side.** a shaft only pairs with a hole, a flat only with a flat facing it. this stops a key matching another key
-- **size.** hole minus shaft has to sit in the gap band. cone angles within 0.5 degrees
-- **layout.** for every two picked faces: the angle between them and the signed distance. the key flats are 7.8 mm apart with metal between, the socket walls 8.2 mm apart with air between. the sign is what makes it fit
-- **overlap.** at least 25% of each face has to land on the target face, not just on the same endless plane
-- **collision.** the whole part placed there cant run into the target by more than 0.5% of its volume. this kills the vice jaw flipped into the T-slot
+the picked faces are matched as a group, not one by one. the angles and distances between them have to show up again on the target. one flat face alone would match thousands of flat faces in a lathe, but four flats at right angles, 7.8 mm apart, match almost nothing except the real sockets.
 
-the gap band is 5% of the thinnest size of the selection, at least 0.05 mm, at most 1 mm. the 7.8 mm key gets 0.39 mm. every number here is a flag and a slider in the viewer.
+for every group that passes, it works out the one move that puts the part there, then checks three things: the gaps are small enough, the faces really overlap (not just line up 200 mm apart), and the two solid parts dont run into each other. that last check is what throws out the vice jaw flipped upside down into the T-slot.
 
-## exact vs sliding
+a square key drops into a square socket 8 different ways. those count as one match.
 
-the gap alone gets it wrong. the lathe key has 0.2 mm on every side but the assignment calls it exact. the real vice jaw has 0 gap but its the sliding example.
+## exact or sliding
 
-so it goes by motion:
+you cant tell from the gap. the lathe key has 0.2 mm on every side but the assignment calls it exact. the real bench vice jaw has 0 gap but its the sliding example.
 
-- **exact**: the part is held, or its only free direction hits a stop face (the bottom of the socket)
-- **sliding**: it can still slide and nothing stops it, or it spins with real clearance
-- **interference**: gap below -0.01 mm
+so it looks at what the part can still do once its in. if its held, or its only free direction runs into a stop (like the bottom of the socket), thats exact. if it can keep sliding or spinning with nothing to stop it, thats sliding. a negative gap means its too tight.
 
 ## results
 
@@ -45,93 +34,64 @@ so it goes by motion:
 |---|---|---|
 | chuck key | lathe | 3 pinion sockets, exact, 0.2 mm gap |
 | chuck key | grabcad sim model, key turned 11 deg | same 3, exact |
-| key, 4 sockets + 3 decoy pockets | synthetic | 4 of 4, decoys ignored |
-| belt in big pulley | lathe, sim model | groove, exact |
-| belt on small pulley | lathe, sim model | no fit, belt V is 38 deg, groove 34 |
-| taper bushes | lathe, sim model | each finds its own pulley |
-| pulley bore on motor shaft | lathe | no fit. the model has a 20 mm bore on a 24 mm shaft, shown as -2 mm interference if allowed |
-| bench vice jaw | real CATIA vice | base rails, sliding |
-| keyed shaft | synthetic | shaft keyway exact (blind end), both hubs sliding (through) |
+| key, 4 sockets and 3 decoy pockets | test part | 4 of 4, decoys ignored |
+| belt in the big pulley | lathe | the groove, exact |
+| belt on the small pulley | lathe | no fit, the belt V is 38 deg and the groove 34 |
+| taper bushes | lathe | each finds its own pulley |
+| pulley bore on the motor shaft | lathe | no fit. the model puts a 20 mm bore on a 24 mm shaft |
+| bench vice jaw | real CATIA vice | the base rails, sliding |
+| keyed shaft | test part | shaft keyway exact, both hub keyways sliding |
 | countersunk screw | grabcad motor mount | all 8 holes, exact |
-| pin, ball stud, dovetail | synthetic | all found, decoys ignored |
 
-json for all 20 runs in [results/](results/README.md).
+![dark: countersunk screw head and shank, ghosted into all eight countersinks of the motor plate](docs/viewer-motor-mount.jpg)
+
+all 20 runs, with full json, are in [results/](results/README.md).
 
 ## why this way
 
-- **finds every place**, not just the best one
-- **matches the group**, so one flat face doesnt match every flat face in the machine
-- **exact sizes** from the file, so a 0.2 mm gap or a 4 degree difference shows up
-- **easy to check**. every match lists which face landed where and the gap on each
-- **no training data**. works on any STEP file, at any angle
+it finds every place, not just the best one, which is what the assignment asks for. the sizes come straight from the file, so a 0.2 mm gap or a 4 degree difference in a belt groove shows up. every match lists which face landed on which and the gap on each, so you can check it by hand in any CAD program. and it needs no training data, so it works on any STEP file at any angle.
 
-point clouds (ICP) and RANSAC throw away the exact sizes and return one answer. learned models like
-AutoMate and JoinABLe need training data and predict one joint, not a full list with gaps.
+point cloud methods like ICP throw away the exact sizes and return one answer. learned models like AutoMate and JoinABLe need training data and predict one joint, not a full list with gaps.
 
-## what breaks
+## what it doesnt do yet
 
-- a lone hole fits any shaft its size. those come back marked low confidence
-- gear teeth, spirals and cams arent planes, cylinders, cones or balls, so theyre skipped
-- a fit looser than 5% of the part size is missed unless you move the slider
-- the collision check needs solids. the lathe motor is surfaces only
-- face numbers follow the file order
+a lone hole fits any shaft its size, so those matches are marked low confidence. a lone flat face, or flats that all point the same way, fit almost everything, so the tool doesnt search those and asks you to pick another face instead. gear teeth, spirals and cams are skipped because they arent planes, cylinders, cones or balls. the collision check needs real solids, and the lathe motor is only surfaces.
 
-## with another week
-
-- treat contacts as one sided, so "can be pushed in" is solved properly instead of with stop faces
-- suggest the selection (socket walls + floor) so its one click
-- spot patterns (bolt circles) and check the rest of the pattern first
-- cache the face descriptions per file
-- test against labelled joints from the Fusion 360 Gallery
+with another week i would solve "can it be pushed in" properly instead of looking for stop faces, suggest the faces to pick so its one click, spot bolt circles and other patterns, and test against the labelled joints in the Fusion 360 Gallery.
 
 ## run it
 
-the lathe from the assignment (`WM290V_RedrawStart.stp`) is in the repo root.
+the lathe from the assignment (`WM290V_RedrawStart.stp`) is in the repo, so this works right after cloning.
 
 ```sh
 python3.13 -m venv .venv
 .venv/bin/pip install cadquery-ocp-novtk numpy pytest
 ```
 
-**command line**
+from the command line:
 
 ```sh
 .venv/bin/python -m automate match WM290V_RedrawStart.stp --part Key --faces 2,4,16,18
 ```
 
-```
-  Key  faces 2 4 16 18  (4 flat)
-  gap allowed -0.10 to 0.39 mm, took 14.3 s
+![the command line output for the chuck key: 3 places it fits, all exact, 0.2 mm gap](docs/cli-key.png)
 
-  3 places it fits
+add `--out key.json` for the full detail. `python -m automate faces <file> "<part>"` lists the faces of a part.
 
-      fits on                        fit     moves    gap
-  1   Pinion M1.8 10T.1 [4 6 8 12]   exact   slides   +0.20 mm   8 ways   already here
-  2   Pinion M1.8 10T.2 [4 6 8 12]   exact   slides   +0.20 mm   8 ways
-  3   Pinion M1.8 10T.3 [4 6 8 12]   exact   slides   +0.20 mm   8 ways
-
-  touching now   Pinion M1.8 10T.1 [4 6 8 12]
-```
-
-`already here` is where the key sits now. add `--out key.json` for the full detail.
-`python -m automate faces <file> "<part>"` lists the faces of a part.
-
-**viewer**
+or open the viewer:
 
 ```sh
 .venv/bin/python -m automate serve WM290V_RedrawStart.stp fixtures/*.step
 # open http://127.0.0.1:8765
 ```
 
-click faces, press find mates. green is exact, blue is sliding. let go of a slider and it searches again.
+click faces on a part and press find mates. green is exact, blue is sliding. every tolerance is a slider, and the search runs again when you let go.
 
-**deploy**
-
-the backend runs on azure container apps: `scripts/deploy_azure.sh` builds the docker image there (needs `az login`). the page is on vercel, `web/vercel.json` sends `/api` on to azure. `cd web && vercel deploy --prod` ships a new page.
-
-**tests**
+tests:
 
 ```sh
 scripts/fetch_external.sh        # downloads the bench vice
-.venv/bin/python -m pytest -q    # 17 tests
+.venv/bin/python -m pytest -q    # 18 tests
 ```
+
+the live site runs the backend on azure (`scripts/deploy_azure.sh`) and the page on vercel, which passes `/api` on to azure.
