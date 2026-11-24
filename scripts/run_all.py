@@ -12,7 +12,7 @@ sys.path.insert(0, str(ROOT))
 
 from automate.cli import run  # noqa: E402
 
-lathe = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT.parent / "assignment" / "WM290V_RedrawStart.stp"
+lathe = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "WM290V_RedrawStart.stp"
 grabcad = ROOT.parent / "assignment" / "grabcad"
 sim = grabcad / "wm290v_sim_model_2026-11-16.step"
 mount = grabcad / "motor_mount_alt_A_2026-11-10.step"

@@ -9,6 +9,51 @@ sliding one.
 the write up (what it compares and why, what breaks, next steps) is in [WRITEUP.md](WRITEUP.md).
 results for every test case are in [results/](results/README.md).
 
+the lathe assembly from the assignment (`WM290V_RedrawStart.stp`, 22 MB) is in the repo root, so the
+commands below work straight after a clone.
+
+## how it works
+
+![flow: the step file and the picked faces go in, every face is described, a search and an in place check run side by side, then checks, motion, and the list of places it fits](docs/flow.svg)
+
+1. **describe every face.** each face in the file becomes a plane, cylinder, cone or ball with its exact size,
+   axis and outward normal, read straight from the STEP, not from a mesh. a cylinder knows if it is a shaft or a
+   hole.
+2. **complement filter.** a picked face can only land on a face that could actually touch it: flat on flat facing
+   the other way, shaft in a hole of about the same diameter, cone in a cone of the same angle. so the search
+   only ever looks at faces that could touch, out of the 8257 in the lathe.
+3. **search tree + pose.** the picked faces are a group, so the angles and distances between them have to show up
+   again between the target faces. every set that passes is kept (not just the best one), and each gets the single
+   rigid move that lays the part on it.
+4. **where it sits now.** the same faces are also checked where the part already is, so the existing mate is
+   marked `already here` instead of being a surprise.
+5. **checks.** the faces must really overlap (not just lie on the same infinite plane), every gap must be inside a
+   band that scales with the size of the picked faces, and the two solids must not run into each other.
+6. **what it can still do.** from the faces in contact it works out what motion is left (locked, slides, turns) and
+   whether a face closes off the slide, which is what splits an exact fit from a sliding one.
+
+## why this approach
+
+the file already says exactly what every face is: a plane, a 7.8 mm wide flat, a 20 mm hole. so the tool works on
+that, with plain geometry, instead of guessing from points or pictures.
+
+- **it finds every place, not one.** the assignment asks for all instances. a best fit method (ICP, RANSAC, a
+  learned net that predicts one mate) gives one answer. here the search keeps every branch, so the key gets all 3
+  chuck sockets and the countersunk screw gets all 8 holes in the motor plate.
+- **it matches the group, not single faces.** one flat face matches every flat face in a lathe. four flats at right
+  angles 7.8 mm apart match very little. that is why the 12x12 and 10x13 decoy pockets in the fixture chuck are left
+  out and only the 4 real sockets come back.
+- **it is exact where it needs to be.** sizes come from the surface equations, so a 0.2 mm clearance or a 71 vs 73
+  degree belt flank is visible. the small pulley near miss is correctly reported as no fit.
+- **every answer can be checked by hand.** each match lists which picked face landed on which target face and the gap
+  on each, so a person can open the CAD and measure it. nothing is a score from a black box.
+- **no training data and it is quick.** it runs on any STEP with no model to train. after the file is read, a search
+  took 0.1 to 2 s in the viewer.
+- **it does not care how the part is turned.** fixture parts are baked in at random rotations and the same answers come
+  back, and the sim model (whole lathe at different world coordinates, key rotated) gives the same 3 sockets.
+
+what it gives up, and the other options looked at, are in [WRITEUP.md](WRITEUP.md).
+
 ## setup
 
 tested with python 3.13 on macOS (pyproject asks for 3.11+). the only real dependency is OpenCascade through
@@ -23,16 +68,29 @@ python3.13 -m venv .venv
 
 ```sh
 # faces 2,4,16,18 of the part called Key (the square tip of the chuck key)
-.venv/bin/python -m automate match ../assignment/WM290V_RedrawStart.stp --part Key --faces 2,4,16,18 --out key.json
+.venv/bin/python -m automate match WM290V_RedrawStart.stp --part Key --faces 2,4,16,18 --out key.json
 ```
 
 ```
-Key faces [2, 4, 16, 18] -> 3 match(es) in 18.2s
-  TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.1 (in place): faces {'TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.1': [4, 6, 8, 12]} | fit=exact motion=prismatic dof=1 gaps=[+0.200, +0.200, +0.200, +0.200] x8 sym conf=high
-  TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.2: faces {'TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.2': [4, 6, 8, 12]} | fit=exact motion=prismatic dof=1 gaps=[+0.200, +0.200, +0.200, +0.200] x8 sym conf=high
-  TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.3: faces {'TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.3': [4, 6, 8, 12]} | fit=exact motion=prismatic dof=1 gaps=[+0.200, +0.200, +0.200, +0.200] x8 sym conf=high
-  touching now: TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.1 (in place): ...
+  Key  faces 2 4 16 18  (4 flat)
+  gap allowed -0.10 to 0.39 mm, took 14.3 s
+
+  3 places it fits
+
+      fits on                        fit     moves    gap
+  1   Pinion M1.8 10T.1 [4 6 8 12]   exact   slides   +0.20 mm   8 ways   already here
+  2   Pinion M1.8 10T.2 [4 6 8 12]   exact   slides   +0.20 mm   8 ways
+  3   Pinion M1.8 10T.3 [4 6 8 12]   exact   slides   +0.20 mm   8 ways
+
+  touching now   Pinion M1.8 10T.1 [4 6 8 12]
+
+  full detail in key.json
 ```
+
+one row per place the faces fit. `fits on` is the part copy and its face ids, `moves` is what the key can
+still do once it is in (slide in and out of the socket), `gap` is the clearance on each face (here 0.2 mm
+all round), `8 ways` is how many ways a square drops into a square socket, and `already here` is the socket
+the key sits in today. long names are cut short, the json keeps the full instance path.
 
 a run took 15 to 22 s here. reading the 22 MB file is about 3 to 5 s and describing all 8257 faces about
 9 s, the search itself is the rest. in the viewer the assembly stays loaded, so a repeat search took
@@ -69,7 +127,7 @@ a run took 15 to 22 s here. reading the 22 MB file is about 3 to 5 s and describ
 ## viewer
 
 ```sh
-.venv/bin/python -m automate serve ../assignment/WM290V_RedrawStart.stp fixtures/chuck_4slot.step ...
+.venv/bin/python -m automate serve WM290V_RedrawStart.stp fixtures/chuck_4slot.step ...
 # open http://127.0.0.1:8765
 ```
 
@@ -108,7 +166,7 @@ scripts/fetch_external.sh        # the third party bench vice, it has no license
 .venv/bin/python -m pytest -q    # 17 tests, one to two minutes
 ```
 
-the lathe tests look for `../assignment/WM290V_RedrawStart.stp`, or set `LATHE_STEP=/path/to/file`.
+the lathe tests use `WM290V_RedrawStart.stp` in the repo root, or set `LATHE_STEP=/path/to/file`.
 the sim model and motor mount from the grabcad page (login needed) are looked for in `../assignment/grabcad/`
 (unzip the grabcad download there, or set `GRABCAD_DIR`). tests for files that are missing are skipped.
 `python scripts/run_all.py` reruns every case and rewrites `results/`.
@@ -118,19 +176,3 @@ chuck with decoy pockets, a keyed shaft with two hubs, a dovetail slide with 0.2
 shoulder pin over a bolt circle and a ball stud with two sockets and an oversize decoy. the chuck key,
 the spare hub, the shoulder pin and the ball stud have their geometry baked in at a random rotation, so
 the matcher cant lean on parts being axis aligned.
-
-## layout
-
-```
-automate/load.py     STEP -> parts, instances, world transforms, bodies (XCAF)
-automate/faces.py    every face -> plane / cylinder / cone / sphere with outward normal and sense
-automate/pose.py     transforms, signed distance to each primitive, kabsch, screw theory dof
-automate/match.py    the search: complement filter, pair tables, interpretation tree, pose, checks
-automate/export.py   per face tessellation for the viewer
-automate/serve.py    local server for the viewer (scene, face info, match with tolerances)
-automate/cli.py      command line
-web/                 the viewer: react + three.js, built copy in web/dist
-fixtures/            synthetic assemblies + their expected answers (cases.json)
-tests/               pytest
-results/             json for every case, screenshots for the first 13
-```

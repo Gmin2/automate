@@ -35,6 +35,63 @@ def pick(asm, name, instance=None):
     return cands[0]
 
 
+KIND = {"plane": "flat", "cyl": "cylinder", "cone": "cone", "sphere": "ball"}
+MOVES = {"fixed": "locked", "prismatic": "slides", "revolute": "turns", "cylindrical": "slides + turns",
+         "planar": "slides on a plane", "spherical": "swivels"}
+
+
+def short(id, room=36):
+    name = id.rsplit("/", 1)[-1]
+    stem, dot, n = name.rpartition(".")
+    if not (dot and n.isdigit()):
+        stem, n = name, ""
+    if len(stem) > room:
+        stem = stem[:room - 3].rstrip(" ,;") + "..."
+    return stem + (f".{n}" if n else "")
+
+
+def gap_text(gaps):
+    lo, hi = round(min(gaps), 2) + 0.0, round(max(gaps), 2) + 0.0
+    return f"{lo:+.2f} mm" if hi - lo < 0.005 else f"{lo:+.2f} to {hi:+.2f} mm"
+
+
+def where(m):
+    return "  ".join(f"{short(k)} [{' '.join(map(str, v))}]" for k, v in m.target_faces.items())
+
+
+def report(inst, ids, sel, band, found, here, out, path=None):
+    kinds = {}
+    for s in sel:
+        kinds[KIND[s.kind]] = kinds.get(KIND[s.kind], 0) + 1
+    made = ", ".join(f"{n} {k}" for k, n in kinds.items())
+    print(f"\n  {short(inst.part.name, 60)}  faces {' '.join(map(str, ids))}  ({made})")
+    print(f"  gap allowed {band[0]:.2f} to {band[1]:.2f} mm, took {out['seconds']} s\n")
+    if not found:
+        print("  fits nowhere\n")
+    else:
+        rows = [(str(i + 1), where(m), m.fit, MOVES.get(m.motion, m.motion), gap_text(m.gaps),
+                 f"{m.symmetry} ways" if m.symmetry > 1 else "",
+                 "already here" if m.in_place else "")
+                for i, m in enumerate(found)]
+        head = ("", "fits on", "fit", "moves", "gap", "", "")
+        w = [max(len(r[c]) for r in rows + [head]) for c in range(len(head))]
+        line = lambda r: "  " + "   ".join(x.ljust(w[c]) for c, x in enumerate(r)).rstrip()
+        print(f"  {len(found)} place{'s' if len(found) > 1 else ''} it fits\n")
+        print(line(head))
+        for r in rows:
+            print(line(r))
+        print()
+    if found and found[0].confidence == "low":
+        print("  low confidence: these faces alone leave the part free in 2+ ways, so many things fit\n")
+    if here:
+        print(f"  touching now   {where(here)}")
+    for r in out["rejected"]:
+        print(f"  ruled out      {short(r['part'])} [{' '.join(map(str, r['faces']))}]  {r['why']}")
+    if path:
+        print(f"\n  full detail in {path}")
+    print()
+
+
 def to_json(m):
     return {
         "instance": m.instance,
@@ -88,13 +145,7 @@ def run(args):
         with open(args.out, "w") as f:
             f.write(text)
     if not args.quiet:
-        print(f"{inst.part.name} faces {ids} -> {len(found)} match(es) in {out['seconds']}s")
-        for x in found:
-            print("  " + x.summary())
-        if here:
-            print("  touching now: " + here.summary())
-        for r in out["rejected"]:
-            print(f"  rejected {r['part']} {r['faces']}: {r['why']}")
+        report(inst, ids, sel, band, found, here, out, args.out)
     return out
 
 
