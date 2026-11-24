@@ -3,6 +3,9 @@
 pick a few faces on one part of a STEP assembly. this finds every other place in the assembly where
 those faces fit, which part each one is on, and whether its an exact fit or a sliding one.
 
+**try it:** https://automate.delightfulsky-d10b8c02.centralindia.azurecontainerapps.io
+(the lathe and the test parts. open examples, pick one, press find mates)
+
 ![the viewer: chuck key tip picked, all three pinion sockets found, a see-through key at each](docs/viewer-chuck-key.jpg)
 
 ## how it works
@@ -121,6 +124,10 @@ python3.13 -m venv .venv
 ```
 
 click faces, press find mates. green is exact, blue is sliding. let go of a slider and it searches again.
+
+**deploy**
+
+`scripts/deploy_azure.sh` builds the docker image in azure and runs it on container apps. needs `az login` first.
 
 **tests**
 
