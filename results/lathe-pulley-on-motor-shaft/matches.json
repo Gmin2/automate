@@ -1,5 +1,5 @@
 {
-  "assembly": "/Users/mintu/coding/jobs/hanomi/assignment/WM290V_RedrawStart.stp",
+  "assembly": "/Users/mintu/coding/jobs/hanomi/automate/WM290V_RedrawStart.stp",
   "selection": {
     "part": "1210 TL \u00d820 PILOT BORE",
     "instance": "Product2.1/Product3.1/01. Test00-1210 TL 20 PILOT BORE.1",
@@ -28,7 +28,8 @@
     "exact": 0.01,
     "angle": 0.5,
     "overlap": 0.25,
-    "collide": 0.005
+    "collide": 0.005,
+    "budget": 15.0
   },
   "matches": [
     {
@@ -368,5 +369,7 @@
     ]
   },
   "rejected": [],
-  "seconds": 15.5
+  "unchecked": 0,
+  "too_loose": false,
+  "seconds": 17.9
 }

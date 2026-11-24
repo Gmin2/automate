@@ -212,8 +212,11 @@ function Assembly({ scene }: { scene: Scene }) {
     const src = selection.inst ? built.meshes.get(selection.inst) : null
     if (!src || !result || !showGhosts) return
     const part = built.parts.get(src.userData.part)!
+    // past a couple dozen the copies just pile into a blob, then only the open match gets one
+    const crowd = result.matches.length > 24
     result.matches.forEach((m, i) => {
       if (!m.world || m.in_place) return
+      if (crowd && active !== i) return
       const on = active === null || active === i
       const mat = new THREE.MeshStandardMaterial({ color: COLORS[m.fit], transparent: true, opacity: on ? 0.34 : 0.1, depthWrite: false, side: THREE.DoubleSide, roughness: 0.4 })
       const g = new THREE.Mesh(part.geo, mat)

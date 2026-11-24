@@ -1,5 +1,5 @@
 {
-  "assembly": "/Users/mintu/coding/jobs/hanomi/assignment/WM290V_RedrawStart.stp",
+  "assembly": "/Users/mintu/coding/jobs/hanomi/automate/WM290V_RedrawStart.stp",
   "selection": {
     "part": "Key",
     "instance": "TOS Svitavy 125.1/Assem1.1/Key.1",
@@ -48,7 +48,8 @@
     "exact": 0.01,
     "angle": 0.5,
     "overlap": 0.25,
-    "collide": 0.005
+    "collide": 0.005,
+    "budget": 15.0
   },
   "matches": [
     {
@@ -481,5 +482,7 @@
     ]
   },
   "rejected": [],
-  "seconds": 18.2
+  "unchecked": 0,
+  "too_loose": false,
+  "seconds": 28.2
 }

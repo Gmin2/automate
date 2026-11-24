@@ -40,8 +40,11 @@ class Model:
 
     def faces(self, inst_id):
         part = self.instance(inst_id).part
-        with self.lock:
-            fs, _ = describe_part(part)
+        if getattr(part, "_faces", None) is not None:
+            fs, _ = describe_part(part)  # already described, no need to wait behind a running search
+        else:
+            with self.lock:
+                fs, _ = describe_part(part)
         out = []
         for f in fs:
             d = {"id": f.idx, "kind": f.kind, "area": round(f.area, 2)}
@@ -68,6 +71,8 @@ class Model:
             "matches": [to_json(x) for x in found],
             "in_place_contacts": to_json(here) if here else None,
             "rejected": [{"part": p, "faces": f, "why": w} for p, f, w in m.rejected],
+            "unchecked": m.unchecked,
+            "too_loose": m.too_loose,
             "seconds": round(time.time() - t, 2),
         }
 
@@ -131,11 +136,18 @@ def handler(models):
     return H
 
 
-def serve(paths, port=8765, examples=None):
+def serve(paths, port=8765, examples=None, host="127.0.0.1", preload=False):
     examples = examples or {}
     models = {Path(p).name: Model(p, examples.get(Path(p).name, [])) for p in paths}
     if not WEB.exists():
         print("no web/dist yet: run `pnpm install && pnpm build` in web/, or `pnpm dev` there for the dev server")
-    srv = ThreadingHTTPServer(("127.0.0.1", port), handler(models))
-    print(f"viewer on http://127.0.0.1:{port}  ({', '.join(models)})")
+    if preload:
+        # read every file and describe every face before taking requests, so nobody waits on a cold load
+        for m in models.values():
+            t = time.time()
+            for part in m.load().asm.parts.values():
+                describe_part(part)
+            print(f"ready {m.path.name} in {time.time() - t:.1f}s", flush=True)
+    srv = ThreadingHTTPServer((host, port), handler(models))
+    print(f"viewer on http://{host}:{port}  ({', '.join(models)})", flush=True)
     srv.serve_forever()

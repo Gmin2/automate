@@ -41,10 +41,13 @@
     "exact": 0.01,
     "angle": 0.5,
     "overlap": 0.25,
-    "collide": 0.005
+    "collide": 0.005,
+    "budget": 15.0
   },
   "matches": [],
   "in_place_contacts": null,
   "rejected": [],
-  "seconds": 21.8
+  "unchecked": 0,
+  "too_loose": false,
+  "seconds": 19.5
 }

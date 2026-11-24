@@ -29,7 +29,8 @@
     "exact": 0.01,
     "angle": 0.5,
     "overlap": 0.25,
-    "collide": 0.005
+    "collide": 0.005,
+    "budget": 15.0
   },
   "matches": [
     {
@@ -156,5 +157,7 @@
     ]
   },
   "rejected": [],
-  "seconds": 22.1
+  "unchecked": 0,
+  "too_loose": false,
+  "seconds": 20.5
 }

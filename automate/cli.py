@@ -66,7 +66,10 @@ def report(inst, ids, sel, band, found, here, out, path=None):
     made = ", ".join(f"{n} {k}" for k, n in kinds.items())
     print(f"\n  {short(inst.part.name, 60)}  faces {' '.join(map(str, ids))}  ({made})")
     print(f"  gap allowed {band[0]:.2f} to {band[1]:.2f} mm, took {out['seconds']} s\n")
-    if not found:
+    if out.get("too_loose"):
+        print("  not searched: flat faces that are all parallel can slide anywhere on any flat face,")
+        print("  so they fit almost everything. add a face at an angle (a side, an edge face, a hole)\n")
+    elif not found:
         print("  fits nowhere\n")
     else:
         rows = [(str(i + 1), where(m), m.fit, MOVES.get(m.motion, m.motion), gap_text(m.gaps),
@@ -85,6 +88,8 @@ def report(inst, ids, sel, band, found, here, out, path=None):
         print("  low confidence: these faces alone leave the part free in 2+ ways, so many things fit\n")
     if here:
         print(f"  touching now   {where(here)}")
+    if out["unchecked"]:
+        print(f"  not checked    {out['unchecked']} poses kept without a collision check, the {out['params']['budget']:g} s budget ran out")
     for r in out["rejected"]:
         print(f"  ruled out      {short(r['part'])} [{' '.join(map(str, r['faces']))}]  {r['why']}")
     if path:
@@ -138,6 +143,8 @@ def run(args):
         "matches": [to_json(x) for x in found],
         "in_place_contacts": to_json(here) if here else None,
         "rejected": [{"part": p, "faces": f, "why": w} for p, f, w in m.rejected],
+        "unchecked": m.unchecked,
+        "too_loose": m.too_loose,
         "seconds": round(time.time() - t0, 1),
     }
     text = json.dumps(out, indent=2)
@@ -165,6 +172,8 @@ def main(argv=None):
     sp = sub.add_parser("serve", help="open the 3d viewer, for one or more assemblies")
     sp.add_argument("assembly", nargs="+")
     sp.add_argument("--port", type=int, default=8765)
+    sp.add_argument("--host", default="127.0.0.1")
+    sp.add_argument("--preload", action="store_true", help="load and describe every file before serving")
     lp = sub.add_parser("faces", help="list a part's faces")
     lp.add_argument("assembly")
     lp.add_argument("part", nargs="?")
@@ -175,7 +184,7 @@ def main(argv=None):
         from .serve import serve
         ex = Path(__file__).resolve().parent.parent / "examples.json"
         examples = json.loads(ex.read_text()) if ex.exists() else {}
-        serve(args.assembly, args.port, examples)
+        serve(args.assembly, args.port, examples, args.host, args.preload)
         return
     if args.cmd == "match":
         if not args.part and not args.part_step:

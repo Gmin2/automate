@@ -66,6 +66,21 @@ lathe = pytest.mark.skipif(not LATHE.exists(), reason="lathe STEP not found")
 
 
 @lathe
+def test_lone_flat_face_is_not_searched():
+    # one flat slides anywhere on any flat, so it would "fit" all over. it should say so instead
+    asm = _asm.setdefault(FIX / "chuck_4slot.step", Assembly(FIX / "chuck_4slot.step"))
+    inst = [i for i in asm.instances if i.part.name == "chuck_key"][0]
+    m = Matcher(asm)
+    _, _, found, _ = m.run(inst, [1])
+    assert m.too_loose and found == []
+    m = Matcher(asm)
+    _, _, found, _ = m.run(inst, [1, 2])  # two opposite sides are parallel, still too loose
+    assert m.too_loose and found == []
+    m = Matcher(asm)
+    _, _, found, _ = m.run(inst, [1, 2, 3, 4])
+    assert not m.too_loose and len(found) == 4
+
+
 def test_lathe_chuck_key_finds_all_three_pinions():
     _, _, found, here = run(LATHE, "Key", [2, 4, 16, 18])
     assert sorted(m.instance.split("/")[-1] for m in found) == [f"Pinion M1.8 10T.{k}" for k in (1, 2, 3)]

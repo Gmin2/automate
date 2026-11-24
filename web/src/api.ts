@@ -56,15 +56,25 @@ export type Result = {
   matches: Match[]
   in_place_contacts: Match | null
   rejected: { part: string; faces: number[]; why: string }[]
+  unchecked?: number
+  too_loose?: boolean
   seconds: number
 }
 
-async function get<T>(url: string): Promise<T> {
-  const r = await fetch(url)
-  const body = await r.json()
+// a proxy that times out answers with a plain text page, not json
+async function read<T>(r: Response): Promise<T> {
+  const text = await r.text()
+  let body: { error?: string } | null = null
+  try {
+    body = JSON.parse(text)
+  } catch {
+    throw new Error(r.status === 504 || r.status === 502 ? 'The server took too long. Try again in a moment.' : `Server error ${r.status}`)
+  }
   if (!r.ok || body?.error) throw new Error(body?.error ?? r.statusText)
   return body as T
 }
+
+const get = async <T,>(url: string) => read<T>(await fetch(url))
 
 const q = (file: string, more: Record<string, string> = {}) => new URLSearchParams({ file, ...more }).toString()
 
@@ -75,12 +85,23 @@ export const api = {
   examples: (file: string) => get<Example[]>(`/api/examples?${q(file)}`),
   faces: (file: string, instance: string) => get<FaceInfo[]>(`/api/faces?${q(file, { instance })}`),
   match: async (file: string, instance: string, faces: number[], params: Params) => {
-    const r = await fetch('/api/match', { method: 'POST', body: JSON.stringify({ file, instance, faces, params }) })
-    const body = await r.json()
-    if (!r.ok || body?.error) throw new Error(body?.error ?? r.statusText)
-    return body as Result
+    return read<Result>(await fetch('/api/match', { method: 'POST', body: JSON.stringify({ file, instance, faces, params }) }))
   },
 }
+
+// what a person calls each model, the file name stays in the menu as a hint
+const TITLES: Record<string, string> = {
+  'WM290V_RedrawStart.stp': 'Lathe',
+  'wm290v_sim_model_2026-11-16.step': 'Lathe, sim model',
+  'motor_mount_alt_A_2026-11-10.step': 'Motor mount',
+  'bench_vice.stp': 'Bench vice',
+  'chuck_4slot.step': '4 slot chuck',
+  'keyed_shaft.step': 'Keyed shaft',
+  'vice_dovetail.step': 'Dovetail slide',
+  'pin_plate.step': 'Pin plate',
+  'ball_socket.step': 'Ball and socket',
+}
+export const title = (file: string) => TITLES[file] ?? file.replace(/\.(step|stp)$/i, '').replaceAll('_', ' ')
 
 // the last bit of an instance path, what a person calls it
 export const short = (id: string) => id.split('/').pop() ?? id

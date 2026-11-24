@@ -3,6 +3,9 @@
 pick a few faces on one part of a STEP assembly. this finds every other place in the assembly where
 those faces fit, which part each one is on, and whether its an exact fit or a sliding one.
 
+**try it:** https://autometa-app.vercel.app
+(the lathe and the test parts. open examples, pick one, press find mates)
+
 ![the viewer: chuck key tip picked, all three pinion sockets found, a see-through key at each](docs/viewer-chuck-key.jpg)
 
 ## how it works
@@ -121,6 +124,10 @@ python3.13 -m venv .venv
 ```
 
 click faces, press find mates. green is exact, blue is sliding. let go of a slider and it searches again.
+
+**deploy**
+
+the backend runs on azure container apps: `scripts/deploy_azure.sh` builds the docker image there (needs `az login`). the page is on vercel, `web/vercel.json` sends `/api` on to azure. `cd web && vercel deploy --prod` ships a new page.
 
 **tests**
 

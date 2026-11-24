@@ -130,11 +130,21 @@ function Matches() {
       </header>
       <div className="tx-card__body">
         {ms.map((m, i) => <MatchRow key={i} m={m} i={i} on={active === i} />)}
-        {!ms.length && <p className="hint" style={{ paddingTop: 0 }}>Nothing in this assembly takes that face group within the tolerances. Loosen them to see near misses.</p>}
+        {result.too_loose && (
+          <p className="hint" style={{ paddingTop: 0 }}>
+            <b>Add another face.</b> Flat faces that all point the same way can slide anywhere on any flat face, so they fit almost everything in the machine. Pick one more at an angle (a side, a hole, a shoulder) and search again.{here ? ' Below is only what they touch right now.' : ''}
+          </p>
+        )}
+        {!ms.length && !result.too_loose && <p className="hint" style={{ paddingTop: 0 }}>Nothing in this assembly takes that face group within the tolerances. Loosen them to see near misses.</p>}
         {contactOnly && here && <MatchRow m={here} i={ms.length} on={false} contact />}
         {result.rejected.length > 0 && (
           <p className="hint">
             <b>{result.rejected.length}</b> more face {result.rejected.length === 1 ? 'match' : 'matches'} dropped, the solids would run into each other: {result.rejected.slice(0, 3).map((r) => `${short(r.part)} ${r.faces.join(',')}`).join(', ')}{result.rejected.length > 3 ? '…' : ''}
+          </p>
+        )}
+        {!!result.unchecked && (
+          <p className="hint">
+            <b>{result.unchecked}</b> {result.unchecked === 1 ? 'fit was' : 'fits were'} kept without the solid collision check, the time for it ran out. A single face fits almost anywhere, pick a few more to narrow it down.
           </p>
         )}
       </div>
