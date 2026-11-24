@@ -1,0 +1,111 @@
+[
+  {
+    "file": "chuck_4slot.step",
+    "part": "chuck_key",
+    "faces": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "expect": {
+      "count": 4,
+      "part": "chuck_body",
+      "fit": "exact",
+      "motion": "prismatic",
+      "gap": 0.0
+    },
+    "note": "4 radial sockets; round hole, 12x12 pocket and 10x13 pocket are decoys"
+  },
+  {
+    "file": "keyed_shaft.step",
+    "part": "key",
+    "faces": [
+      1,
+      2,
+      3
+    ],
+    "expect": {
+      "targets": {
+        "shaft": [
+          "exact",
+          "prismatic"
+        ],
+        "hub": [
+          "sliding",
+          "prismatic"
+        ]
+      }
+    },
+    "note": "key flipped also fits the through keyway of both hubs (sliding, no stop); shaft keyway is blind (exact)"
+  },
+  {
+    "file": "keyed_shaft.step",
+    "part": "hub",
+    "faces": [
+      4,
+      8
+    ],
+    "expect": {
+      "targets": {
+        "shaft": [
+          "sliding",
+          "cylindrical"
+        ]
+      },
+      "confidence": "low"
+    },
+    "note": "a bore alone is a 2 dof cylindrical fit, any 20 mm shaft would do"
+  },
+  {
+    "file": "vice_dovetail.step",
+    "part": "sliding_jaw",
+    "faces": [
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "expect": {
+      "targets": {
+        "vice_body": [
+          "sliding",
+          "prismatic"
+        ]
+      },
+      "gap": 0.2
+    },
+    "note": "jaw groove 0.2 mm clear of the rail on flanks and top, base sits on the body"
+  },
+  {
+    "file": "pin_plate.step",
+    "part": "shoulder_pin",
+    "faces": [
+      3,
+      4
+    ],
+    "expect": {
+      "count": 12,
+      "part": "plate",
+      "fit": "sliding",
+      "motion": "revolute",
+      "gap": 0.1
+    },
+    "note": "shank + shoulder underside; 0.1 radial clearance so it is a running fit. 6 holes x either side of the plate = 12. the 10 mm centre hole is a decoy"
+  },
+  {
+    "file": "ball_socket.step",
+    "part": "ball_stud",
+    "faces": [
+      1
+    ],
+    "expect": {
+      "count": 2,
+      "part": "socket_block",
+      "motion": "spherical",
+      "gap": 0.1
+    },
+    "note": "two 20.2 sockets match, the 24 mm one is too loose"
+  }
+]

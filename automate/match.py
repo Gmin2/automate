@@ -23,7 +23,7 @@ from .faces import describe_part
 
 @dataclass
 class Params:
-    gap_rel: float = 0.05      # max clearance as a fraction of the selection size
+    gap_rel: float = 0.05      # max clearance as a fraction of the selection's thinnest dimension
     gap_max: float = 1.0       # mm, hard cap on clearance
     gap_min: float = 0.05      # mm, clearance always allowed (cad nominal noise)
     interference: float = 0.1  # mm, overlap still accepted as a (press) fit
@@ -157,8 +157,13 @@ class Matcher:
         return sel
 
     def gap_band(self, sel):
+        # scale clearance by the selection's thinnest dimension (a key's cross section, a pin's
+        # diameter), not its length, or long parts get sloppy tolerances
         pts = np.vstack([s.pts for s in sel])
-        size = float(np.linalg.norm(np.ptp(pts, axis=0)))
+        c = pts - pts.mean(axis=0)
+        ext = np.ptp(c @ np.linalg.svd(c, full_matrices=False)[2].T, axis=0)
+        ext = ext[ext > 1e-3]
+        size = float(ext.min()) if len(ext) else 1.0
         gmax = min(self.p.gap_max, max(self.p.gap_min, self.p.gap_rel * size))
         return -self.p.interference, gmax
 
@@ -418,19 +423,30 @@ class Matcher:
         return v if v > self.p.collide * min(_volume(a, True), _volume(b, True)) else 0
 
     def place(self, sel_part, sel, tgt, T, band, part, body):
-        """slide along a free direction until the solids stop colliding, keeping the faces on each other"""
-        _, _, trans, _ = pose.dof(tgt)
+        """use the free dof (slide, spin) to find a pose where the solids dont collide,
+        keeping the faces on each other"""
+        _, _, trans, rots = pose.dof(tgt)
         steps = [0.0]
         if len(trans) == 1:
             L = float(np.ptp(pose.apply(T, np.vstack([s.pts for s in sel])) @ trans[0])) or 1.0
             steps += [sg * k * L / 8 for k in range(1, 9) for sg in (1, -1)]
-        for s in steps:
-            T2 = T.copy()
-            if s:
-                T2[:3, 3] += s * trans[0]
-            ok = self.verify(sel, tgt, T2, band)
-            if ok and not self.collides(sel_part, sel[0].body, T2, part, body):
-                return T2, ok
+        spins = [np.eye(4)]
+        if rots:
+            pivot = next((t.origin for t in tgt if t.kind in ("sphere", "cone", "cyl")), None)
+            if pivot is not None:
+                spins += [_spin(a, pivot, ang) for a in rots for ang in np.radians(range(45, 360, 45))]
+                if len(rots) == 3:
+                    rng = np.random.default_rng(0)
+                    spins += [_spin(v / np.linalg.norm(v), pivot, ang)
+                              for v, ang in zip(rng.normal(size=(40, 3)), rng.uniform(0, 2 * np.pi, 40))]
+        for S in spins:
+            for s in steps:
+                T2 = S @ T
+                if s:
+                    T2[:3, 3] += s * trans[0]
+                ok = self.verify(sel, tgt, T2, band)
+                if ok and not self.collides(sel_part, sel[0].body, T2, part, body):
+                    return T2, ok
         return None
 
     def pose_free(self, sel_inst, sel, band):
@@ -547,6 +563,16 @@ class Matcher:
                     m.in_place = True
         found.sort(key=lambda m: (not m.in_place, m.instance))
         return sel, band, found, here
+
+
+def _spin(axis, pivot, ang):
+    """rotation by ang about an axis through pivot, as a 4x4"""
+    a = np.asarray(axis) / np.linalg.norm(axis)
+    K = np.array([[0, -a[2], a[1]], [a[2], 0, -a[0]], [-a[1], a[0], 0]])
+    R = np.eye(3) + math.sin(ang) * K + (1 - math.cos(ang)) * K @ K
+    S = np.eye(4)
+    S[:3, :3], S[:3, 3] = R, pivot - R @ pivot
+    return S
 
 
 def _footprint(sel_pts, stop_pts, u):

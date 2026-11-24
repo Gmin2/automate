@@ -124,7 +124,12 @@ class Assembly:
             body, subs = _bodies(shape)
             part = Part(entry, name, shape, faces, body, subs)
             self.parts[entry] = part
-        iid = "/".join(path[1:]) or path[0]
+        # name instances after their part when the file only has "=>[0:1:1:3]" style labels
+        names = [p if not _generic(p) else "" for p in path[1:]]
+        if not names or not names[-1]:
+            k = sum(1 for i in self.instances if i.part is part) + 1
+            names = [n for n in names if n] + [f"{part.name}.{k}"]
+        iid = "/".join(names) or path[0]
         self.instances.append(Instance(iid, part, loc))
 
     def by_name(self, name):

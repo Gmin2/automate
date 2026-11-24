@@ -1,0 +1,15 @@
+[project]
+name = "automate"
+version = "0.1.0"
+description = "find every place in a STEP assembly where a group of faces mates"
+requires-python = ">=3.11"
+dependencies = ["cadquery-ocp-novtk>=8.0", "numpy>=2"]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[project.scripts]
+automate = "automate.cli:main"
+
+[tool.setuptools]
+packages = ["automate"]
