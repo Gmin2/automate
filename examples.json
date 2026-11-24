@@ -1,0 +1,21 @@
+{
+  "WM290V_RedrawStart.stp": [
+    {"label": "chuck key tip -> key sockets", "instance": "TOS Svitavy 125.1/Assem1.1/Key.1", "faces": [2, 4, 16, 18]},
+    {"label": "v-belt (big wrap) -> pulley groove", "instance": "Product1.1/01. Test00-180 x 1 SPZ Type 1 1610 TL.1/01. Test00-180 x 1 SPZ Type 1 1610 TL.1", "faces": [27, 23, 31]},
+    {"label": "v-belt (small wrap) -> 80 pulley (near miss)", "instance": "Product1.1/01. Test00-180 x 1 SPZ Type 1 1610 TL.1/01. Test00-180 x 1 SPZ Type 1 1610 TL.1", "faces": [29, 25, 33]},
+    {"label": "taper bush 1610 -> pulley taper", "instance": "Product1.1/01. Test00-1610x38mm.1", "faces": [5]},
+    {"label": "taper bush 1210 -> pulley taper", "instance": "Product2.1/Product3.1/01. Test00-1210 TL 20 PILOT BORE.1", "faces": [3]},
+    {"label": "pilot bore -> shafts (motor shaft is 24, no fit)", "instance": "Product2.1/Product3.1/01. Test00-1210 TL 20 PILOT BORE.1", "faces": [12]}
+  ],
+  "bench_vice.stp": [
+    {"label": "jaw tongue + base -> body slides", "instance": "Vice Jaw.1", "faces": [3, 27, 4, 6]}
+  ],
+  "chuck_4slot.step": [{"label": "square key -> 4 sockets", "instance": "chuck_key.1", "faces": [1, 2, 3, 4]}],
+  "keyed_shaft.step": [
+    {"label": "key sides + bottom", "instance": "key.1", "faces": [1, 2, 3]},
+    {"label": "hub bore", "instance": "hub.1", "faces": [4, 8]}
+  ],
+  "vice_dovetail.step": [{"label": "jaw dovetail groove", "instance": "sliding_jaw.1", "faces": [4, 5, 6, 7, 8]}],
+  "pin_plate.step": [{"label": "shoulder pin -> holes", "instance": "shoulder_pin.1", "faces": [3, 4]}],
+  "ball_socket.step": [{"label": "ball -> sockets", "instance": "ball_stud.1", "faces": [1]}]
+}

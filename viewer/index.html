@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>automate · face group mating</title>
+<style>
+  :root {
+    --bg: #eef0f2; --panel: rgba(255,255,255,.92); --ink: #16181d; --mute: #6b7280; --line: #e3e5e8;
+    --sel: #f97316; --exact: #16a34a; --sliding: #2563eb; --interference: #dc2626;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink);
+    font: 13px/1.45 Inter, ui-sans-serif, system-ui, -apple-system, sans-serif; letter-spacing: -0.01em; }
+  canvas { display: block; }
+  #panel { position: fixed; top: 14px; left: 14px; width: 340px; max-height: calc(100% - 28px); overflow: auto;
+    background: var(--panel); backdrop-filter: blur(10px); border: 1px solid var(--line); border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(0,0,0,.06); }
+  section { padding: 12px 14px; border-top: 1px solid var(--line); }
+  section:first-child { border-top: 0; }
+  h1 { font-size: 14px; margin: 0; font-weight: 600; }
+  .file { color: var(--mute); font-size: 12px; word-break: break-all; margin-top: 2px; }
+  .label { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--mute); margin-bottom: 6px; }
+  .hint { color: var(--mute); font-size: 12px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+  .chip { background: #fff3ea; color: #b45309; border: 1px solid #fed7aa; border-radius: 99px; padding: 1px 8px; font-size: 12px; }
+  .row { display: flex; gap: 6px; margin-top: 10px; }
+  button, select { font: inherit; border-radius: 99px; border: 1px solid var(--line); background: #fff; padding: 6px 12px; cursor: pointer; }
+  button.primary { background: var(--ink); color: #fff; border-color: var(--ink); }
+  button:disabled { opacity: .4; cursor: default; }
+  select { width: 100%; border-radius: 10px; }
+  .toggle { margin-left: auto; }
+  .toggle.on { background: #f3f4f6; }
+  .match { padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; margin-top: 6px; cursor: pointer; background: #fff; }
+  .match:hover, .match.active { border-color: #c7cbd1; box-shadow: 0 1px 0 rgba(0,0,0,.03); }
+  .match .name { font-weight: 500; word-break: break-all; }
+  .match .meta { color: var(--mute); font-size: 12px; margin-top: 2px; }
+  .badge { display: inline-block; border-radius: 99px; padding: 0 7px; font-size: 11px; color: #fff; margin-right: 4px; }
+  .badge.exact { background: var(--exact); } .badge.sliding { background: var(--sliding); } .badge.interference { background: var(--interference); }
+  .badge.ghost { background: #fff; color: var(--mute); border: 1px solid var(--line); }
+  .err { color: var(--interference); }
+  .legend { display: flex; gap: 10px; flex-wrap: wrap; font-size: 12px; color: var(--mute); }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; vertical-align: 0; }
+  #tip { position: fixed; pointer-events: none; background: var(--ink); color: #fff; font-size: 12px; border-radius: 8px;
+    padding: 3px 8px; display: none; white-space: nowrap; }
+  #busy { position: fixed; right: 14px; top: 14px; background: var(--panel); border: 1px solid var(--line);
+    border-radius: 99px; padding: 6px 12px; display: none; }
+  details summary { cursor: pointer; color: var(--mute); font-size: 12px; margin-top: 8px; }
+  pre { font-size: 11px; white-space: pre-wrap; margin: 6px 0 0; }
+</style>
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+               "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/" } }
+</script>
+</head>
+<body>
+<div id="panel">
+  <section>
+    <h1>face group mating</h1>
+    <div class="file" id="file">loading…</div>
+  </section>
+  <section>
+    <div class="label">selection</div>
+    <div id="selection" class="hint">click faces on one part to select them. click again to drop a face.</div>
+    <div class="row">
+      <button class="primary" id="run" disabled>find mates</button>
+      <button id="clear">clear</button>
+      <button class="toggle" id="xray" title="fade parts that are not involved">x-ray</button>
+    </div>
+    <div id="examples-wrap" style="margin-top:10px; display:none">
+      <select id="examples"><option value="">examples…</option></select>
+    </div>
+  </section>
+  <section>
+    <div class="legend">
+      <span><span class="dot" style="background:var(--sel)"></span>selected</span>
+      <span><span class="dot" style="background:var(--exact)"></span>exact</span>
+      <span><span class="dot" style="background:var(--sliding)"></span>sliding</span>
+      <span><span class="dot" style="background:var(--interference)"></span>interference</span>
+    </div>
+  </section>
+  <section id="results-wrap" style="display:none">
+    <div class="label" id="results-title">matches</div>
+    <div id="results"></div>
+  </section>
+</div>
+<div id="tip"></div>
+<div id="busy">matching…</div>
+<script type="module" src="main.js"></script>
+</body>
+</html>
