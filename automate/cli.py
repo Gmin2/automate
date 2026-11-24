@@ -111,8 +111,8 @@ def main(argv=None):
     mp.add_argument("--quiet", action="store_true")
     for k, f in Params.__dataclass_fields__.items():
         mp.add_argument("--" + k.replace("_", "-"), dest=k, type=float)
-    sp = sub.add_parser("serve", help="open the 3d viewer for an assembly")
-    sp.add_argument("assembly")
+    sp = sub.add_parser("serve", help="open the 3d viewer, for one or more assemblies")
+    sp.add_argument("assembly", nargs="+")
     sp.add_argument("--port", type=int, default=8765)
     lp = sub.add_parser("faces", help="list a part's faces")
     lp.add_argument("assembly")
@@ -124,7 +124,7 @@ def main(argv=None):
         from .serve import serve
         ex = Path(__file__).resolve().parent.parent / "examples.json"
         examples = json.loads(ex.read_text()) if ex.exists() else {}
-        serve(args.assembly, args.port, examples.get(Path(args.assembly).name, []))
+        serve(args.assembly, args.port, examples)
         return
     if args.cmd == "match":
         if not args.part and not args.part_step:

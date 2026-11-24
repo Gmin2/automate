@@ -4,7 +4,7 @@ give it a STEP assembly and a few faces picked on one part. it finds every place
 where that face group fits, says which part each match is on, and whether it is an exact fit or a
 sliding one.
 
-![chuck key into the three pinion sockets of the lathe chuck](results/lathe-chuck-key/screenshot.jpg)
+![the viewer: chuck key tip selected, the three pinion sockets found, a ghost key in each](docs/viewer-chuck-key.jpg)
 
 the write up (what it compares and why, what breaks, next steps) is in [WRITEUP.md](WRITEUP.md).
 results for every test case are in [results/](results/README.md).
@@ -65,14 +65,33 @@ assembly stays loaded and a repeat search takes 0.1 to 2 s (the slow part is the
 ## viewer
 
 ```sh
-.venv/bin/python -m automate serve ../assignment/WM290V_RedrawStart.stp
+.venv/bin/python -m automate serve ../assignment/WM290V_RedrawStart.stp fixtures/chuck_4slot.step ...
 # open http://127.0.0.1:8765
 ```
 
-click faces on one part to select them (click again to drop one), then **find mates**. matches are
-painted on the target parts (green exact, blue sliding, red interference) and a translucent copy of
-your part is drawn at each match. the examples menu has the test selections. three.js is pulled
-from unpkg, so the page needs internet the first time.
+give it one or more STEP files, switch between them from the file menu in the top bar. each opens the
+first time it is picked (the lathe takes about 15 s), then stays loaded.
+
+- click faces on one part to select them, click again to drop one. the inspector lists each face with its
+  type and size (plane area, cylinder or cone diameter, cone angle, shaft or hole).
+- **find mates** paints every match on the target faces (green exact, blue sliding, red interference),
+  x-rays the rest and drops a see-through copy of your part at each match. the camera flies there.
+- click a match card to fly to it and see the gap on each face pair and the face that stops the slide.
+- every tolerance is a slider. let go of one and the search runs again, so you can watch a fit appear or
+  vanish (drag clearance under 2.6% and the chuck key stops fitting its 0.2 mm sockets).
+- the left side lists every part instance (search, hide, click to frame) and the saved example selections.
+
+![countersunk screw head and shank, ghosted into all eight countersinks of the motor plate](docs/viewer-motor-mount.jpg)
+
+the page is react + three.js (react three fiber), with tick sliders, toggles and section cards in a
+light editor style. it lives in `web/` and the built copy in `web/dist` is committed, so the
+python server is all you need. to work on it:
+
+```sh
+cd web && pnpm install
+AUTOMATE_API=http://127.0.0.1:8765 pnpm dev   # vite on :5173, /api goes to the python server
+pnpm build                                     # rewrites web/dist
+```
 
 ## tests
 
@@ -99,9 +118,9 @@ automate/faces.py    every face -> plane / cylinder / cone / sphere with outward
 automate/pose.py     transforms, signed distance to each primitive, kabsch, screw theory dof
 automate/match.py    the search: complement filter, pair tables, interpretation tree, pose, checks
 automate/export.py   per face tessellation for the viewer
-automate/serve.py    local server for the viewer
+automate/serve.py    local server for the viewer (scene, face info, match with tolerances)
 automate/cli.py      command line
-viewer/              three.js page
+web/                 the viewer: react + three.js, built copy in web/dist
 fixtures/            synthetic assemblies + their expected answers (cases.json)
 tests/               pytest
 results/             json + screenshots for every case

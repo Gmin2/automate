@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+/* geist (vercel, ofl 1.1, public/fonts/Geist-OFL.txt) */
+@font-face {
+  font-family: "Studio Sans";
+  src: url("/fonts/Geist-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Studio Mono";
+  src: url("/fonts/GeistMono-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+:root {
+  --font-display: "Studio Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-text: "Studio Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: "Studio Mono", "SFMono-Regular", Menlo, monospace;
+
+  --studio-chrome-surface: #fbfbfb;
+  --studio-chrome-surface-raised: #ffffff;
+  --studio-chrome-surface-subtle: #f6f6f6;
+  --studio-chrome-border: #f1f1f1;
+  --studio-chrome-icon-muted: #c4c4c4;
+  --studio-chrome-icon-idle: #5c5c5c;
+  --studio-chrome-icon-active: #38dd64;
+  --studio-chrome-text: #000000;
+  --studio-chrome-muted: #c4c4c4;
+  --studio-chrome-muted-soft: #b5b5b5;
+  --studio-chrome-hover: #f6f6f6;
+  --studio-chrome-highlight: #ededed;
+  --studio-chrome-active-surface: #000000;
+  --studio-chrome-active-text: #ffffff;
+  --studio-chrome-shadow: 0px 12px 24px 0px rgba(0, 0, 0, 0.04);
+
+  /* what a match is, the same colours the canvas paints faces with */
+  --fit-selected: #ff7a00;
+  --fit-exact: #22b455;
+  --fit-sliding: #2f6bff;
+  --fit-interference: #ec3b2f;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  * {
+    border-color: #e6e6e6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: #ffffff;
+    color: #0f0f0f;
+    font-family: var(--font-text);
+  }
+
+  button {
+    cursor: pointer;
+  }
+}
+
+.toggle-reveal-stack[data-state="open"] > .toggle-reveal-content > * {
+  transform-origin: top;
+  will-change: transform, opacity;
+  animation: 0.3s cubic-bezier(0.2, 0.85, 0.2, 1) parameter-reveal;
+}
+.toggle-reveal-stack[data-state="open"] > .toggle-reveal-content > :nth-child(2) { animation-delay: 16ms; }
+.toggle-reveal-stack[data-state="open"] > .toggle-reveal-content > :nth-child(3) { animation-delay: 32ms; }
+.toggle-reveal-stack[data-state="open"] > .toggle-reveal-content > :nth-child(4) { animation-delay: 48ms; }
+
+@keyframes parameter-reveal {
+  0% { opacity: 0; transform: translateY(-4px) scaleY(0.995); }
+  to { opacity: 1; transform: translateY(0) scaleY(1); }
+}
+
+/* a section's body dropping in as it opens */
+.section-body > * { animation: 0.3s cubic-bezier(0.2, 0.85, 0.2, 1) parameter-reveal both; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin { animation: spin 0.9s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .toggle-reveal-stack[data-state="open"] > .toggle-reveal-content > *,
+  .section-body > * { animation: none; }
+}
+
+.thin-scroll { scrollbar-width: thin; scrollbar-color: #e6e6e6 transparent; }
