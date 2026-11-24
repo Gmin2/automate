@@ -1,0 +1,122 @@
+{
+  "assembly": "/Users/mintu/coding/jobs/hanomi/assignment/WM290V_RedrawStart.stp",
+  "selection": {
+    "part": "01. Test00-180 x 1 SPZ Type 1 1610 TL",
+    "instance": "Product1.1/01. Test00-180 x 1 SPZ Type 1 1610 TL.1/01. Test00-180 x 1 SPZ Type 1 1610 TL.1",
+    "faces": [
+      29,
+      25,
+      33
+    ],
+    "surfaces": [
+      {
+        "faces": [
+          29
+        ],
+        "kind": "cyl"
+      },
+      {
+        "faces": [
+          25
+        ],
+        "kind": "cone"
+      },
+      {
+        "faces": [
+          33
+        ],
+        "kind": "cone"
+      }
+    ]
+  },
+  "gap_band_mm": [
+    -0.1,
+    0.4728
+  ],
+  "params": {
+    "gap_rel": 0.05,
+    "gap_max": 1.0,
+    "gap_min": 0.05,
+    "interference": 0.1,
+    "exact": 0.01,
+    "angle": 0.5,
+    "overlap": 0.25,
+    "collide": 0.005
+  },
+  "matches": [],
+  "in_place_contacts": {
+    "instance": "Product2.1/Product3.1/01. Test00-03-80 x 1 SPZ Type 1 1210 TL.1",
+    "part": "1 Groove SPZ Type 1",
+    "target_faces": {
+      "Product2.1/Product3.1/01. Test00-03-80 x 1 SPZ Type 1 1210 TL.1": [
+        12,
+        13
+      ]
+    },
+    "selected_to_target": [
+      {
+        "selected": [
+          29
+        ],
+        "target": [
+          12,
+          13
+        ],
+        "kind": "cyl",
+        "gap": -0.0,
+        "overlap": 1.0
+      }
+    ],
+    "fit": "sliding",
+    "motion": "cylindrical",
+    "dof": 2,
+    "clearance": -0.0,
+    "free_directions": [
+      [
+        -1.0,
+        -0.0,
+        0.0
+      ]
+    ],
+    "stops": [],
+    "symmetry": 1,
+    "confidence": "high",
+    "in_place": true,
+    "no_contact": [
+      [
+        25
+      ],
+      [
+        33
+      ]
+    ],
+    "world": [
+      [
+        -0.0,
+        0.0,
+        -1.0,
+        246.0
+      ],
+      [
+        1.0,
+        0.0,
+        -0.0,
+        0.0
+      ],
+      [
+        0.0,
+        -1.0,
+        -0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  },
+  "rejected": [],
+  "seconds": 11.4
+}

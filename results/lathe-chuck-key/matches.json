@@ -1,0 +1,485 @@
+{
+  "assembly": "/Users/mintu/coding/jobs/hanomi/assignment/WM290V_RedrawStart.stp",
+  "selection": {
+    "part": "Key",
+    "instance": "TOS Svitavy 125.1/Assem1.1/Key.1",
+    "faces": [
+      2,
+      4,
+      16,
+      18
+    ],
+    "surfaces": [
+      {
+        "faces": [
+          2
+        ],
+        "kind": "plane"
+      },
+      {
+        "faces": [
+          4
+        ],
+        "kind": "plane"
+      },
+      {
+        "faces": [
+          16
+        ],
+        "kind": "plane"
+      },
+      {
+        "faces": [
+          18
+        ],
+        "kind": "plane"
+      }
+    ]
+  },
+  "gap_band_mm": [
+    -0.1,
+    0.4786
+  ],
+  "params": {
+    "gap_rel": 0.05,
+    "gap_max": 1.0,
+    "gap_min": 0.05,
+    "interference": 0.1,
+    "exact": 0.01,
+    "angle": 0.5,
+    "overlap": 0.25,
+    "collide": 0.005
+  },
+  "matches": [
+    {
+      "instance": "TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.1",
+      "part": "Pinion M1.8 10T",
+      "target_faces": {
+        "TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.1": [
+          4,
+          6,
+          8,
+          12
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            2
+          ],
+          "target": [
+            4
+          ],
+          "kind": "plane",
+          "gap": 0.2,
+          "overlap": 0.77
+        },
+        {
+          "selected": [
+            4
+          ],
+          "target": [
+            6
+          ],
+          "kind": "plane",
+          "gap": 0.2,
+          "overlap": 0.77
+        },
+        {
+          "selected": [
+            16
+          ],
+          "target": [
+            8
+          ],
+          "kind": "plane",
+          "gap": 0.2,
+          "overlap": 0.77
+        },
+        {
+          "selected": [
+            18
+          ],
+          "target": [
+            12
+          ],
+          "kind": "plane",
+          "gap": 0.2,
+          "overlap": 0.77
+        }
+      ],
+      "fit": "exact",
+      "motion": "prismatic",
+      "dof": 1,
+      "clearance": 0.2,
+      "free_directions": [
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "stops": [
+        {
+          "faces": [
+            14
+          ],
+          "direction": 1
+        }
+      ],
+      "symmetry": 8,
+      "confidence": "high",
+      "in_place": true,
+      "no_contact": [],
+      "world": [
+        [
+          -0.98117,
+          0.19314,
+          -0.0,
+          -57.6
+        ],
+        [
+          0.19314,
+          0.98117,
+          -0.0,
+          -0.0
+        ],
+        [
+          0.0,
+          -0.0,
+          -1.0,
+          122.30568
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.2",
+      "part": "Pinion M1.8 10T",
+      "target_faces": {
+        "TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.2": [
+          4,
+          6,
+          8,
+          12
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            2
+          ],
+          "target": [
+            4
+          ],
+          "kind": "plane",
+          "gap": 0.2,
+          "overlap": 0.77
+        },
+        {
+          "selected": [
+            4
+          ],
+          "target": [
+            6
+          ],
+          "kind": "plane",
+          "gap": 0.2,
+          "overlap": 0.77
+        },
+        {
+          "selected": [
+            16
+          ],
+          "target": [
+            8
+          ],
+          "kind": "plane",
+          "gap": 0.2,
+          "overlap": 0.77
+        },
+        {
+          "selected": [
+            18
+          ],
+          "target": [
+            12
+          ],
+          "kind": "plane",
+          "gap": 0.2,
+          "overlap": 0.77
+        }
+      ],
+      "fit": "exact",
+      "motion": "prismatic",
+      "dof": 1,
+      "clearance": 0.2,
+      "free_directions": [
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "stops": [
+        {
+          "faces": [
+            14
+          ],
+          "direction": 1
+        }
+      ],
+      "symmetry": 8,
+      "confidence": "high",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          0.96664,
+          0.25612,
+          -0.0,
+          -57.6
+        ],
+        [
+          -0.12806,
+          0.48332,
+          0.86603,
+          -105.91983
+        ],
+        [
+          0.22181,
+          -0.83714,
+          0.5,
+          -61.15284
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.3",
+      "part": "Pinion M1.8 10T",
+      "target_faces": {
+        "TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.3": [
+          4,
+          6,
+          8,
+          12
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            2
+          ],
+          "target": [
+            4
+          ],
+          "kind": "plane",
+          "gap": 0.2,
+          "overlap": 0.77
+        },
+        {
+          "selected": [
+            4
+          ],
+          "target": [
+            6
+          ],
+          "kind": "plane",
+          "gap": 0.2,
+          "overlap": 0.77
+        },
+        {
+          "selected": [
+            16
+          ],
+          "target": [
+            8
+          ],
+          "kind": "plane",
+          "gap": 0.2,
+          "overlap": 0.77
+        },
+        {
+          "selected": [
+            18
+          ],
+          "target": [
+            12
+          ],
+          "kind": "plane",
+          "gap": 0.2,
+          "overlap": 0.77
+        }
+      ],
+      "fit": "exact",
+      "motion": "prismatic",
+      "dof": 1,
+      "clearance": 0.2,
+      "free_directions": [
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "stops": [
+        {
+          "faces": [
+            14
+          ],
+          "direction": 1
+        }
+      ],
+      "symmetry": 8,
+      "confidence": "high",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          0.80459,
+          0.59383,
+          -0.0,
+          -57.6
+        ],
+        [
+          -0.29691,
+          0.4023,
+          -0.86603,
+          105.91983
+        ],
+        [
+          -0.51427,
+          0.6968,
+          0.5,
+          -61.15284
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    }
+  ],
+  "in_place_contacts": {
+    "instance": "TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.1",
+    "part": "Pinion M1.8 10T",
+    "target_faces": {
+      "TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.1": [
+        4,
+        6,
+        8,
+        12
+      ]
+    },
+    "selected_to_target": [
+      {
+        "selected": [
+          16
+        ],
+        "target": [
+          4
+        ],
+        "kind": "plane",
+        "gap": 0.2,
+        "overlap": 0.77
+      },
+      {
+        "selected": [
+          18
+        ],
+        "target": [
+          6
+        ],
+        "kind": "plane",
+        "gap": 0.2,
+        "overlap": 0.77
+      },
+      {
+        "selected": [
+          2
+        ],
+        "target": [
+          8
+        ],
+        "kind": "plane",
+        "gap": 0.2,
+        "overlap": 0.77
+      },
+      {
+        "selected": [
+          4
+        ],
+        "target": [
+          12
+        ],
+        "kind": "plane",
+        "gap": 0.2,
+        "overlap": 0.77
+      }
+    ],
+    "fit": "exact",
+    "motion": "prismatic",
+    "dof": 1,
+    "clearance": 0.2,
+    "free_directions": [
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "stops": [
+      {
+        "faces": [
+          14
+        ],
+        "direction": -1
+      }
+    ],
+    "symmetry": 1,
+    "confidence": "high",
+    "in_place": true,
+    "no_contact": [],
+    "world": [
+      [
+        0.98117,
+        -0.19314,
+        0.0,
+        -57.6
+      ],
+      [
+        -0.19314,
+        -0.98117,
+        0.0,
+        -0.0
+      ],
+      [
+        0.0,
+        -0.0,
+        -1.0,
+        122.58324
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  },
+  "rejected": [],
+  "seconds": 13.2
+}

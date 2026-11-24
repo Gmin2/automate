@@ -1,0 +1,884 @@
+{
+  "assembly": "/Users/mintu/coding/jobs/hanomi/automate/fixtures/pin_plate.step",
+  "selection": {
+    "part": "shoulder_pin",
+    "instance": "shoulder_pin.1",
+    "faces": [
+      3,
+      4
+    ],
+    "surfaces": [
+      {
+        "faces": [
+          3
+        ],
+        "kind": "plane"
+      },
+      {
+        "faces": [
+          4
+        ],
+        "kind": "cyl"
+      }
+    ]
+  },
+  "gap_band_mm": [
+    -0.1,
+    0.6224
+  ],
+  "params": {
+    "gap_rel": 0.05,
+    "gap_max": 1.0,
+    "gap_min": 0.05,
+    "interference": 0.1,
+    "exact": 0.01,
+    "angle": 0.5,
+    "overlap": 0.25,
+    "collide": 0.005
+  },
+  "matches": [
+    {
+      "instance": "plate.1",
+      "part": "plate",
+      "target_faces": {
+        "plate.1": [
+          3,
+          7
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            3
+          ],
+          "target": [
+            3
+          ],
+          "kind": "plane",
+          "gap": -0.0,
+          "overlap": 1.0
+        },
+        {
+          "selected": [
+            4
+          ],
+          "target": [
+            7
+          ],
+          "kind": "cyl",
+          "gap": 0.1,
+          "overlap": 0.33
+        }
+      ],
+      "fit": "sliding",
+      "motion": "revolute",
+      "dof": 1,
+      "clearance": 0.1,
+      "free_directions": [],
+      "stops": [],
+      "symmetry": 1,
+      "confidence": "high",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          -0.16392,
+          -0.3286,
+          0.93014,
+          -94.41092
+        ],
+        [
+          -0.3286,
+          0.90723,
+          0.26259,
+          -55.64845
+        ],
+        [
+          -0.93014,
+          -0.26259,
+          -0.25669,
+          30.53541
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "plate.1",
+      "part": "plate",
+      "target_faces": {
+        "plate.1": [
+          3,
+          8
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            3
+          ],
+          "target": [
+            3
+          ],
+          "kind": "plane",
+          "gap": -0.0,
+          "overlap": 1.0
+        },
+        {
+          "selected": [
+            4
+          ],
+          "target": [
+            8
+          ],
+          "kind": "cyl",
+          "gap": 0.1,
+          "overlap": 0.33
+        }
+      ],
+      "fit": "sliding",
+      "motion": "revolute",
+      "dof": 1,
+      "clearance": 0.1,
+      "free_directions": [],
+      "stops": [],
+      "symmetry": 1,
+      "confidence": "high",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          -0.16392,
+          -0.3286,
+          0.93014,
+          -54.41092
+        ],
+        [
+          -0.3286,
+          0.90723,
+          0.26259,
+          -55.64845
+        ],
+        [
+          -0.93014,
+          -0.26259,
+          -0.25669,
+          30.53541
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "plate.1",
+      "part": "plate",
+      "target_faces": {
+        "plate.1": [
+          3,
+          10
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            3
+          ],
+          "target": [
+            3
+          ],
+          "kind": "plane",
+          "gap": -0.0,
+          "overlap": 1.0
+        },
+        {
+          "selected": [
+            4
+          ],
+          "target": [
+            10
+          ],
+          "kind": "cyl",
+          "gap": 0.1,
+          "overlap": 0.33
+        }
+      ],
+      "fit": "sliding",
+      "motion": "revolute",
+      "dof": 1,
+      "clearance": 0.1,
+      "free_directions": [],
+      "stops": [],
+      "symmetry": 1,
+      "confidence": "high",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          -0.16392,
+          -0.3286,
+          0.93014,
+          -34.41092
+        ],
+        [
+          -0.3286,
+          0.90723,
+          0.26259,
+          -21.00744
+        ],
+        [
+          -0.93014,
+          -0.26259,
+          -0.25669,
+          30.53541
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "plate.1",
+      "part": "plate",
+      "target_faces": {
+        "plate.1": [
+          3,
+          11
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            3
+          ],
+          "target": [
+            3
+          ],
+          "kind": "plane",
+          "gap": -0.0,
+          "overlap": 1.0
+        },
+        {
+          "selected": [
+            4
+          ],
+          "target": [
+            11
+          ],
+          "kind": "cyl",
+          "gap": 0.1,
+          "overlap": 0.33
+        }
+      ],
+      "fit": "sliding",
+      "motion": "revolute",
+      "dof": 1,
+      "clearance": 0.1,
+      "free_directions": [],
+      "stops": [],
+      "symmetry": 1,
+      "confidence": "high",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          -0.16392,
+          -0.3286,
+          0.93014,
+          -114.41092
+        ],
+        [
+          -0.3286,
+          0.90723,
+          0.26259,
+          -21.00744
+        ],
+        [
+          -0.93014,
+          -0.26259,
+          -0.25669,
+          30.53541
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "plate.1",
+      "part": "plate",
+      "target_faces": {
+        "plate.1": [
+          3,
+          12
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            3
+          ],
+          "target": [
+            3
+          ],
+          "kind": "plane",
+          "gap": -0.0,
+          "overlap": 1.0
+        },
+        {
+          "selected": [
+            4
+          ],
+          "target": [
+            12
+          ],
+          "kind": "cyl",
+          "gap": 0.1,
+          "overlap": 0.33
+        }
+      ],
+      "fit": "sliding",
+      "motion": "revolute",
+      "dof": 1,
+      "clearance": 0.1,
+      "free_directions": [],
+      "stops": [],
+      "symmetry": 1,
+      "confidence": "high",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          -0.16392,
+          -0.3286,
+          0.93014,
+          -94.41092
+        ],
+        [
+          -0.3286,
+          0.90723,
+          0.26259,
+          13.63358
+        ],
+        [
+          -0.93014,
+          -0.26259,
+          -0.25669,
+          30.53541
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "plate.1",
+      "part": "plate",
+      "target_faces": {
+        "plate.1": [
+          3,
+          13
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            3
+          ],
+          "target": [
+            3
+          ],
+          "kind": "plane",
+          "gap": -0.0,
+          "overlap": 1.0
+        },
+        {
+          "selected": [
+            4
+          ],
+          "target": [
+            13
+          ],
+          "kind": "cyl",
+          "gap": 0.1,
+          "overlap": 0.33
+        }
+      ],
+      "fit": "sliding",
+      "motion": "revolute",
+      "dof": 1,
+      "clearance": 0.1,
+      "free_directions": [],
+      "stops": [],
+      "symmetry": 1,
+      "confidence": "high",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          -0.16392,
+          -0.3286,
+          0.93014,
+          -54.41092
+        ],
+        [
+          -0.3286,
+          0.90723,
+          0.26259,
+          13.63358
+        ],
+        [
+          -0.93014,
+          -0.26259,
+          -0.25669,
+          30.53541
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "plate.1",
+      "part": "plate",
+      "target_faces": {
+        "plate.1": [
+          5,
+          7
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            3
+          ],
+          "target": [
+            5
+          ],
+          "kind": "plane",
+          "gap": 0.0,
+          "overlap": 1.0
+        },
+        {
+          "selected": [
+            4
+          ],
+          "target": [
+            7
+          ],
+          "kind": "cyl",
+          "gap": 0.1,
+          "overlap": 0.33
+        }
+      ],
+      "fit": "sliding",
+      "motion": "revolute",
+      "dof": 1,
+      "clearance": 0.1,
+      "free_directions": [],
+      "stops": [],
+      "symmetry": 1,
+      "confidence": "high",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          0.31156,
+          -0.19436,
+          -0.93014,
+          54.41092
+        ],
+        [
+          -0.19436,
+          0.94513,
+          -0.26259,
+          -13.63358
+        ],
+        [
+          0.93014,
+          0.26259,
+          0.25669,
+          -20.53541
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "plate.1",
+      "part": "plate",
+      "target_faces": {
+        "plate.1": [
+          5,
+          8
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            3
+          ],
+          "target": [
+            5
+          ],
+          "kind": "plane",
+          "gap": 0.0,
+          "overlap": 1.0
+        },
+        {
+          "selected": [
+            4
+          ],
+          "target": [
+            8
+          ],
+          "kind": "cyl",
+          "gap": 0.1,
+          "overlap": 0.33
+        }
+      ],
+      "fit": "sliding",
+      "motion": "revolute",
+      "dof": 1,
+      "clearance": 0.1,
+      "free_directions": [],
+      "stops": [],
+      "symmetry": 1,
+      "confidence": "high",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          0.31156,
+          -0.19436,
+          -0.93014,
+          94.41092
+        ],
+        [
+          -0.19436,
+          0.94513,
+          -0.26259,
+          -13.63358
+        ],
+        [
+          0.93014,
+          0.26259,
+          0.25669,
+          -20.53541
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "plate.1",
+      "part": "plate",
+      "target_faces": {
+        "plate.1": [
+          5,
+          10
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            3
+          ],
+          "target": [
+            5
+          ],
+          "kind": "plane",
+          "gap": 0.0,
+          "overlap": 1.0
+        },
+        {
+          "selected": [
+            4
+          ],
+          "target": [
+            10
+          ],
+          "kind": "cyl",
+          "gap": 0.1,
+          "overlap": 0.33
+        }
+      ],
+      "fit": "sliding",
+      "motion": "revolute",
+      "dof": 1,
+      "clearance": 0.1,
+      "free_directions": [],
+      "stops": [],
+      "symmetry": 1,
+      "confidence": "high",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          0.31156,
+          -0.19436,
+          -0.93014,
+          114.41092
+        ],
+        [
+          -0.19436,
+          0.94513,
+          -0.26259,
+          21.00744
+        ],
+        [
+          0.93014,
+          0.26259,
+          0.25669,
+          -20.53541
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "plate.1",
+      "part": "plate",
+      "target_faces": {
+        "plate.1": [
+          5,
+          11
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            3
+          ],
+          "target": [
+            5
+          ],
+          "kind": "plane",
+          "gap": 0.0,
+          "overlap": 1.0
+        },
+        {
+          "selected": [
+            4
+          ],
+          "target": [
+            11
+          ],
+          "kind": "cyl",
+          "gap": 0.1,
+          "overlap": 0.33
+        }
+      ],
+      "fit": "sliding",
+      "motion": "revolute",
+      "dof": 1,
+      "clearance": 0.1,
+      "free_directions": [],
+      "stops": [],
+      "symmetry": 1,
+      "confidence": "high",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          0.31156,
+          -0.19436,
+          -0.93014,
+          34.41092
+        ],
+        [
+          -0.19436,
+          0.94513,
+          -0.26259,
+          21.00744
+        ],
+        [
+          0.93014,
+          0.26259,
+          0.25669,
+          -20.53541
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "plate.1",
+      "part": "plate",
+      "target_faces": {
+        "plate.1": [
+          5,
+          12
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            3
+          ],
+          "target": [
+            5
+          ],
+          "kind": "plane",
+          "gap": 0.0,
+          "overlap": 1.0
+        },
+        {
+          "selected": [
+            4
+          ],
+          "target": [
+            12
+          ],
+          "kind": "cyl",
+          "gap": 0.1,
+          "overlap": 0.33
+        }
+      ],
+      "fit": "sliding",
+      "motion": "revolute",
+      "dof": 1,
+      "clearance": 0.1,
+      "free_directions": [],
+      "stops": [],
+      "symmetry": 1,
+      "confidence": "high",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          0.31156,
+          -0.19436,
+          -0.93014,
+          54.41092
+        ],
+        [
+          -0.19436,
+          0.94513,
+          -0.26259,
+          55.64845
+        ],
+        [
+          0.93014,
+          0.26259,
+          0.25669,
+          -20.53541
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "plate.1",
+      "part": "plate",
+      "target_faces": {
+        "plate.1": [
+          5,
+          13
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            3
+          ],
+          "target": [
+            5
+          ],
+          "kind": "plane",
+          "gap": 0.0,
+          "overlap": 1.0
+        },
+        {
+          "selected": [
+            4
+          ],
+          "target": [
+            13
+          ],
+          "kind": "cyl",
+          "gap": 0.1,
+          "overlap": 0.33
+        }
+      ],
+      "fit": "sliding",
+      "motion": "revolute",
+      "dof": 1,
+      "clearance": 0.1,
+      "free_directions": [],
+      "stops": [],
+      "symmetry": 1,
+      "confidence": "high",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          0.31156,
+          -0.19436,
+          -0.93014,
+          94.41092
+        ],
+        [
+          -0.19436,
+          0.94513,
+          -0.26259,
+          55.64845
+        ],
+        [
+          0.93014,
+          0.26259,
+          0.25669,
+          -20.53541
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    }
+  ],
+  "in_place_contacts": null,
+  "rejected": [],
+  "seconds": 0.1
+}

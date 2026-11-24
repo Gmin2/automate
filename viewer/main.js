@@ -238,6 +238,11 @@ function showResults() {
     };
     el.append(div);
   }
+  // frame everything involved: matched parts, ghosts and the selected part
+  const all = [...ghosts];
+  for (const { m } of items) for (const k of Object.keys(m.target_faces)) if (byId[k] && k !== selection.inst) all.push(byId[k]);
+  if (!all.length) all.push(byId[selection.inst]);
+  frameMeshes(all.filter(Boolean));
   if (result.rejected.length) {
     const d = document.createElement("details");
     d.innerHTML = `<summary>${result.rejected.length} rejected after the face check</summary><pre>${

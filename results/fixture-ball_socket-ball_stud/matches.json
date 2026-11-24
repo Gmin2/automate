@@ -1,0 +1,153 @@
+{
+  "assembly": "/Users/mintu/coding/jobs/hanomi/automate/fixtures/ball_socket.step",
+  "selection": {
+    "part": "ball_stud",
+    "instance": "ball_stud.1",
+    "faces": [
+      1
+    ],
+    "surfaces": [
+      {
+        "faces": [
+          1
+        ],
+        "kind": "sphere"
+      }
+    ]
+  },
+  "gap_band_mm": [
+    -0.1,
+    0.9413
+  ],
+  "params": {
+    "gap_rel": 0.05,
+    "gap_max": 1.0,
+    "gap_min": 0.05,
+    "interference": 0.1,
+    "exact": 0.01,
+    "angle": 0.5,
+    "overlap": 0.25,
+    "collide": 0.005
+  },
+  "matches": [
+    {
+      "instance": "socket_block.1",
+      "part": "socket_block",
+      "target_faces": {
+        "socket_block.1": [
+          7
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            1
+          ],
+          "target": [
+            7
+          ],
+          "kind": "sphere",
+          "gap": 0.1,
+          "overlap": 0.44
+        }
+      ],
+      "fit": "sliding",
+      "motion": "spherical",
+      "dof": 3,
+      "clearance": 0.1,
+      "free_directions": [],
+      "stops": [],
+      "symmetry": 1,
+      "confidence": "low",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          0.0,
+          -0.0,
+          -1.0,
+          30.0
+        ],
+        [
+          0.0,
+          1.0,
+          -0.0,
+          0.0
+        ],
+        [
+          1.0,
+          -0.0,
+          0.0,
+          -0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "socket_block.1",
+      "part": "socket_block",
+      "target_faces": {
+        "socket_block.1": [
+          8
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            1
+          ],
+          "target": [
+            8
+          ],
+          "kind": "sphere",
+          "gap": 0.1,
+          "overlap": 0.56
+        }
+      ],
+      "fit": "sliding",
+      "motion": "spherical",
+      "dof": 3,
+      "clearance": 0.1,
+      "free_directions": [],
+      "stops": [],
+      "symmetry": 1,
+      "confidence": "low",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          0.70711,
+          0.0,
+          0.70711,
+          -42.42641
+        ],
+        [
+          -0.0,
+          1.0,
+          -0.0,
+          0.0
+        ],
+        [
+          -0.70711,
+          -0.0,
+          0.70711,
+          -42.42641
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    }
+  ],
+  "in_place_contacts": null,
+  "rejected": [],
+  "seconds": 0.6
+}

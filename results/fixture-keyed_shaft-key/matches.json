@@ -1,0 +1,442 @@
+{
+  "assembly": "/Users/mintu/coding/jobs/hanomi/automate/fixtures/keyed_shaft.step",
+  "selection": {
+    "part": "key",
+    "instance": "key.1",
+    "faces": [
+      1,
+      2,
+      3
+    ],
+    "surfaces": [
+      {
+        "faces": [
+          1
+        ],
+        "kind": "plane"
+      },
+      {
+        "faces": [
+          2
+        ],
+        "kind": "plane"
+      },
+      {
+        "faces": [
+          3
+        ],
+        "kind": "plane"
+      }
+    ]
+  },
+  "gap_band_mm": [
+    -0.1,
+    0.2833
+  ],
+  "params": {
+    "gap_rel": 0.05,
+    "gap_max": 1.0,
+    "gap_min": 0.05,
+    "interference": 0.1,
+    "exact": 0.01,
+    "angle": 0.5,
+    "overlap": 0.25,
+    "collide": 0.005
+  },
+  "matches": [
+    {
+      "instance": "shaft.1",
+      "part": "shaft",
+      "target_faces": {
+        "shaft.1": [
+          4,
+          6,
+          8
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            1
+          ],
+          "target": [
+            4
+          ],
+          "kind": "plane",
+          "gap": 0.0,
+          "overlap": 0.56
+        },
+        {
+          "selected": [
+            2
+          ],
+          "target": [
+            6
+          ],
+          "kind": "plane",
+          "gap": 0.0,
+          "overlap": 0.56
+        },
+        {
+          "selected": [
+            3
+          ],
+          "target": [
+            8
+          ],
+          "kind": "plane",
+          "gap": 0.0,
+          "overlap": 1.0
+        }
+      ],
+      "fit": "exact",
+      "motion": "prismatic",
+      "dof": 1,
+      "clearance": 0.0,
+      "free_directions": [
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "stops": [
+        {
+          "faces": [
+            5
+          ],
+          "direction": 1
+        }
+      ],
+      "symmetry": 2,
+      "confidence": "high",
+      "in_place": true,
+      "no_contact": [],
+      "world": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "hub.1",
+      "part": "hub",
+      "target_faces": {
+        "hub.1": [
+          5,
+          6,
+          7
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            1
+          ],
+          "target": [
+            5
+          ],
+          "kind": "plane",
+          "gap": 0.0,
+          "overlap": 0.67
+        },
+        {
+          "selected": [
+            2
+          ],
+          "target": [
+            7
+          ],
+          "kind": "plane",
+          "gap": 0.0,
+          "overlap": 0.67
+        },
+        {
+          "selected": [
+            3
+          ],
+          "target": [
+            6
+          ],
+          "kind": "plane",
+          "gap": 0.0,
+          "overlap": 1.0
+        }
+      ],
+      "fit": "sliding",
+      "motion": "prismatic",
+      "dof": 1,
+      "clearance": 0.0,
+      "free_directions": [
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "stops": [],
+      "symmetry": 2,
+      "confidence": "high",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          -1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          -1.0,
+          0.0,
+          20.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "hub.2",
+      "part": "hub",
+      "target_faces": {
+        "hub.2": [
+          5,
+          6,
+          7
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            1
+          ],
+          "target": [
+            5
+          ],
+          "kind": "plane",
+          "gap": 0.0,
+          "overlap": 0.67
+        },
+        {
+          "selected": [
+            2
+          ],
+          "target": [
+            7
+          ],
+          "kind": "plane",
+          "gap": 0.0,
+          "overlap": 0.67
+        },
+        {
+          "selected": [
+            3
+          ],
+          "target": [
+            6
+          ],
+          "kind": "plane",
+          "gap": 0.0,
+          "overlap": 1.0
+        }
+      ],
+      "fit": "sliding",
+      "motion": "prismatic",
+      "dof": 1,
+      "clearance": 0.0,
+      "free_directions": [
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "stops": [],
+      "symmetry": 2,
+      "confidence": "high",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          0.20392,
+          -0.36772,
+          -0.9073,
+          180.03693
+        ],
+        [
+          0.44751,
+          0.8593,
+          -0.24768,
+          29.00607
+        ],
+        [
+          0.87072,
+          -0.35552,
+          0.33979,
+          28.61569
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    }
+  ],
+  "in_place_contacts": {
+    "instance": "hub.1, shaft.1",
+    "part": "hub, shaft",
+    "target_faces": {
+      "shaft.1": [
+        4,
+        6,
+        8
+      ],
+      "hub.1": [
+        5,
+        7
+      ]
+    },
+    "selected_to_target": [
+      {
+        "selected": [
+          1
+        ],
+        "target": [
+          4
+        ],
+        "kind": "plane",
+        "gap": 0.0,
+        "overlap": 0.56
+      },
+      {
+        "selected": [
+          2
+        ],
+        "target": [
+          6
+        ],
+        "kind": "plane",
+        "gap": 0.0,
+        "overlap": 0.56
+      },
+      {
+        "selected": [
+          3
+        ],
+        "target": [
+          8
+        ],
+        "kind": "plane",
+        "gap": 0.0,
+        "overlap": 1.0
+      },
+      {
+        "selected": [
+          2
+        ],
+        "target": [
+          5
+        ],
+        "kind": "plane",
+        "gap": 0.0,
+        "overlap": 0.44
+      },
+      {
+        "selected": [
+          1
+        ],
+        "target": [
+          7
+        ],
+        "kind": "plane",
+        "gap": 0.0,
+        "overlap": 0.44
+      }
+    ],
+    "fit": "exact",
+    "motion": "prismatic",
+    "dof": 1,
+    "clearance": 0.0,
+    "free_directions": [
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "stops": [
+      {
+        "faces": [
+          5
+        ],
+        "direction": 1
+      }
+    ],
+    "symmetry": 1,
+    "confidence": "high",
+    "in_place": true,
+    "no_contact": [],
+    "world": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  },
+  "rejected": [],
+  "seconds": 0.1
+}

@@ -1,0 +1,159 @@
+{
+  "assembly": "/Users/mintu/coding/jobs/hanomi/assignment/WM290V_RedrawStart.stp",
+  "selection": {
+    "part": "1610x38mm",
+    "instance": "Product1.1/01. Test00-1610x38mm.1",
+    "faces": [
+      5
+    ],
+    "surfaces": [
+      {
+        "faces": [
+          5,
+          6
+        ],
+        "kind": "cone"
+      }
+    ]
+  },
+  "gap_band_mm": [
+    -0.1,
+    1.0
+  ],
+  "params": {
+    "gap_rel": 0.05,
+    "gap_max": 1.0,
+    "gap_min": 0.05,
+    "interference": 0.1,
+    "exact": 0.01,
+    "angle": 0.5,
+    "overlap": 0.25,
+    "collide": 0.005
+  },
+  "matches": [
+    {
+      "instance": "Product1.1/01. Test00-180 x 1 SPZ Type 1 1610 TL.1/01. Test00-180 x 1 SPZ Type 1 1610 TL.1",
+      "part": "01. Test00-180 x 1 SPZ Type 1 1610 TL",
+      "target_faces": {
+        "Product1.1/01. Test00-180 x 1 SPZ Type 1 1610 TL.1/01. Test00-180 x 1 SPZ Type 1 1610 TL.1": [
+          1,
+          3
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            5,
+            6
+          ],
+          "target": [
+            1,
+            3
+          ],
+          "kind": "cone",
+          "gap": -0.0,
+          "overlap": 1.0
+        }
+      ],
+      "fit": "exact",
+      "motion": "revolute",
+      "dof": 1,
+      "clearance": -0.0,
+      "free_directions": [],
+      "stops": [],
+      "symmetry": 1,
+      "confidence": "high",
+      "in_place": true,
+      "no_contact": [],
+      "world": [
+        [
+          -0.0,
+          1.0,
+          0.0,
+          221.53627
+        ],
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0,
+          -0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    }
+  ],
+  "in_place_contacts": {
+    "instance": "Product1.1/01. Test00-180 x 1 SPZ Type 1 1610 TL.1/01. Test00-180 x 1 SPZ Type 1 1610 TL.1",
+    "part": "01. Test00-180 x 1 SPZ Type 1 1610 TL",
+    "target_faces": {
+      "Product1.1/01. Test00-180 x 1 SPZ Type 1 1610 TL.1/01. Test00-180 x 1 SPZ Type 1 1610 TL.1": [
+        1,
+        3
+      ]
+    },
+    "selected_to_target": [
+      {
+        "selected": [
+          5,
+          6
+        ],
+        "target": [
+          1,
+          3
+        ],
+        "kind": "cone",
+        "gap": 0.0653,
+        "overlap": 1.0
+      }
+    ],
+    "fit": "exact",
+    "motion": "revolute",
+    "dof": 1,
+    "clearance": 0.0653,
+    "free_directions": [],
+    "stops": [],
+    "symmetry": 1,
+    "confidence": "high",
+    "in_place": true,
+    "no_contact": [],
+    "world": [
+      [
+        0.0,
+        1.0,
+        -0.0,
+        220.6
+      ],
+      [
+        -0.0,
+        0.0,
+        1.0,
+        -0.0
+      ],
+      [
+        1.0,
+        -0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  },
+  "rejected": [],
+  "seconds": 11.6
+}

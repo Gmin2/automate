@@ -1,0 +1,172 @@
+{
+  "assembly": "/Users/mintu/coding/jobs/hanomi/assignment/WM290V_RedrawStart.stp",
+  "selection": {
+    "part": "1210 TL \u00d820 PILOT BORE",
+    "instance": "Product2.1/Product3.1/01. Test00-1210 TL 20 PILOT BORE.1",
+    "faces": [
+      12
+    ],
+    "surfaces": [
+      {
+        "faces": [
+          12,
+          13
+        ],
+        "kind": "cyl"
+      }
+    ]
+  },
+  "gap_band_mm": [
+    -0.1,
+    0.9848
+  ],
+  "params": {
+    "gap_rel": 0.05,
+    "gap_max": 1.0,
+    "gap_min": 0.05,
+    "interference": 0.1,
+    "exact": 0.01,
+    "angle": 0.5,
+    "overlap": 0.25,
+    "collide": 0.005
+  },
+  "matches": [
+    {
+      "instance": "LeadScrew-20mm.1",
+      "part": "LeadScrew-20mm",
+      "target_faces": {
+        "LeadScrew-20mm.1": [
+          1,
+          2
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            12,
+            13
+          ],
+          "target": [
+            1,
+            2
+          ],
+          "kind": "cyl",
+          "gap": 0.0,
+          "overlap": 1.0
+        }
+      ],
+      "fit": "sliding",
+      "motion": "cylindrical",
+      "dof": 2,
+      "clearance": 0.0,
+      "free_directions": [
+        [
+          -1.0,
+          -0.0,
+          0.0
+        ]
+      ],
+      "stops": [],
+      "symmetry": 2,
+      "confidence": "low",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          0.0,
+          1.0,
+          0.0,
+          -572.7
+        ],
+        [
+          -1.0,
+          0.0,
+          0.0,
+          110.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -210.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "Product2.1/01. Test00-M90S B34(ok).1/01. Test00-M90S B34(ok).1",
+      "part": "01. Test00-M90S B34(ok)",
+      "target_faces": {
+        "Product2.1/01. Test00-M90S B34(ok).1/01. Test00-M90S B34(ok).1": [
+          976,
+          978
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            12,
+            13
+          ],
+          "target": [
+            976,
+            978
+          ],
+          "kind": "cyl",
+          "gap": 0.0,
+          "overlap": 0.78
+        }
+      ],
+      "fit": "sliding",
+      "motion": "cylindrical",
+      "dof": 2,
+      "clearance": 0.0,
+      "free_directions": [
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "stops": [],
+      "symmetry": 2,
+      "confidence": "low",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          -0.0,
+          -1.0,
+          0.0,
+          -19.3
+        ],
+        [
+          -0.0,
+          -0.0,
+          -1.0,
+          -228.0
+        ],
+        [
+          1.0,
+          -0.0,
+          -0.0,
+          -218.79671
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    }
+  ],
+  "in_place_contacts": null,
+  "rejected": [],
+  "seconds": 17.1
+}

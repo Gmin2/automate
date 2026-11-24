@@ -1,0 +1,268 @@
+{
+  "assembly": "/Users/mintu/coding/jobs/hanomi/automate/data/external/bench_vice.stp",
+  "selection": {
+    "part": "Vice Jaw",
+    "instance": "Vice Jaw.1",
+    "faces": [
+      3,
+      27,
+      4,
+      6
+    ],
+    "surfaces": [
+      {
+        "faces": [
+          3
+        ],
+        "kind": "plane"
+      },
+      {
+        "faces": [
+          27
+        ],
+        "kind": "plane"
+      },
+      {
+        "faces": [
+          4
+        ],
+        "kind": "plane"
+      },
+      {
+        "faces": [
+          6
+        ],
+        "kind": "plane"
+      }
+    ]
+  },
+  "gap_band_mm": [
+    -0.1,
+    0.425
+  ],
+  "params": {
+    "gap_rel": 0.05,
+    "gap_max": 1.0,
+    "gap_min": 0.05,
+    "interference": 0.1,
+    "exact": 0.01,
+    "angle": 0.5,
+    "overlap": 0.25,
+    "collide": 0.005
+  },
+  "matches": [
+    {
+      "instance": "Base.1",
+      "part": "Base",
+      "target_faces": {
+        "Base.1": [
+          5,
+          11,
+          17,
+          26
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            3
+          ],
+          "target": [
+            5
+          ],
+          "kind": "plane",
+          "gap": 0.0,
+          "overlap": 1.0
+        },
+        {
+          "selected": [
+            27
+          ],
+          "target": [
+            11
+          ],
+          "kind": "plane",
+          "gap": 0.0,
+          "overlap": 1.0
+        },
+        {
+          "selected": [
+            4
+          ],
+          "target": [
+            26
+          ],
+          "kind": "plane",
+          "gap": -0.0,
+          "overlap": 1.0
+        },
+        {
+          "selected": [
+            6
+          ],
+          "target": [
+            17
+          ],
+          "kind": "plane",
+          "gap": -0.0,
+          "overlap": 1.0
+        }
+      ],
+      "fit": "sliding",
+      "motion": "prismatic",
+      "dof": 1,
+      "clearance": 0.0,
+      "free_directions": [
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "stops": [],
+      "symmetry": 2,
+      "confidence": "high",
+      "in_place": true,
+      "no_contact": [],
+      "world": [
+        [
+          -1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          -1.0,
+          0.0,
+          88.75875
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          16.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    }
+  ],
+  "in_place_contacts": {
+    "instance": "Base.1",
+    "part": "Base",
+    "target_faces": {
+      "Base.1": [
+        5,
+        11,
+        17,
+        26
+      ]
+    },
+    "selected_to_target": [
+      {
+        "selected": [
+          27
+        ],
+        "target": [
+          5
+        ],
+        "kind": "plane",
+        "gap": -0.0,
+        "overlap": 1.0
+      },
+      {
+        "selected": [
+          3
+        ],
+        "target": [
+          11
+        ],
+        "kind": "plane",
+        "gap": 0.0,
+        "overlap": 1.0
+      },
+      {
+        "selected": [
+          4
+        ],
+        "target": [
+          17
+        ],
+        "kind": "plane",
+        "gap": 0.0,
+        "overlap": 1.0
+      },
+      {
+        "selected": [
+          6
+        ],
+        "target": [
+          26
+        ],
+        "kind": "plane",
+        "gap": 0.0,
+        "overlap": 1.0
+      }
+    ],
+    "fit": "sliding",
+    "motion": "prismatic",
+    "dof": 1,
+    "clearance": 0.0,
+    "free_directions": [
+      [
+        0.0,
+        1.0,
+        0.0
+      ]
+    ],
+    "stops": [],
+    "symmetry": 1,
+    "confidence": "high",
+    "in_place": true,
+    "no_contact": [],
+    "world": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        -0.0
+      ],
+      [
+        -0.0,
+        1.0,
+        0.0,
+        36.0
+      ],
+      [
+        -0.0,
+        -0.0,
+        1.0,
+        16.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  },
+  "rejected": [
+    {
+      "part": "Base",
+      "faces": [
+        4,
+        5,
+        11,
+        14
+      ],
+      "why": "solids collide in every pose"
+    }
+  ],
+  "seconds": 0.9
+}
