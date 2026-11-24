@@ -30,6 +30,10 @@ html, body, #root { height: 100%; margin: 0; }
   box-shadow: var(--tx-ring), var(--tx-inset);
 }
 
+/* full bleed: the canvas is the page, the panels float over it */
+.stage-card--full { border-radius: 0; box-shadow: none; }
+.tx:has(.stage-card--full) { background: var(--stage); }
+
 /* the right column's tabs carry the panel, the cards stack under them */
 .side-stack { display: flex; flex-direction: column; gap: 10px; min-height: 0; flex: 1; }
 .side-stack > * { animation: side-in 250ms var(--tx-out) both; }

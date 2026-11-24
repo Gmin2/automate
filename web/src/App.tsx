@@ -80,8 +80,8 @@ export function App() {
   return (
     <div className="tx" style={{ '--tx-left': '306px', '--tx-right': '326px' } as React.CSSProperties}>
       <div className="tx-stage">
-        <div className="tx-page">
-          <div className="stage-card">
+        <div className="tx-page tx-page--full">
+          <div className="stage-card stage-card--full">
             <Viewport />
             <Wait />
           </div>

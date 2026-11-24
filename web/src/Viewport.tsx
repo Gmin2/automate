@@ -267,6 +267,7 @@ function Assembly({ scene }: { scene: Scene }) {
 function Framer({ built, ghosts }: { built: Built; ghosts: THREE.Group }) {
   const controls = useThree((s) => s.controls) as unknown as CameraControls | null
   const camera = useThree((s) => s.camera) as THREE.PerspectiveCamera
+  const size = useThree((s) => s.size)
   const focusReq = useApp((s) => s.focus)
   const first = useRef(true)
 
@@ -287,6 +288,11 @@ function Framer({ built, ghosts }: { built: Built; ghosts: THREE.Group }) {
       }
       if (box.isEmpty()) return
       const sphere = box.getBoundingSphere(new THREE.Sphere())
+      // the side panels float over the canvas: fit into the open middle, not the whole width
+      const w = size.width
+      const open = Math.max(w - 2 * 326, 320)
+      // a bounding sphere is loose round long parts, so it can come in a little
+      sphere.radius *= Math.min(w / open, 1.45) * 0.72
       const r = Math.max(sphere.radius, 1)
       camera.near = r / 200
       camera.far = r * 400
