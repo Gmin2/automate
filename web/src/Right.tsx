@@ -198,10 +198,11 @@ function Tolerances() {
 
 export function Right() {
   const [tab, setTab] = useState<'mates' | 'tol'>('mates')
+  const open = useApp((s) => s.rightOpen)
   const n = useApp((s) => s.result?.matches.length)
   const edited = useApp((s) => s.defaults && s.params && (Object.keys(s.params) as (keyof Params)[]).some((k) => s.params![k] !== s.defaults![k]))
   return (
-    <aside className="tx-right">
+    <aside className="tx-right" data-shut={!open || undefined} aria-hidden={!open}>
       <Tabs id="right-tab" at={tab} onPick={setTab} items={[{ id: 'mates', label: 'Mates', count: n }, { id: 'tol', label: 'Tolerances', count: edited ? 'Edited' : undefined }]} />
       <div className="side-stack" key={tab}>
         {tab === 'mates' ? <><Selection /><Matches /><Find /></> : <Tolerances />}

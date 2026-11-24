@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Live } from './bits'
 import { Menu, Pill, Round, type MenuAt } from './tx/kit'
 import { Glyph } from './tx/glyphs'
-import { open, run, setTheme, useApp } from './store'
+import { open, run, setTheme, togglePanel, useApp } from './store'
 
 function FilePill() {
   const files = useApp((s) => s.files)
@@ -67,10 +67,13 @@ export function Top() {
   const ready = useApp((s) => s.selection.faces.length > 0 && !s.running)
   const again = useApp((s) => !!s.result)
   const theme = useApp((s) => s.theme)
+  const left = useApp((s) => s.leftOpen)
+  const right = useApp((s) => s.rightOpen)
   return (
     <div className="tx-top">
       <div className="tx-group">
         <div className="tx-pill tx-pill--quiet" style={{ color: 'var(--tx-text)', fontWeight: 600 }}><Glyph name="bolt" size={16} style={{ color: 'var(--tx-orange)' }} />Automate</div>
+        <Round icon="panel" on={left} label={left ? 'Shut the parts panel' : 'Open the parts panel'} tip={left ? 'Shut the side  [' : 'Open the side  ['} onClick={() => togglePanel('left')} />
         <FilePill />
         <Stats />
       </div>
@@ -78,6 +81,7 @@ export function Top() {
       <div className="tx-group">
         <Status />
         <Pill primary icon={again ? 'reset' : 'play'} disabled={!ready} onClick={run}>{again ? 'Search again' : 'Find mates'}</Pill>
+        <Round icon="panelRight" on={right} label={right ? 'Shut the mates panel' : 'Open the mates panel'} tip={right ? 'Shut the side  ]' : 'Open the side  ]'} onClick={() => togglePanel('right')} />
         <Round icon={theme === 'dark' ? 'sun' : 'moon'} label={theme === 'dark' ? 'Light' : 'Dark'} tip={theme === 'dark' ? 'Light' : 'Dark'} onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} />
       </div>
     </div>

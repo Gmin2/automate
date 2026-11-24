@@ -81,7 +81,8 @@ first time it is picked (the lathe takes about 15 s), then stays loaded.
   vanish (drag clearance under 2.6% and the chuck key stops fitting its 0.2 mm sockets).
 - the left side lists every part instance (search, hide, click to frame), with whatever the last search touched
   pinned on top, and a tab of saved example selections.
-- light and dark, the moon at the top right. keys: `f` frame, `x` x-ray, `g` ghosts, `e` feature lines.
+- light and dark, the moon at the top right. keys: `f` frame, `x` x-ray, `g` ghosts, `e` feature lines,
+  `[` and `]` fold the side panels away (also the round buttons in the top bar) so the model gets the whole window.
 
 ![dark: countersunk screw head and shank, ghosted into all eight countersinks of the motor plate](docs/viewer-motor-mount.jpg)
 

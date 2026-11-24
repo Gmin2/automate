@@ -133,10 +133,11 @@ export function Left() {
   const [tab, setTab] = useState<'parts' | 'examples'>('parts')
   const scene = useApp((s) => s.scene)
   const examples = useApp((s) => s.examples.length)
+  const open = useApp((s) => s.leftOpen)
   const parts = scene.state === 'ready' ? scene.data.instances.length : undefined
   const faces = scene.state === 'ready' ? Object.values(scene.data.parts).reduce((n, p) => n + p.nfaces, 0) : 0
   return (
-    <aside className="tx-left">
+    <aside className="tx-left" data-shut={!open || undefined} aria-hidden={!open}>
       <Tabs id="left-tab" at={tab} onPick={setTab} items={[{ id: 'parts', label: 'Parts', count: parts }, { id: 'examples', label: 'Examples', count: examples }]} />
       <div className="side-stack" key={tab}>
         <section className="tx-card tx-fill">

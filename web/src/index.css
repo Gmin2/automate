@@ -116,3 +116,9 @@ html, body, #root { height: 100%; margin: 0; }
   border-radius: 2px 2px 0 0; background: var(--tx-muted); opacity: 0.7; pointer-events: none;
 }
 .knob[data-edited] .tx-slider__value { color: var(--tx-blue); }
+
+/* a side column folds away: it slides off its edge and fades, the page shows through */
+.tx-left, .tx-right { transition: transform 360ms var(--tx-out), opacity 240ms ease, width 520ms cubic-bezier(0.34, 1.36, 0.64, 1); }
+.tx-left[data-shut] { transform: translateX(calc(-100% - 24px)); opacity: 0; pointer-events: none; }
+.tx-right[data-shut] { transform: translateX(calc(100% + 24px)); opacity: 0; pointer-events: none; }
+.tx-left[data-shut] > *, .tx-right[data-shut] > * { pointer-events: none; }

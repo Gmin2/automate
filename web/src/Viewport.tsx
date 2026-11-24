@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react'
-import { Canvas, useThree, type ThreeEvent } from '@react-three/fiber'
+import { Canvas, useFrame, useThree, type ThreeEvent } from '@react-three/fiber'
 import { CameraControls } from '@react-three/drei'
 import * as THREE from 'three'
 import { acceleratedRaycast, computeBoundsTree, MeshBVH } from 'three-mesh-bvh'
@@ -290,7 +290,8 @@ function Framer({ built, ghosts }: { built: Built; ghosts: THREE.Group }) {
       const sphere = box.getBoundingSphere(new THREE.Sphere())
       // the side panels float over the canvas: fit into the open middle, not the whole width
       const w = size.width
-      const open = Math.max(w - 2 * 326, 320)
+      const { leftOpen, rightOpen } = useApp.getState()
+      const open = Math.max(w - (leftOpen ? PANEL_L : 0) - (rightOpen ? PANEL_R : 0), 320)
       // a bounding sphere is loose round long parts, so it can come in a little
       sphere.radius *= Math.min(w / open, 1.45) * 0.72
       const r = Math.max(sphere.radius, 1)
@@ -309,6 +310,28 @@ function Framer({ built, ghosts }: { built: Built; ghosts: THREE.Group }) {
   }, [focusReq, built, controls])
 
   useEffect(() => { first.current = true }, [built])
+  return null
+}
+
+// how much of the canvas each open side column covers
+const PANEL_L = 312
+const PANEL_R = 342
+
+// keeps the picture centred in the space the panels leave, easing over as one opens or shuts
+function ViewShift() {
+  const left = useApp((s) => s.leftOpen)
+  const right = useApp((s) => s.rightOpen)
+  const shift = useRef(0)
+  useFrame(({ camera, size }) => {
+    const cam = camera as THREE.PerspectiveCamera
+    const want = ((left ? PANEL_L : 0) - (right ? PANEL_R : 0)) / 2
+    const next = shift.current + (want - shift.current) * 0.14
+    shift.current = Math.abs(want - next) < 0.2 ? want : next
+    const v = cam.view
+    if (!v || Math.abs(v.offsetX + shift.current) > 0.01 || v.fullWidth !== size.width || v.fullHeight !== size.height) {
+      cam.setViewOffset(size.width, size.height, -shift.current, 0, size.width, size.height)
+    }
+  })
   return null
 }
 
@@ -346,6 +369,7 @@ export function Viewport() {
     >
       <Lights />
       <CameraLight />
+      <ViewShift />
       <CameraControls makeDefault smoothTime={0.32} draggingSmoothTime={0.08} dollyToCursor />
       {scene.state === 'ready' && <Assembly scene={scene.data} />}
     </Canvas>

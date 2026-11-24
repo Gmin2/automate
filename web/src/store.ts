@@ -29,6 +29,8 @@ type State = {
   focus: Focus
   theme: 'light' | 'dark'
   started: number | null
+  leftOpen: boolean
+  rightOpen: boolean
 }
 
 export const useApp = create<State>(() => ({
@@ -52,6 +54,8 @@ export const useApp = create<State>(() => ({
   focus: { n: 0, instances: [], ghosts: [], all: true },
   theme: localStorage.getItem('automate-theme') === 'dark' ? 'dark' : 'light',
   started: null,
+  leftOpen: localStorage.getItem('automate-left') !== 'shut',
+  rightOpen: localStorage.getItem('automate-right') !== 'shut',
 }))
 
 document.documentElement.dataset.theme = useApp.getState().theme
@@ -183,4 +187,11 @@ export function setTheme(theme: 'light' | 'dark') {
   localStorage.setItem('automate-theme', theme)
   set({ theme })
   setTimeout(() => html.classList.remove('tx-theming'), 320)
+}
+
+export function togglePanel(side: 'left' | 'right') {
+  const k = side === 'left' ? 'leftOpen' : 'rightOpen'
+  const open = !useApp.getState()[k]
+  localStorage.setItem(`automate-${side}`, open ? 'open' : 'shut')
+  set({ [k]: open } as Partial<State>)
 }

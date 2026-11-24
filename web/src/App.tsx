@@ -3,7 +3,7 @@ import { short } from './api'
 import { Live } from './bits'
 import { Left } from './Left'
 import { Right } from './Right'
-import { boot, focusAll, setView, useApp } from './store'
+import { boot, focusAll, setView, togglePanel, useApp } from './store'
 import { Top } from './Top'
 import { Glyph } from './tx/glyphs'
 import { Bar, Rule, Tool } from './tx/kit'
@@ -73,6 +73,8 @@ export function App() {
       if (e.key === 'x') setView({ xray: !s.xray })
       if (e.key === 'g') setView({ ghosts: !s.ghosts })
       if (e.key === 'e') setView({ edges: !s.edges })
+      if (e.key === '[') togglePanel('left')
+      if (e.key === ']') togglePanel('right')
     }
     window.addEventListener('keydown', key)
     return () => window.removeEventListener('keydown', key)
