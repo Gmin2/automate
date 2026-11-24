@@ -72,6 +72,7 @@ class Model:
             "in_place_contacts": to_json(here) if here else None,
             "rejected": [{"part": p, "faces": f, "why": w} for p, f, w in m.rejected],
             "unchecked": m.unchecked,
+            "too_loose": m.too_loose,
             "seconds": round(time.time() - t, 2),
         }
 

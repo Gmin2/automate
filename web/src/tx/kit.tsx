@@ -99,7 +99,7 @@ export function Segments<T extends string>({ items, at, onPick, disabled, layout
           <button key={it.id} type="button" role="tab" className="tx-seg__item" aria-pressed={on} aria-selected={on} disabled={disabled} data-a={`view-${it.id}`} onClick={() => { tick(); onPick(it.id) }}>
             {on && <motion.span layoutId={layoutId} className="tx-seg__mark" transition={{ type: 'spring', stiffness: 500, damping: 38 }} />}
             <Glyph name={it.icon} size={15} />
-            <span>{it.label}</span>
+            <span style={{ whiteSpace: 'nowrap' }}>{it.label}</span>
           </button>
         )
       })}
@@ -188,7 +188,7 @@ export function mix(hex: string, to: number, t: number) {
   return `rgb(${c.join(',')})`
 }
 
-export type MenuItem = { label: string; icon?: GlyphName; on?: () => void; off?: boolean } | 'rule'
+export type MenuItem = { label: string; sub?: string; icon?: GlyphName; on?: () => void; off?: boolean } | 'rule'
 export type MenuAt = { title?: string; items: MenuItem[]; x: number; y: number; right?: boolean }
 
 // a menu dropped from a pill, kept on screen
@@ -213,7 +213,8 @@ export function Menu({ menu, onClose }: { menu: MenuAt; onClose: () => void }) {
       {menu.items.map((it, i) => it === 'rule' ? <div key={`r${i}`} className="tx-menu__rule" /> : (
         <button key={`${it.label}${i}`} type="button" role="menuitem" className="tx-menu__row" disabled={it.off} onClick={() => { tick(); onClose(); it.on?.() }}>
           {it.icon && <Glyph name={it.icon} size={15} />}
-          <span>{it.label}</span>
+          <span style={{ whiteSpace: 'nowrap' }}>{it.label}</span>
+          {it.sub && <span style={{ marginLeft: 'auto', paddingLeft: 16, fontSize: 11.5, color: 'var(--tx-faint)', whiteSpace: 'nowrap', maxWidth: 190, overflow: 'hidden', textOverflow: 'ellipsis' }}>{it.sub}</span>}
         </button>
       ))}
     </div>

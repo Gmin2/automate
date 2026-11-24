@@ -48,5 +48,6 @@
   "in_place_contacts": null,
   "rejected": [],
   "unchecked": 0,
-  "seconds": 23.6
+  "too_loose": false,
+  "seconds": 19.5
 }

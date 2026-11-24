@@ -224,5 +224,6 @@
   },
   "rejected": [],
   "unchecked": 0,
-  "seconds": 23.2
+  "too_loose": false,
+  "seconds": 19.1
 }

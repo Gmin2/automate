@@ -66,7 +66,10 @@ def report(inst, ids, sel, band, found, here, out, path=None):
     made = ", ".join(f"{n} {k}" for k, n in kinds.items())
     print(f"\n  {short(inst.part.name, 60)}  faces {' '.join(map(str, ids))}  ({made})")
     print(f"  gap allowed {band[0]:.2f} to {band[1]:.2f} mm, took {out['seconds']} s\n")
-    if not found:
+    if out.get("too_loose"):
+        print("  not searched: flat faces that are all parallel can slide anywhere on any flat face,")
+        print("  so they fit almost everything. add a face at an angle (a side, an edge face, a hole)\n")
+    elif not found:
         print("  fits nowhere\n")
     else:
         rows = [(str(i + 1), where(m), m.fit, MOVES.get(m.motion, m.motion), gap_text(m.gaps),
@@ -141,6 +144,7 @@ def run(args):
         "in_place_contacts": to_json(here) if here else None,
         "rejected": [{"part": p, "faces": f, "why": w} for p, f, w in m.rejected],
         "unchecked": m.unchecked,
+        "too_loose": m.too_loose,
         "seconds": round(time.time() - t0, 1),
     }
     text = json.dumps(out, indent=2)

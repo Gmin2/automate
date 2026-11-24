@@ -151,5 +151,6 @@
   "in_place_contacts": null,
   "rejected": [],
   "unchecked": 0,
+  "too_loose": false,
   "seconds": 0.2
 }

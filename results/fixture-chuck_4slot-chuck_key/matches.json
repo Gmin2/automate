@@ -484,5 +484,6 @@
   "in_place_contacts": null,
   "rejected": [],
   "unchecked": 0,
-  "seconds": 0.5
+  "too_loose": false,
+  "seconds": 0.7
 }

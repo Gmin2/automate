@@ -149,6 +149,7 @@ class Matcher:
         self.rejected = []
         self.spent = 0.0       # seconds in collision checks so far
         self.unchecked = 0     # poses kept without a collision check once the budget ran out
+        self.too_loose = False # flats only that can still slide around, so they fit nearly every flat
 
     def selection(self, inst, face_ids):
         _, surfs = describe_part(inst.part)
@@ -588,7 +589,11 @@ class Matcher:
     def run(self, inst, face_ids):
         sel = self.selection(inst, face_ids)
         band = self.gap_band(sel)
-        found = self.pose_free(inst, sel, band)
+        # one flat face (or flats that are all parallel) slides and spins on any flat facing it,
+        # so it "fits" hundreds of places in a machine. searching those says nothing, so only
+        # report what it touches now and ask for another face
+        self.too_loose = pose.dof(sel)[0] >= 3 and all(s.kind == "plane" for s in sel)
+        found = [] if self.too_loose else self.pose_free(inst, sel, band)
         here = self.in_place(inst, sel, band)
         conf = "low" if pose.dof(sel)[0] >= 2 else "high"
         for m in found + ([here] if here else []):

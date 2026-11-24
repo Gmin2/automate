@@ -439,5 +439,6 @@
     }
   ],
   "unchecked": 0,
-  "seconds": 29.8
+  "too_loose": false,
+  "seconds": 25.5
 }

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Live } from './bits'
+import { title } from './api'
 import { Menu, Pill, Round, type MenuAt } from './tx/kit'
 import { Glyph } from './tx/glyphs'
 import { open, run, setTheme, togglePanel, useApp } from './store'
@@ -17,14 +18,14 @@ function FilePill() {
         onClick={(e) => {
           const r = e.currentTarget.getBoundingClientRect()
           setMenu(menu ? null : {
-            title: 'Assemblies',
+            title: 'Models',
             x: r.left,
             y: r.bottom + 8,
-            items: files.map((f) => ({ label: f.name + (f.loaded ? '' : ''), icon: f.name === file ? 'check' : f.loaded ? 'cube' : 'cubeWire', on: () => { if (f.name !== file) open(f.name) } })),
+            items: files.map((f) => ({ label: title(f.name), sub: f.name, icon: f.name === file ? 'check' : f.loaded ? 'cube' : 'cubeWire', on: () => { if (f.name !== file) open(f.name) } })),
           })
         }}
       >
-        <span style={{ color: 'var(--tx-text)', maxWidth: 260, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{file ?? 'No file'}</span>
+        <span style={{ color: 'var(--tx-text)', maxWidth: 260, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{file ? title(file) : 'No file'}</span>
       </Pill>
       {menu && <Menu menu={menu} onClose={() => setMenu(null)} />}
     </>

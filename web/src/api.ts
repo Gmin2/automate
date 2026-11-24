@@ -57,6 +57,7 @@ export type Result = {
   in_place_contacts: Match | null
   rejected: { part: string; faces: number[]; why: string }[]
   unchecked?: number
+  too_loose?: boolean
   seconds: number
 }
 
@@ -87,6 +88,20 @@ export const api = {
     return read<Result>(await fetch('/api/match', { method: 'POST', body: JSON.stringify({ file, instance, faces, params }) }))
   },
 }
+
+// what a person calls each model, the file name stays in the menu as a hint
+const TITLES: Record<string, string> = {
+  'WM290V_RedrawStart.stp': 'Lathe',
+  'wm290v_sim_model_2026-11-16.step': 'Lathe, sim model',
+  'motor_mount_alt_A_2026-11-10.step': 'Motor mount',
+  'bench_vice.stp': 'Bench vice',
+  'chuck_4slot.step': '4 slot chuck',
+  'keyed_shaft.step': 'Keyed shaft',
+  'vice_dovetail.step': 'Dovetail slide',
+  'pin_plate.step': 'Pin plate',
+  'ball_socket.step': 'Ball and socket',
+}
+export const title = (file: string) => TITLES[file] ?? file.replace(/\.(step|stp)$/i, '').replaceAll('_', ' ')
 
 // the last bit of an instance path, what a person calls it
 export const short = (id: string) => id.split('/').pop() ?? id

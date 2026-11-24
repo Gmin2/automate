@@ -158,5 +158,6 @@
   },
   "rejected": [],
   "unchecked": 0,
-  "seconds": 22.8
+  "too_loose": false,
+  "seconds": 20.5
 }

@@ -266,5 +266,6 @@
     }
   ],
   "unchecked": 0,
-  "seconds": 0.7
+  "too_loose": false,
+  "seconds": 0.8
 }
