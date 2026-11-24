@@ -9,7 +9,7 @@ from automate.match import Matcher
 
 ROOT = Path(__file__).resolve().parent.parent
 FIX = ROOT / "fixtures"
-LATHE = Path(os.environ.get("LATHE_STEP", ROOT.parent / "assignment" / "WM290V_RedrawStart.stp"))
+LATHE = Path(os.environ.get("LATHE_STEP", ROOT / "WM290V_RedrawStart.stp"))
 VICE = ROOT / "data" / "external" / "bench_vice.stp"
 # the grabcad download (login needed), unzipped next to the assignment file
 GRABCAD = Path(os.environ.get("GRABCAD_DIR", ROOT.parent / "assignment" / "grabcad"))

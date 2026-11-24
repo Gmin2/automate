@@ -1,0 +1,124 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "./tx/tokens.css";
+@import "./tx/components.css";
+
+/* what a match is: the canvas paints faces with the same accents */
+:root {
+  --fit-selected: var(--tx-orange);
+  --fit-exact: var(--tx-green);
+  --fit-sliding: var(--tx-blue);
+  --fit-interference: var(--tx-red);
+  --stage: #f4f4f5;
+}
+:root[data-theme='dark'] {
+  --stage: #0b0b0b;
+}
+
+html, body, #root { height: 100%; margin: 0; }
+.tx { font-family: 'Inter Variable', Inter, sans-serif; }
+.tx-shelf__head, .tx-slider__label, .tx-slider__value, .th__row { font-family: 'Inter Variable', Inter, sans-serif; }
+
+/* the work area: one big card the canvas fills */
+.stage-card {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--stage);
+  box-shadow: var(--tx-ring), var(--tx-inset);
+}
+
+/* full bleed: the canvas is the page, the panels float over it */
+.stage-card--full { border-radius: 0; box-shadow: none; }
+.tx:has(.stage-card--full) { background: var(--stage); }
+
+/* the right column's tabs carry the panel, the cards stack under them */
+.side-stack { display: flex; flex-direction: column; gap: 10px; min-height: 0; flex: 1; }
+.side-stack > * { animation: side-in 250ms var(--tx-out) both; }
+@keyframes side-in { from { opacity: 0; transform: translateX(12px); } to { opacity: 1; transform: none; } }
+.tx-left .side-stack > * { animation-name: side-in-left; }
+@keyframes side-in-left { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: none; } }
+
+/* a search box at the top of a list card */
+.find {
+  display: flex; align-items: center; gap: 8px; height: 34px; margin: 0 0 6px; padding: 0 12px;
+  border-radius: 9999px; background: var(--tx-control); color: var(--tx-faint);
+}
+.find input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; font: inherit; color: var(--tx-text); }
+.find input::placeholder { color: var(--tx-muted); }
+
+/* a row's trailing action shows on hover */
+.tx-row .row-act { opacity: 0; transition: opacity 150ms ease; display: inline-flex; color: var(--tx-faint); }
+.tx-row:hover .row-act, .tx-row .row-act[data-on] { opacity: 1; }
+.tx-row[data-off] { opacity: 0.45; }
+
+/* the live line: a spinner, a word with light running across it, seconds so far */
+.live { display: inline-flex; align-items: center; gap: 8px; color: var(--tx-body); }
+.live__word {
+  background: linear-gradient(90deg, var(--tx-muted) 0%, var(--tx-text) 45%, var(--tx-muted) 90%);
+  background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: shimmer 1.6s linear infinite;
+}
+.live__secs { color: var(--tx-faint); font-variant-numeric: tabular-nums; }
+@keyframes shimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+.spinner { width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid var(--tx-muted); border-top-color: transparent; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* skeleton blocks in the shape of the rows that are coming */
+.skel { height: 12px; border-radius: 6px; background: linear-gradient(90deg, var(--tx-control) 0%, var(--tx-surface-3) 50%, var(--tx-control) 100%); background-size: 200% 100%; animation: shimmer 1.4s linear infinite; }
+
+/* the hover tip on the canvas */
+.canvas-tip {
+  position: fixed; z-index: 40; pointer-events: none; display: flex; align-items: center; gap: 8px;
+  height: 28px; padding: 0 10px; border-radius: 9999px; white-space: nowrap;
+  background: var(--tx-action); color: var(--tx-on-action); box-shadow: var(--tx-ring); font-size: 12px;
+  animation: tx-pop-in 140ms var(--tx-out);
+}
+.canvas-tip b { font-weight: 500; max-width: 240px; overflow: hidden; text-overflow: ellipsis; }
+.canvas-tip i { font-style: normal; opacity: 0.6; font-variant-numeric: tabular-nums; }
+
+/* a pill that only says something: status at the top right */
+.tx-pill--quiet { pointer-events: none; }
+
+/* match rows open into their detail */
+.match-detail { margin: 2px 8px 8px 28px; }
+.match-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.match-chips span { height: 20px; padding: 0 7px; border-radius: 9999px; background: var(--tx-control); color: var(--tx-faint); font-size: 11.5px; line-height: 20px; }
+.match-chips span[data-tone='place'] { background: rgba(97, 85, 245, 0.1); color: var(--tx-indigo); }
+.match-chips span[data-tone='warn'] { background: rgba(255, 141, 40, 0.12); color: #c2640f; }
+
+/* a short sentence where a list will be */
+.hint { padding: 6px 10px 10px; color: var(--tx-faint); font-size: 12.5px; line-height: 18px; font-weight: 400; }
+.hint b { color: var(--tx-body); font-weight: 500; }
+.grow-pill { flex: 1; justify-content: center; }
+
+/* the fill sliders read against the grey panel: the fill is a tint of the accent with a solid edge at the value */
+.tx-slider { background: var(--tx-control); }
+.tx-slider__bar {
+  background: color-mix(in srgb, var(--tx-blue) 15%, var(--tx-card));
+  box-shadow: inset -2px 0 0 color-mix(in srgb, var(--tx-blue) 75%, transparent), inset 0 0 0 1px color-mix(in srgb, var(--tx-blue) 22%, transparent), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.tx-slider[data-drag] .tx-slider__bar {
+  background: color-mix(in srgb, var(--tx-blue) 24%, var(--tx-card));
+  box-shadow: inset -2px 0 0 var(--tx-blue), inset 0 0 0 1px color-mix(in srgb, var(--tx-blue) 40%, transparent), 0 2px 6px -2px rgba(0, 0, 0, 0.18);
+}
+.tx-slider__value { color: var(--tx-body); }
+:root[data-theme='dark'] .tx-slider__bar { background: color-mix(in srgb, var(--tx-blue) 26%, var(--tx-control)); }
+:root[data-theme='dark'] .tx-slider[data-drag] .tx-slider__bar { background: color-mix(in srgb, var(--tx-blue) 36%, var(--tx-control)); }
+
+/* where the default sits, so an edited slider shows how far it moved */
+.knob { position: relative; }
+.knob__home {
+  position: absolute; z-index: 2; top: 30px; width: 6px; height: 4px; margin-left: -3px;
+  border-radius: 2px 2px 0 0; background: var(--tx-muted); opacity: 0.7; pointer-events: none;
+}
+.knob[data-edited] .tx-slider__value { color: var(--tx-blue); }
+
+/* a side column folds away: it slides off its edge and fades, the page shows through */
+.tx-left, .tx-right { transition: transform 360ms var(--tx-out), opacity 240ms ease, width 520ms cubic-bezier(0.34, 1.36, 0.64, 1); }
+.tx-left[data-shut] { transform: translateX(calc(-100% - 24px)); opacity: 0; pointer-events: none; }
+.tx-right[data-shut] { transform: translateX(calc(100% + 24px)); opacity: 0; pointer-events: none; }
+.tx-left[data-shut] > *, .tx-right[data-shut] > * { pointer-events: none; }

@@ -159,11 +159,7 @@ class Matcher:
     def gap_band(self, sel):
         # scale clearance by the selection's thinnest dimension (a key's cross section, a pin's
         # diameter), not its length, or long parts get sloppy tolerances
-        pts = np.vstack([s.pts for s in sel])
-        c = pts - pts.mean(axis=0)
-        ext = np.ptp(c @ np.linalg.svd(c, full_matrices=False)[2].T, axis=0)
-        ext = ext[ext > 1e-3]
-        size = float(ext.min()) if len(ext) else 1.0
+        size = min_width(np.vstack([s.pts for s in sel]))
         # a countersunk head is 2 mm tall but its feature size is the 12 mm diameter
         dia = [2 * s.r for s in sel if s.kind in ("cyl", "cone", "sphere")]
         if dia:
@@ -576,6 +572,44 @@ class Matcher:
                     m.in_place = True
         found.sort(key=lambda m: (not m.in_place, m.instance))
         return sel, band, found, here
+
+
+def min_width(pts):
+    """smallest width of a point cloud over all directions (a square key gives its side, not its diagonal).
+    directions with no spread (the normal of a single plane) are left out"""
+    c = pts - pts.mean(axis=0)
+    axes = np.linalg.svd(c, full_matrices=False)[2]
+    ext = np.ptp(c @ axes.T, axis=0)
+    basis = axes[ext > 1e-3 * max(ext.max(), 1e-9)]
+    if len(basis) == 0:
+        return 1.0
+    if len(basis) == 1:
+        return float(np.ptp(c @ basis[0]))
+    if len(basis) == 2:
+        t = np.linspace(0, np.pi, 360, endpoint=False)
+        dirs = np.outer(np.cos(t), basis[0]) + np.outer(np.sin(t), basis[1])
+    else:
+        # fibonacci sphere, half of it is enough since width is the same both ways
+        n = 2000
+        k = np.arange(n) + 0.5
+        z = k / n
+        r = np.sqrt(1 - z * z)
+        phi = k * np.pi * (3 - np.sqrt(5))
+        dirs = np.c_[r * np.cos(phi), r * np.sin(phi), z]
+    w = np.ptp(c @ dirs.T, axis=0)
+    best, width = dirs[w.argmin()], float(w.min())
+    # then home in around the best direction
+    rng = np.random.default_rng(0)
+    step = 0.1
+    for _ in range(40):
+        cand = best + step * rng.normal(size=(64, 3)) @ np.vstack([basis, np.zeros((3 - len(basis), 3))])
+        cand /= np.linalg.norm(cand, axis=1, keepdims=True)
+        cw = np.ptp(c @ cand.T, axis=0)
+        if cw.min() < width:
+            best, width = cand[cw.argmin()], float(cw.min())
+        else:
+            step *= 0.6
+    return width
 
 
 def _spin(axis, pivot, ang):

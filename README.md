@@ -1,108 +1,130 @@
 # automate
 
-give it a STEP assembly and a few faces picked on one part. it finds every place in the assembly
-where that face group fits, says which part each match is on, and whether it is an exact fit or a
-sliding one.
+pick a few faces on one part of a STEP assembly. this finds every other place in the assembly where
+those faces fit, which part each one is on, and whether its an exact fit or a sliding one.
 
-![chuck key into the three pinion sockets of the lathe chuck](results/lathe-chuck-key/screenshot.jpg)
+![the viewer: chuck key tip picked, all three pinion sockets found, a see-through key at each](docs/viewer-chuck-key.jpg)
 
-the write up (what it compares and why, what breaks, next steps) is in [WRITEUP.md](WRITEUP.md).
-results for every test case are in [results/](results/README.md).
+## how it works
 
-## setup
+![flow from the step file and picked faces to every place they fit](docs/flow.svg)
 
-python 3.11 to 3.13. the only real dependency is OpenCascade through the `cadquery-ocp` wheels, no conda needed.
+1. every face in the file becomes a plane, cylinder, cone or ball with its exact size and direction
+2. only faces that could touch stay in: flat against flat, shaft in a hole of the same size, cone in cone
+3. the picked faces are matched as a group. angles and distances between them have to show up again on the target
+4. each match gets the move that puts the part there, then three checks: small enough gap, faces really overlap, solids dont crash
+5. what the part can still do decides the fit (below)
+6. a square key drops into a square socket 8 ways. those count as one match
+
+## what it compares
+
+- **type and side.** a shaft only pairs with a hole, a flat only with a flat facing it. this stops a key matching another key
+- **size.** hole minus shaft has to sit in the gap band. cone angles within 0.5 degrees
+- **layout.** for every two picked faces: the angle between them and the signed distance. the key flats are 7.8 mm apart with metal between, the socket walls 8.2 mm apart with air between. the sign is what makes it fit
+- **overlap.** at least 25% of each face has to land on the target face, not just on the same endless plane
+- **collision.** the whole part placed there cant run into the target by more than 0.5% of its volume. this kills the vice jaw flipped into the T-slot
+
+the gap band is 5% of the thinnest size of the selection, at least 0.05 mm, at most 1 mm. the 7.8 mm key gets 0.39 mm. every number here is a flag and a slider in the viewer.
+
+## exact vs sliding
+
+the gap alone gets it wrong. the lathe key has 0.2 mm on every side but the assignment calls it exact. the real vice jaw has 0 gap but its the sliding example.
+
+so it goes by motion:
+
+- **exact**: the part is held, or its only free direction hits a stop face (the bottom of the socket)
+- **sliding**: it can still slide and nothing stops it, or it spins with real clearance
+- **interference**: gap below -0.01 mm
+
+## results
+
+| case | file | found |
+|---|---|---|
+| chuck key | lathe | 3 pinion sockets, exact, 0.2 mm gap |
+| chuck key | grabcad sim model, key turned 11 deg | same 3, exact |
+| key, 4 sockets + 3 decoy pockets | synthetic | 4 of 4, decoys ignored |
+| belt in big pulley | lathe, sim model | groove, exact |
+| belt on small pulley | lathe, sim model | no fit, belt V is 38 deg, groove 34 |
+| taper bushes | lathe, sim model | each finds its own pulley |
+| pulley bore on motor shaft | lathe | no fit. the model has a 20 mm bore on a 24 mm shaft, shown as -2 mm interference if allowed |
+| bench vice jaw | real CATIA vice | base rails, sliding |
+| keyed shaft | synthetic | shaft keyway exact (blind end), both hubs sliding (through) |
+| countersunk screw | grabcad motor mount | all 8 holes, exact |
+| pin, ball stud, dovetail | synthetic | all found, decoys ignored |
+
+json for all 20 runs in [results/](results/README.md).
+
+## why this way
+
+- **finds every place**, not just the best one
+- **matches the group**, so one flat face doesnt match every flat face in the machine
+- **exact sizes** from the file, so a 0.2 mm gap or a 4 degree difference shows up
+- **easy to check**. every match lists which face landed where and the gap on each
+- **no training data**. works on any STEP file, at any angle
+
+point clouds (ICP) and RANSAC throw away the exact sizes and return one answer. learned models like
+AutoMate and JoinABLe need training data and predict one joint, not a full list with gaps.
+
+## what breaks
+
+- a lone hole fits any shaft its size. those come back marked low confidence
+- gear teeth, spirals and cams arent planes, cylinders, cones or balls, so theyre skipped
+- a fit looser than 5% of the part size is missed unless you move the slider
+- the collision check needs solids. the lathe motor is surfaces only
+- face numbers follow the file order
+
+## with another week
+
+- treat contacts as one sided, so "can be pushed in" is solved properly instead of with stop faces
+- suggest the selection (socket walls + floor) so its one click
+- spot patterns (bolt circles) and check the rest of the pattern first
+- cache the face descriptions per file
+- test against labelled joints from the Fusion 360 Gallery
+
+## run it
+
+the lathe from the assignment (`WM290V_RedrawStart.stp`) is in the repo root.
 
 ```sh
 python3.13 -m venv .venv
 .venv/bin/pip install cadquery-ocp-novtk numpy pytest
 ```
 
-## find mates from the command line
+**command line**
 
 ```sh
-# faces 2,4,16,18 of the part called Key (the square tip of the chuck key)
-.venv/bin/python -m automate match ../assignment/WM290V_RedrawStart.stp --part Key --faces 2,4,16,18 --out key.json
+.venv/bin/python -m automate match WM290V_RedrawStart.stp --part Key --faces 2,4,16,18
 ```
 
 ```
-Key faces [2, 4, 16, 18] -> 3 match(es) in 18.7s
-  TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.1 (in place): faces {'TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.1': [4, 6, 8, 12]} | fit=exact motion=prismatic dof=1 gaps=[+0.200, +0.200, +0.200, +0.200] x8 sym conf=high
-  TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.2: faces {'TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.2': [4, 6, 8, 12]} | fit=exact motion=prismatic dof=1 gaps=[+0.200, +0.200, +0.200, +0.200] x8 sym conf=high
-  TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.3: faces {'TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.3': [4, 6, 8, 12]} | fit=exact motion=prismatic dof=1 gaps=[+0.200, +0.200, +0.200, +0.200] x8 sym conf=high
-  touching now: TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.1 (in place): ...
+  Key  faces 2 4 16 18  (4 flat)
+  gap allowed -0.10 to 0.39 mm, took 14.3 s
+
+  3 places it fits
+
+      fits on                        fit     moves    gap
+  1   Pinion M1.8 10T.1 [4 6 8 12]   exact   slides   +0.20 mm   8 ways   already here
+  2   Pinion M1.8 10T.2 [4 6 8 12]   exact   slides   +0.20 mm   8 ways
+  3   Pinion M1.8 10T.3 [4 6 8 12]   exact   slides   +0.20 mm   8 ways
+
+  touching now   Pinion M1.8 10T.1 [4 6 8 12]
 ```
 
-most of the 18 s is reading the 22 MB file and describing all 8257 faces once. in the viewer the
-assembly stays loaded and a repeat search takes 0.1 to 2 s (the slow part is the solid collision check).
+`already here` is where the key sits now. add `--out key.json` for the full detail.
+`python -m automate faces <file> "<part>"` lists the faces of a part.
 
-- face ids are 1-based, in OpenCascade `TopExp.MapShapes` order on the part (same idea as FreeCAD `Face12`).
-  `python -m automate faces <step> "<part>"` lists the faces of a part with type, size and normal.
-- the assignment gives the input as a separate STEP of the single part. pass it with `--part-step key.step`
-  and the face ids refer to that file. the tool finds the same part inside the assembly by its face list.
-- `--instance` picks one copy when a part is used more than once.
-- every threshold is a flag: `--gap-rel --gap-max --gap-min --interference --exact --angle --overlap --collide`.
-
-### what comes back
-
-`matches.json` has one entry per place the group fits:
-
-| field | meaning |
-|---|---|
-| `instance`, `part`, `target_faces` | where it fits, as face ids per part instance |
-| `selected_to_target` | which selected face lands on which target face, the gap (mm, + is clearance) and how much of it overlaps |
-| `fit` | `exact`, `sliding` or `interference` (rule in the write up) |
-| `motion`, `dof`, `free_directions` | what the selected part can still do once mated: fixed, prismatic, revolute, cylindrical, planar, spherical |
-| `stops` | faces that close off a free direction (the bottom of a socket) |
-| `symmetry` | how many ways the group drops into the same spot (a square key: 8) |
-| `in_place` | this is where the part already sits in the assembly |
-| `confidence` | `low` when the selection alone leaves 2+ dof (a single bore), so lots of things will fit |
-| `world` | 4x4 pose the selected part would have at this match |
-
-`in_place_contacts` lists what the selection touches right now, across parts, including partial contact.
-`rejected` lists face matches thrown out because the solids would run into each other.
-
-## viewer
+**viewer**
 
 ```sh
-.venv/bin/python -m automate serve ../assignment/WM290V_RedrawStart.stp
+.venv/bin/python -m automate serve WM290V_RedrawStart.stp fixtures/*.step
 # open http://127.0.0.1:8765
 ```
 
-click faces on one part to select them (click again to drop one), then **find mates**. matches are
-painted on the target parts (green exact, blue sliding, red interference) and a translucent copy of
-your part is drawn at each match. the examples menu has the test selections. three.js is pulled
-from unpkg, so the page needs internet the first time.
+click faces, press find mates. green is exact, blue is sliding. let go of a slider and it searches again.
 
-## tests
+**tests**
 
 ```sh
-scripts/fetch_external.sh        # the third party bench vice, it has no license so it isnt committed
-.venv/bin/python -m pytest -q    # 17 tests, ~50 s
-```
-
-the lathe tests look for `../assignment/WM290V_RedrawStart.stp`, or set `LATHE_STEP=/path/to/file`.
-the sim model and motor mount from the grabcad page (login needed) are looked for in `../assignment/grabcad/`
-(unzip the grabcad download there, or set `GRABCAD_DIR`). tests for files that are missing are skipped.
-`python scripts/run_all.py` reruns every case and rewrites `results/`.
-
-`fixtures/make_fixtures.py` rebuilds the synthetic assemblies (plain OCP, no extra deps): a 4 slot
-chuck with decoy pockets, a keyed shaft with two hubs, a dovetail slide with 0.2 mm clearance, a
-shoulder pin over a bolt circle and a ball stud with two sockets and an oversize decoy. floating parts
-have their geometry baked in at a random rotation so nothing leans on parts being axis aligned.
-
-## layout
-
-```
-automate/load.py     STEP -> parts, instances, world transforms, bodies (XCAF)
-automate/faces.py    every face -> plane / cylinder / cone / sphere with outward normal and sense
-automate/pose.py     transforms, signed distance to each primitive, kabsch, screw theory dof
-automate/match.py    the search: complement filter, pair tables, interpretation tree, pose, checks
-automate/export.py   per face tessellation for the viewer
-automate/serve.py    local server for the viewer
-automate/cli.py      command line
-viewer/              three.js page
-fixtures/            synthetic assemblies + their expected answers (cases.json)
-tests/               pytest
-results/             json + screenshots for every case
+scripts/fetch_external.sh        # downloads the bench vice
+.venv/bin/python -m pytest -q    # 17 tests
 ```
