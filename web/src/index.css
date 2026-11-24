@@ -89,3 +89,26 @@ html, body, #root { height: 100%; margin: 0; }
 .hint { padding: 6px 10px 10px; color: var(--tx-faint); font-size: 12.5px; line-height: 18px; font-weight: 400; }
 .hint b { color: var(--tx-body); font-weight: 500; }
 .grow-pill { flex: 1; justify-content: center; }
+
+/* the fill sliders read against the grey panel: the fill is a tint of the accent with a solid edge at the value */
+.tx-slider { background: var(--tx-control); }
+.tx-slider__bar {
+  background: color-mix(in srgb, var(--tx-blue) 15%, var(--tx-card));
+  box-shadow: inset -2px 0 0 color-mix(in srgb, var(--tx-blue) 75%, transparent), inset 0 0 0 1px color-mix(in srgb, var(--tx-blue) 22%, transparent), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.tx-slider[data-drag] .tx-slider__bar {
+  background: color-mix(in srgb, var(--tx-blue) 24%, var(--tx-card));
+  box-shadow: inset -2px 0 0 var(--tx-blue), inset 0 0 0 1px color-mix(in srgb, var(--tx-blue) 40%, transparent), 0 2px 6px -2px rgba(0, 0, 0, 0.18);
+}
+.tx-slider__value { color: var(--tx-body); }
+:root[data-theme='dark'] .tx-slider__bar { background: color-mix(in srgb, var(--tx-blue) 26%, var(--tx-control)); }
+:root[data-theme='dark'] .tx-slider[data-drag] .tx-slider__bar { background: color-mix(in srgb, var(--tx-blue) 36%, var(--tx-control)); }
+
+/* where the default sits, so an edited slider shows how far it moved */
+.knob { position: relative; }
+.knob__home {
+  position: absolute; z-index: 2; top: 30px; width: 6px; height: 4px; margin-left: -3px;
+  border-radius: 2px 2px 0 0; background: var(--tx-muted); opacity: 0.7; pointer-events: none;
+}
+.knob[data-edited] .tx-slider__value { color: var(--tx-blue); }

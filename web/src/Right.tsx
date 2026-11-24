@@ -172,7 +172,8 @@ function Tolerances() {
         {KNOBS.map((s) => {
           const f = s.scale ?? 1
           return (
-            <div key={s.k} title={s.note}>
+            <div key={s.k} title={s.note} className="knob" data-edited={defaults && params[s.k] !== defaults[s.k] ? true : undefined}>
+              {defaults && params[s.k] !== defaults[s.k] && <span className="knob__home" style={{ left: `clamp(6px, ${((defaults[s.k] * f - s.min) / (s.max - s.min)) * 100}%, calc(100% - 6px))` }} />}
               <FillSlider
                 label={s.label}
                 value={+(params[s.k] * f).toFixed(4)}
