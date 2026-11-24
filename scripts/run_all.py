@@ -13,6 +13,10 @@ sys.path.insert(0, str(ROOT))
 from automate.cli import run  # noqa: E402
 
 lathe = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT.parent / "assignment" / "WM290V_RedrawStart.stp"
+grabcad = ROOT.parent / "assignment" / "grabcad"
+sim = grabcad / "wm290v_sim_model_2026-11-16.step"
+mount = grabcad / "motor_mount_alt_A_2026-11-10.step"
+screw = "MA-06 motor screw M8 x 30 countersunk, large washer and lock nut on the foot, 1 of 4"
 belt = "01. Test00-180 x 1 SPZ Type 1 1610 TL"
 CASES = [
     ("lathe-chuck-key", lathe, "Key", "2,4,16,18", "chuck key square tip into the pinion sockets"),
@@ -21,6 +25,12 @@ CASES = [
     ("lathe-taper-bush-1610", lathe, "1610x38mm", "5", "taper bush outer cone into its pulley"),
     ("lathe-taper-bush-1210", lathe, "1210 TL Ø20 PILOT BORE", "3", "taper bush outer cone into its pulley"),
     ("lathe-pilot-bore", lathe, "1210 TL Ø20 PILOT BORE", "12", "20 mm pilot bore: the 24 mm motor shaft must not match"),
+    ("sim-chuck-key", sim, "Key.1", "2,4,16,18", "grabcad sim model: 252 parts, baked world coords, key rotated"),
+    ("sim-belt-big-pulley", sim, "SIM belt SPZ", "6,14,10", "sim model belt into the spindle pulley groove"),
+    ("sim-belt-small-pulley", sim, "SIM belt SPZ", "8,16,12", "sim model belt small wrap: 71 vs 73 deg flanks, near miss"),
+    ("sim-taper-bush-1610", sim, "01. Test00-1610x38mm.1", "5,6", "sim model taper bush into the spindle pulley"),
+    ("sim-pilot-bore", sim, "01. Test00-1210 TL 20 PILOT BORE.1", "12,13", "sim model 20 mm bore: drive shaft is 24, fan end stub is 20"),
+    ("mount-countersunk-screw", mount, screw, "1,3", "m8 countersunk screw head + shank: 8 holes in the sliding plate"),
     ("bench-vice-jaw", ROOT / "data/external/bench_vice.stp", "Vice Jaw", "3,27,4,6", "real CATIA bench vice: jaw sliding on the base"),
 ]
 for c in json.loads((ROOT / "fixtures/cases.json").read_text()):

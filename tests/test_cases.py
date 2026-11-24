@@ -11,6 +11,11 @@ ROOT = Path(__file__).resolve().parent.parent
 FIX = ROOT / "fixtures"
 LATHE = Path(os.environ.get("LATHE_STEP", ROOT.parent / "assignment" / "WM290V_RedrawStart.stp"))
 VICE = ROOT / "data" / "external" / "bench_vice.stp"
+# the grabcad download (login needed), unzipped next to the assignment file
+GRABCAD = Path(os.environ.get("GRABCAD_DIR", ROOT.parent / "assignment" / "grabcad"))
+SIM = GRABCAD / "wm290v_sim_model_2026-11-16.step"
+MOUNT = GRABCAD / "motor_mount_alt_A_2026-11-10.step"
+SCREW = "MA-06 motor screw M8 x 30 countersunk, large washer and lock nut on the foot, 1 of 4"
 
 _asm = {}
 
@@ -117,3 +122,40 @@ def test_real_bench_vice_jaw_slides_and_tslot_is_rejected():
     m = found[0]
     assert m.in_place and m.fit == "sliding" and m.motion == "prismatic"
     assert list(m.target_faces.values()) == [[5, 11, 17, 26]]
+
+
+def faces_of(m):
+    return list(m.target_faces.values())[0]
+
+
+@pytest.mark.skipif(not SIM.exists(), reason="grabcad files not unzipped into assignment/grabcad")
+def test_sim_model_key_same_answer_in_a_bigger_rotated_assembly():
+    # 252 parts, geometry baked into world coords, key turned 11 deg vs the original file
+    _, _, found, _ = run(SIM, "Key.1", [2, 4, 16, 18])
+    assert len(found) == 3
+    assert all("Pinion" in m.instance and faces_of(m) == [4, 6, 8, 12] for m in found)
+    assert all(m.fit == "exact" and abs(m.clearance - 0.2) < 1e-3 for m in found)
+    assert sum(m.in_place for m in found) == 1
+
+
+@pytest.mark.skipif(not SIM.exists(), reason="grabcad files not unzipped into assignment/grabcad")
+def test_sim_model_belt_and_bushes():
+    _, _, big, _ = run(SIM, "SIM belt SPZ", [6, 14, 10])
+    assert len(big) == 1 and "spindle pulley" in big[0].instance and big[0].fit == "exact"
+    _, _, small, _ = run(SIM, "SIM belt SPZ", [8, 16, 12])
+    assert small == []
+    _, _, bush, _ = run(SIM, "01. Test00-1610x38mm.1", [5, 6])
+    assert len(bush) == 1 and "spindle pulley" in bush[0].instance and bush[0].in_place
+
+
+@pytest.mark.skipif(not MOUNT.exists(), reason="grabcad files not unzipped into assignment/grabcad")
+def test_countersunk_screw_finds_all_eight_holes():
+    # m8 shank in a 9 mm clearance hole through a 5 mm plate: the straight bit of the hole is 1 mm,
+    # so only the hole is covered by the shank, not the other way round
+    _, _, found, here = run(MOUNT, SCREW, [1, 3])
+    assert len(found) == 8
+    assert all(m.fit == "exact" and m.motion == "revolute" and abs(m.clearance - 0.5) < 1e-3 for m in found)
+    assert [faces_of(m) for m in found if m.in_place] == [[22, 30]]
+    # the head sits 0.35 mm proud in the model, still found where it is
+    _, _, cone, here = run(MOUNT, SCREW, [1])
+    assert len(cone) == 8 and here is not None

@@ -164,6 +164,10 @@ class Matcher:
         ext = np.ptp(c @ np.linalg.svd(c, full_matrices=False)[2].T, axis=0)
         ext = ext[ext > 1e-3]
         size = float(ext.min()) if len(ext) else 1.0
+        # a countersunk head is 2 mm tall but its feature size is the 12 mm diameter
+        dia = [2 * s.r for s in sel if s.kind in ("cyl", "cone", "sphere")]
+        if dia:
+            size = max(size, min(dia))
         gmax = min(self.p.gap_max, max(self.p.gap_min, self.p.gap_rel * size))
         return -self.p.interference, gmax
 
@@ -348,11 +352,16 @@ class Matcher:
             # cheap reject: the moved faces must at least reach the target's bounding box
             if (x.max(axis=0) < t.lo - hi - 1e-3).any() or (x.min(axis=0) > t.hi + hi + 1e-3).any():
                 return None
-        for x, t in zip(xs, tgt):
+        for s, x, t in zip(sel, xs, tgt):
             sd = pose.signed_dist(t, x)
             if np.percentile(sd, 10) < lo - 1e-6 or np.percentile(sd, 90) > hi + 1e-6:
                 return None
             cov = inside(t, x)
+            if cov < self.p.overlap and s.kind != "plane" and s.sense > 0:
+                # a long shank through a thin plate only covers a sliver of the shank,
+                # so also accept the hole being covered by the shank. only shank into hole:
+                # a big flat covers any sliver face, and a long bore would swallow every short boss
+                cov = max(cov, inside(s, pose.apply(pose.inv(T), t.pts)))
             if cov < self.p.overlap:
                 return None
             gaps.append(float(np.median(sd)))
@@ -391,8 +400,10 @@ class Matcher:
         m.stops = stops
         # sliding: something can still translate and no stop face catches it.
         # free rotation only counts as sliding (a running fit) when there is real clearance;
-        # a gap on a cone pair isnt clearance, the cone just isnt pushed fully home
-        clear = any(g > self.p.exact for g, (s, _) in zip(m.gaps, m.targets) if s.kind != "cone")
+        # a gap on a cone pair isnt clearance, the cone just isnt pushed fully home.
+        # and once a cone seats, a clearance hole next to it doesnt make it a running fit
+        seated = any(s.kind == "cone" for s, _ in m.targets)
+        clear = not seated and any(g > self.p.exact for g, (s, _) in zip(m.gaps, m.targets) if s.kind != "cone")
         if min(m.gaps) < -self.p.exact:
             m.fit = "interference"
         elif not blocked or (rots and clear):
@@ -522,6 +533,8 @@ class Matcher:
                     if np.percentile(sd, 10) < lo - 1e-6 or np.percentile(sd, 90) > hi + 1e-6:
                         continue
                     cov = inside(t, pose.apply(pose.inv(W), sw.pts))
+                    if cov < self.p.overlap and s.kind != "plane" and s.sense > 0:
+                        cov = max(cov, inside(s, pose.apply(pose.inv(Ws), tp)))
                     if cov < self.p.overlap:
                         continue
                     contacts.append((s, tw, float(np.median(sd)), cov, inst))

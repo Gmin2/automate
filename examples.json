@@ -10,12 +10,31 @@
   "bench_vice.stp": [
     {"label": "jaw tongue + base -> body slides", "instance": "Vice Jaw.1", "faces": [3, 27, 4, 6]}
   ],
-  "chuck_4slot.step": [{"label": "square key -> 4 sockets", "instance": "chuck_key.1", "faces": [1, 2, 3, 4]}],
+  "chuck_4slot.step": [
+    {"label": "square key -> 4 sockets", "instance": "chuck_key.1", "faces": [1, 2, 3, 4]}
+  ],
   "keyed_shaft.step": [
     {"label": "key sides + bottom", "instance": "key.1", "faces": [1, 2, 3]},
     {"label": "hub bore", "instance": "hub.1", "faces": [4, 8]}
   ],
-  "vice_dovetail.step": [{"label": "jaw dovetail groove", "instance": "sliding_jaw.1", "faces": [4, 5, 6, 7, 8]}],
-  "pin_plate.step": [{"label": "shoulder pin -> holes", "instance": "shoulder_pin.1", "faces": [3, 4]}],
-  "ball_socket.step": [{"label": "ball -> sockets", "instance": "ball_stud.1", "faces": [1]}]
+  "vice_dovetail.step": [
+    {"label": "jaw dovetail groove", "instance": "sliding_jaw.1", "faces": [4, 5, 6, 7, 8]}
+  ],
+  "pin_plate.step": [
+    {"label": "shoulder pin -> holes", "instance": "shoulder_pin.1", "faces": [3, 4]}
+  ],
+  "ball_socket.step": [
+    {"label": "ball -> sockets", "instance": "ball_stud.1", "faces": [1]}
+  ],
+  "wm290v_sim_model_2026-11-16.step": [
+    {"label": "chuck key tip -> key sockets", "instance": "71/49/48/Key.1", "faces": [2, 4, 16, 18]},
+    {"label": "belt (big wrap) -> spindle pulley", "instance": "71/8/7/SIM belt SPZ", "faces": [6, 14, 10]},
+    {"label": "belt (small wrap) -> 80 pulley (near miss)", "instance": "71/8/7/SIM belt SPZ", "faces": [8, 16, 12]},
+    {"label": "taper bush 1610 -> spindle pulley", "instance": "71/8/01. Test00-1610x38mm.1", "faces": [5, 6]},
+    {"label": "countersunk screw -> motor plate holes", "instance": "91/MA-06 motor screw M8 x 30 countersunk, large washer and lock nut on the foot, 1 of 4", "faces": [1, 3]}
+  ],
+  "motor_mount_alt_A_2026-11-10.step": [
+    {"label": "countersunk screw head + shank -> 8 holes", "instance": "MA-06 motor screw M8 x 30 countersunk, large washer and lock nut on the foot, 1 of 4", "faces": [1, 3]},
+    {"label": "countersunk head only", "instance": "MA-06 motor screw M8 x 30 countersunk, large washer and lock nut on the foot, 1 of 4", "faces": [1]}
+  ]
 }

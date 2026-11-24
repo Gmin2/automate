@@ -70,7 +70,10 @@ solids dont collide.
 - every sample point of every selected face sits within the gap band of its target surface
   (signed distance, + is clearance)
 - at least 25% of those points project *inside* the target face, not just onto its infinite surface.
-  this is what kills two planes that line up but sit 200 mm apart.
+  this is what kills two planes that line up but sit 200 mm apart. for a shank, cone or ball going into
+  a hole it also passes the other way round, when the hole is covered by the selected face: an M8 screw
+  in a 5 mm countersunk plate only meets 1 mm of straight bore, a tenth of its shank. planes and bores
+  never get the reverse check, a big flat covers any sliver face and a long bore swallows every short boss.
 - the selected solid placed there doesnt overlap the target solid by more than 0.5% of the smaller
   volume (`BRepAlgoAPI_Common`). this catches faces that genuinely mate but where the rest of the part
   would run through the target, like the bench vice jaw flipped upside down into the base T-slot.
@@ -98,7 +101,8 @@ its null space is what the part can still do:
 - **sliding**: something can still translate and nothing stops it, or it can rotate with real clearance (a running fit)
 - **exact**: it is held, or the only free direction runs into a *stop*: a face closing off the far end
   of the mated faces, facing the part (the bottom of the socket). the clearance is only there to get it in.
-  cones count as exact, a gap on a taper just means it isnt pushed home.
+  cones count as exact, a gap on a taper just means it isnt pushed home, and once a cone seats a
+  clearance hole next to it doesnt make it a running fit (the countersunk screw).
 - **interference**: any gap below -0.01 mm
 
 | case | gap | free motion | stop | result |
@@ -112,6 +116,7 @@ its null space is what the part can still do:
 | belt in pulley groove | 0 | spin | n/a | exact |
 | hub bore on shaft | 0 | slide + spin | none | sliding |
 | shoulder pin in clearance hole | 0.1 | spin | n/a | sliding (running fit) |
+| countersunk screw, M8 in a 9 mm hole | 0.5 on the shank | spin | n/a (head cone seats) | exact |
 
 `motion` is reported separately (prismatic, revolute, cylindrical, planar, spherical) so nothing is lost
 by collapsing to two labels.
@@ -123,7 +128,7 @@ pin diameter), not its length, otherwise a long key gets a sloppy tolerance:
 
 | | default | why |
 |---|---|---|
-| max clearance | 5% of thinnest dimension, at least 0.05 mm, at most 1 mm | covers the 0.2 mm key (2.6%) and rejects a 12 mm socket for a 10 mm key |
+| max clearance | 5% of thinnest dimension, at least 0.05 mm, at most 1 mm | covers the 0.2 mm key (2.6%) and rejects a 12 mm socket for a 10 mm key. for curved faces the size is at least the smallest diameter, a countersunk head is 2 mm tall but 12 mm across |
 | interference allowed | 0.1 mm | CAD noise and light press fits |
 | line to line | 0.01 mm | |
 | angle | 0.5 deg | |
@@ -147,11 +152,20 @@ full table, json and screenshots: [results/README.md](results/README.md).
 | hub bore on shaft | synthetic | cylindrical, low confidence |
 | pin over bolt circle | synthetic | 12 = 6 holes from either side, 10 mm decoy rejected, running fit |
 | ball stud | synthetic | 2 sockets, spherical, oversize decoy rejected |
+| chuck + key | grabcad sim model | same 3 pinions, 0.200 mm, exact. 252 parts, every part baked into world coordinates (no shared definitions) and the key turned 11 deg vs the original file |
+| belt / taper bush | grabcad sim model | new belt and spindle pulley: big wrap fits, small wrap is again the 71 vs 73 deg near miss, 1610 bush finds the spindle pulley bore |
+| pilot bore | grabcad sim model | still no fit on the 24 mm drive shaft. the motor here also has a 20 mm stub at the fan end, which the bore does fit (low confidence, correct by geometry) |
+| countersunk screw | grabcad motor mount | head + shank find all 8 countersunk holes in the sliding plate (4 sunk from each side), exact, 0.5 mm shank clearance, the one it is in flagged. the head sits 0.35 mm proud in the model and is still found in place |
 
 things i found in the lathe file worth knowing: the part called `1610x38mm` is a taper bush, not the
 belt. the belt is a second solid hidden inside the big pulley part, so the loader splits multi body
 parts. both pulleys are named `1 Groove SPZ Type 1`. 38% of faces are bsplines (threads, the scroll,
 the motor) but every mating face that matters is analytic.
+
+the grabcad page has two more STEP files than the notion attachment (a newer simulator model of the
+whole machine and a motor mount). they found two real bugs that the first set of cases missed: the
+overlap check was one sided (fails a screw through a thin plate) and the gap band used the height of a
+countersunk head instead of its diameter. both are fixed and covered by tests now.
 
 ## what breaks
 

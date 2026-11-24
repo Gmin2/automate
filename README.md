@@ -78,10 +78,12 @@ from unpkg, so the page needs internet the first time.
 
 ```sh
 scripts/fetch_external.sh        # the third party bench vice, it has no license so it isnt committed
-.venv/bin/python -m pytest -q    # 14 tests, ~20 s
+.venv/bin/python -m pytest -q    # 17 tests, ~50 s
 ```
 
 the lathe tests look for `../assignment/WM290V_RedrawStart.stp`, or set `LATHE_STEP=/path/to/file`.
+the sim model and motor mount from the grabcad page (login needed) are looked for in `../assignment/grabcad/`
+(unzip the grabcad download there, or set `GRABCAD_DIR`). tests for files that are missing are skipped.
 `python scripts/run_all.py` reruns every case and rewrites `results/`.
 
 `fixtures/make_fixtures.py` rebuilds the synthetic assemblies (plain OCP, no extra deps): a 4 slot
