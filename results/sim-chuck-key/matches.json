@@ -1,0 +1,485 @@
+{
+  "assembly": "/Users/mintu/coding/jobs/hanomi/assignment/grabcad/wm290v_sim_model_2026-11-16.step",
+  "selection": {
+    "part": "Key.1",
+    "instance": "71/49/48/Key.1",
+    "faces": [
+      2,
+      4,
+      16,
+      18
+    ],
+    "surfaces": [
+      {
+        "faces": [
+          2
+        ],
+        "kind": "plane"
+      },
+      {
+        "faces": [
+          4
+        ],
+        "kind": "plane"
+      },
+      {
+        "faces": [
+          16
+        ],
+        "kind": "plane"
+      },
+      {
+        "faces": [
+          18
+        ],
+        "kind": "plane"
+      }
+    ]
+  },
+  "gap_band_mm": [
+    -0.1,
+    0.4785
+  ],
+  "params": {
+    "gap_rel": 0.05,
+    "gap_max": 1.0,
+    "gap_min": 0.05,
+    "interference": 0.1,
+    "exact": 0.01,
+    "angle": 0.5,
+    "overlap": 0.25,
+    "collide": 0.005
+  },
+  "matches": [
+    {
+      "instance": "71/49/48/Pinion M1.8 10T.1",
+      "part": "Pinion M1.8 10T.1",
+      "target_faces": {
+        "71/49/48/Pinion M1.8 10T.1": [
+          4,
+          6,
+          8,
+          12
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            2
+          ],
+          "target": [
+            12
+          ],
+          "kind": "plane",
+          "gap": 0.2,
+          "overlap": 0.68
+        },
+        {
+          "selected": [
+            4
+          ],
+          "target": [
+            8
+          ],
+          "kind": "plane",
+          "gap": 0.2,
+          "overlap": 0.68
+        },
+        {
+          "selected": [
+            16
+          ],
+          "target": [
+            6
+          ],
+          "kind": "plane",
+          "gap": 0.2,
+          "overlap": 0.68
+        },
+        {
+          "selected": [
+            18
+          ],
+          "target": [
+            4
+          ],
+          "kind": "plane",
+          "gap": 0.2,
+          "overlap": 0.68
+        }
+      ],
+      "fit": "exact",
+      "motion": "prismatic",
+      "dof": 1,
+      "clearance": 0.2,
+      "free_directions": [
+        [
+          0.0,
+          -0.0,
+          -1.0
+        ]
+      ],
+      "stops": [
+        {
+          "faces": [
+            14
+          ],
+          "direction": 1
+        }
+      ],
+      "symmetry": 8,
+      "confidence": "high",
+      "in_place": true,
+      "no_contact": [],
+      "world": [
+        [
+          -0.37901,
+          -0.92539,
+          -0.0,
+          -94.59991
+        ],
+        [
+          -0.92539,
+          0.37901,
+          -0.0,
+          -63.482
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0,
+          120.75953
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "71/49/48/Pinion M1.8 10T.2",
+      "part": "Pinion M1.8 10T.2",
+      "target_faces": {
+        "71/49/48/Pinion M1.8 10T.2": [
+          4,
+          6,
+          8,
+          12
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            2
+          ],
+          "target": [
+            8
+          ],
+          "kind": "plane",
+          "gap": 0.2,
+          "overlap": 0.77
+        },
+        {
+          "selected": [
+            4
+          ],
+          "target": [
+            12
+          ],
+          "kind": "plane",
+          "gap": 0.2,
+          "overlap": 0.77
+        },
+        {
+          "selected": [
+            16
+          ],
+          "target": [
+            4
+          ],
+          "kind": "plane",
+          "gap": 0.2,
+          "overlap": 0.77
+        },
+        {
+          "selected": [
+            18
+          ],
+          "target": [
+            6
+          ],
+          "kind": "plane",
+          "gap": 0.2,
+          "overlap": 0.77
+        }
+      ],
+      "fit": "exact",
+      "motion": "prismatic",
+      "dof": 1,
+      "clearance": 0.2,
+      "free_directions": [
+        [
+          0.0,
+          0.866,
+          0.5
+        ]
+      ],
+      "stops": [
+        {
+          "faces": [
+            14
+          ],
+          "direction": 1
+        }
+      ],
+      "symmetry": 8,
+      "confidence": "high",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          -0.89898,
+          0.438,
+          -0.0,
+          -130.26969
+        ],
+        [
+          0.219,
+          0.44949,
+          -0.86603,
+          15.26377
+        ],
+        [
+          -0.37932,
+          -0.77854,
+          -0.5,
+          -25.8825
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "71/49/48/Pinion M1.8 10T.3",
+      "part": "Pinion M1.8 10T.3",
+      "target_faces": {
+        "71/49/48/Pinion M1.8 10T.3": [
+          4,
+          6,
+          8,
+          12
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            2
+          ],
+          "target": [
+            8
+          ],
+          "kind": "plane",
+          "gap": 0.2,
+          "overlap": 0.77
+        },
+        {
+          "selected": [
+            4
+          ],
+          "target": [
+            12
+          ],
+          "kind": "plane",
+          "gap": 0.2,
+          "overlap": 0.77
+        },
+        {
+          "selected": [
+            16
+          ],
+          "target": [
+            4
+          ],
+          "kind": "plane",
+          "gap": 0.2,
+          "overlap": 0.77
+        },
+        {
+          "selected": [
+            18
+          ],
+          "target": [
+            6
+          ],
+          "kind": "plane",
+          "gap": 0.2,
+          "overlap": 0.77
+        }
+      ],
+      "fit": "exact",
+      "motion": "prismatic",
+      "dof": 1,
+      "clearance": 0.2,
+      "free_directions": [
+        [
+          -0.0,
+          -0.866,
+          0.5
+        ]
+      ],
+      "stops": [
+        {
+          "faces": [
+            14
+          ],
+          "direction": 1
+        }
+      ],
+      "symmetry": 8,
+      "confidence": "high",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          -0.67475,
+          0.73805,
+          0.0,
+          -114.88775
+        ],
+        [
+          0.36902,
+          0.33737,
+          0.86603,
+          25.07466
+        ],
+        [
+          0.63917,
+          0.58435,
+          -0.5,
+          43.98571
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    }
+  ],
+  "in_place_contacts": {
+    "instance": "71/49/48/Pinion M1.8 10T.1",
+    "part": "Pinion M1.8 10T.1",
+    "target_faces": {
+      "71/49/48/Pinion M1.8 10T.1": [
+        4,
+        6,
+        8,
+        12
+      ]
+    },
+    "selected_to_target": [
+      {
+        "selected": [
+          16
+        ],
+        "target": [
+          4
+        ],
+        "kind": "plane",
+        "gap": 0.2,
+        "overlap": 0.77
+      },
+      {
+        "selected": [
+          18
+        ],
+        "target": [
+          6
+        ],
+        "kind": "plane",
+        "gap": 0.2,
+        "overlap": 0.77
+      },
+      {
+        "selected": [
+          2
+        ],
+        "target": [
+          8
+        ],
+        "kind": "plane",
+        "gap": 0.2,
+        "overlap": 0.77
+      },
+      {
+        "selected": [
+          4
+        ],
+        "target": [
+          12
+        ],
+        "kind": "plane",
+        "gap": 0.2,
+        "overlap": 0.77
+      }
+    ],
+    "fit": "exact",
+    "motion": "prismatic",
+    "dof": 1,
+    "clearance": 0.2,
+    "free_directions": [
+      [
+        -0.0,
+        -0.0,
+        -1.0
+      ]
+    ],
+    "stops": [
+      {
+        "faces": [
+          14
+        ],
+        "direction": 1
+      }
+    ],
+    "symmetry": 1,
+    "confidence": "high",
+    "in_place": true,
+    "no_contact": [],
+    "world": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  },
+  "rejected": [],
+  "seconds": 36.4
+}

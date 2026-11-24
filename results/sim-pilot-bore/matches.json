@@ -1,0 +1,441 @@
+{
+  "assembly": "/Users/mintu/coding/jobs/hanomi/assignment/grabcad/wm290v_sim_model_2026-11-16.step",
+  "selection": {
+    "part": "01. Test00-1210 TL 20 PILOT BORE.1",
+    "instance": "71/14/13/01. Test00-1210 TL 20 PILOT BORE.1",
+    "faces": [
+      12,
+      13
+    ],
+    "surfaces": [
+      {
+        "faces": [
+          12,
+          13
+        ],
+        "kind": "cyl"
+      }
+    ]
+  },
+  "gap_band_mm": [
+    -0.1,
+    1.0
+  ],
+  "params": {
+    "gap_rel": 0.05,
+    "gap_max": 1.0,
+    "gap_min": 0.05,
+    "interference": 0.1,
+    "exact": 0.01,
+    "angle": 0.5,
+    "overlap": 0.25,
+    "collide": 0.005
+  },
+  "matches": [
+    {
+      "instance": "246/SIM tool post lever grip (representative)",
+      "part": "SIM tool post lever grip (representative)",
+      "target_faces": {
+        "246/SIM tool post lever grip (representative)": [
+          1
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            12,
+            13
+          ],
+          "target": [
+            1
+          ],
+          "kind": "cyl",
+          "gap": 1.0,
+          "overlap": 1.0
+        }
+      ],
+      "fit": "sliding",
+      "motion": "cylindrical",
+      "dof": 2,
+      "clearance": 1.0,
+      "free_directions": [
+        [
+          0.6496,
+          0.5451,
+          -0.5299
+        ]
+      ],
+      "stops": [],
+      "symmetry": 2,
+      "confidence": "low",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          0.64964,
+          -0.54511,
+          0.52992,
+          -459.12428
+        ],
+        [
+          0.54511,
+          0.81987,
+          0.17511,
+          95.76214
+        ],
+        [
+          -0.52992,
+          0.17511,
+          0.82977,
+          458.48631
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "257/SIM tailstock lock lever (representative)",
+      "part": "SIM tailstock lock lever (representative)",
+      "target_faces": {
+        "257/SIM tailstock lock lever (representative)": [
+          1
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            12,
+            13
+          ],
+          "target": [
+            1
+          ],
+          "kind": "cyl",
+          "gap": 0.0,
+          "overlap": 0.33
+        }
+      ],
+      "fit": "sliding",
+      "motion": "cylindrical",
+      "dof": 2,
+      "clearance": 0.0,
+      "free_directions": [
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "stops": [],
+      "symmetry": 2,
+      "confidence": "low",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          0.0,
+          0.0,
+          1.0,
+          -673.0
+        ],
+        [
+          0.0,
+          1.0,
+          -0.0,
+          227.79671
+        ],
+        [
+          -1.0,
+          0.0,
+          0.0,
+          270.92439
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "277/SIM half nut lever grip (representative)",
+      "part": "SIM half nut lever grip (representative)",
+      "target_faces": {
+        "277/SIM half nut lever grip (representative)": [
+          1
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            12,
+            13
+          ],
+          "target": [
+            1
+          ],
+          "kind": "cyl",
+          "gap": 0.0,
+          "overlap": 1.0
+        }
+      ],
+      "fit": "sliding",
+      "motion": "cylindrical",
+      "dof": 2,
+      "clearance": 0.0,
+      "free_directions": [
+        [
+          -1.0,
+          -0.0,
+          -0.0
+        ]
+      ],
+      "stops": [],
+      "symmetry": 2,
+      "confidence": "low",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          1.0,
+          -0.0,
+          -0.0,
+          -637.2
+        ],
+        [
+          0.0,
+          1.0,
+          -0.0,
+          423.79671
+        ],
+        [
+          0.0,
+          -0.0,
+          1.0,
+          7.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "286/SIM feed rod collar at gearbox (representative)",
+      "part": "SIM feed rod collar at gearbox (representative)",
+      "target_faces": {
+        "286/SIM feed rod collar at gearbox (representative)": [
+          5
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            12,
+            13
+          ],
+          "target": [
+            5
+          ],
+          "kind": "cyl",
+          "gap": 0.5,
+          "overlap": 0.33
+        }
+      ],
+      "fit": "sliding",
+      "motion": "cylindrical",
+      "dof": 2,
+      "clearance": 0.5,
+      "free_directions": [
+        [
+          -1.0,
+          0.0,
+          -0.0
+        ]
+      ],
+      "stops": [],
+      "symmetry": 2,
+      "confidence": "low",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          1.0,
+          -0.0,
+          -0.0,
+          -301.7
+        ],
+        [
+          0.0,
+          1.0,
+          -0.0,
+          336.79671
+        ],
+        [
+          0.0,
+          -0.0,
+          1.0,
+          -13.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "71/14/10/01. Test00-M90S B34(ok).1 body",
+      "part": "01. Test00-M90S B34(ok).1 body",
+      "target_faces": {
+        "71/14/10/01. Test00-M90S B34(ok).1 body": [
+          976,
+          978
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            12,
+            13
+          ],
+          "target": [
+            976,
+            978
+          ],
+          "kind": "cyl",
+          "gap": 0.0,
+          "overlap": 0.78
+        }
+      ],
+      "fit": "sliding",
+      "motion": "cylindrical",
+      "dof": 2,
+      "clearance": 0.0,
+      "free_directions": [
+        [
+          -1.0,
+          -0.0,
+          0.0
+        ]
+      ],
+      "stops": [],
+      "symmetry": 2,
+      "confidence": "low",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          1.0,
+          -0.0,
+          -0.0,
+          -274.7
+        ],
+        [
+          0.0,
+          1.0,
+          -0.0,
+          -0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "71/LeadScrew-20mm.1",
+      "part": "LeadScrew-20mm.1",
+      "target_faces": {
+        "71/LeadScrew-20mm.1": [
+          1,
+          2
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            12,
+            13
+          ],
+          "target": [
+            1,
+            2
+          ],
+          "kind": "cyl",
+          "gap": 0.0,
+          "overlap": 1.0
+        }
+      ],
+      "fit": "sliding",
+      "motion": "cylindrical",
+      "dof": 2,
+      "clearance": 0.0,
+      "free_directions": [
+        [
+          -1.0,
+          0.0,
+          -0.0
+        ]
+      ],
+      "stops": [],
+      "symmetry": 2,
+      "confidence": "low",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          1.0,
+          -0.0,
+          -0.0,
+          -785.2
+        ],
+        [
+          0.0,
+          1.0,
+          -0.0,
+          319.79671
+        ],
+        [
+          0.0,
+          -0.0,
+          1.0,
+          23.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    }
+  ],
+  "in_place_contacts": null,
+  "rejected": [
+    {
+      "part": "SIM thread dial housing (representative)",
+      "faces": [
+        11
+      ],
+      "why": "solids collide in every pose"
+    }
+  ],
+  "seconds": 29.4
+}

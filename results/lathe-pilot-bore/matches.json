@@ -18,7 +18,7 @@
   },
   "gap_band_mm": [
     -0.1,
-    0.9848
+    1.0
   ],
   "params": {
     "gap_rel": 0.05,
@@ -168,5 +168,5 @@
   ],
   "in_place_contacts": null,
   "rejected": [],
-  "seconds": 17.1
+  "seconds": 14.8
 }

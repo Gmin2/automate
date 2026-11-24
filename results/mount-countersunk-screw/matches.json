@@ -1,0 +1,673 @@
+{
+  "assembly": "/Users/mintu/coding/jobs/hanomi/assignment/grabcad/motor_mount_alt_A_2026-11-10.step",
+  "selection": {
+    "part": "MA-06 motor screw M8 x 30 countersunk, large washer and lock nut on the foot, 1 of 4",
+    "instance": "MA-06 motor screw M8 x 30 countersunk, large washer and lock nut on the foot, 1 of 4",
+    "faces": [
+      1,
+      3
+    ],
+    "surfaces": [
+      {
+        "faces": [
+          1
+        ],
+        "kind": "cone"
+      },
+      {
+        "faces": [
+          3
+        ],
+        "kind": "cyl"
+      }
+    ]
+  },
+  "gap_band_mm": [
+    -0.1,
+    0.6611
+  ],
+  "params": {
+    "gap_rel": 0.05,
+    "gap_max": 1.0,
+    "gap_min": 0.05,
+    "interference": 0.1,
+    "exact": 0.01,
+    "angle": 0.5,
+    "overlap": 0.25,
+    "collide": 0.005
+  },
+  "matches": [
+    {
+      "instance": "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip",
+      "part": "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip",
+      "target_faces": {
+        "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip": [
+          22,
+          30
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            1
+          ],
+          "target": [
+            30
+          ],
+          "kind": "cone",
+          "gap": -0.0,
+          "overlap": 0.89
+        },
+        {
+          "selected": [
+            3
+          ],
+          "target": [
+            22
+          ],
+          "kind": "cyl",
+          "gap": 0.5,
+          "overlap": 0.56
+        }
+      ],
+      "fit": "exact",
+      "motion": "revolute",
+      "dof": 1,
+      "clearance": 0.5,
+      "free_directions": [],
+      "stops": [],
+      "symmetry": 1,
+      "confidence": "high",
+      "in_place": true,
+      "no_contact": [],
+      "world": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.5
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip",
+      "part": "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip",
+      "target_faces": {
+        "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip": [
+          18,
+          26
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            1
+          ],
+          "target": [
+            18
+          ],
+          "kind": "cone",
+          "gap": 0.0,
+          "overlap": 0.89
+        },
+        {
+          "selected": [
+            3
+          ],
+          "target": [
+            26
+          ],
+          "kind": "cyl",
+          "gap": 0.5,
+          "overlap": 0.56
+        }
+      ],
+      "fit": "exact",
+      "motion": "revolute",
+      "dof": 1,
+      "clearance": 0.5,
+      "free_directions": [],
+      "stops": [],
+      "symmetry": 1,
+      "confidence": "high",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          -1.0,
+          0.0,
+          0.0,
+          98.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -108.2
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0,
+          -623.5
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip",
+      "part": "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip",
+      "target_faces": {
+        "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip": [
+          20,
+          28
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            1
+          ],
+          "target": [
+            20
+          ],
+          "kind": "cone",
+          "gap": 0.0,
+          "overlap": 0.89
+        },
+        {
+          "selected": [
+            3
+          ],
+          "target": [
+            28
+          ],
+          "kind": "cyl",
+          "gap": 0.5,
+          "overlap": 0.56
+        }
+      ],
+      "fit": "exact",
+      "motion": "revolute",
+      "dof": 1,
+      "clearance": 0.5,
+      "free_directions": [],
+      "stops": [],
+      "symmetry": 1,
+      "confidence": "high",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          -1.0,
+          0.0,
+          0.0,
+          211.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -108.2
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0,
+          -623.5
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip",
+      "part": "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip",
+      "target_faces": {
+        "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip": [
+          21,
+          29
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            1
+          ],
+          "target": [
+            21
+          ],
+          "kind": "cone",
+          "gap": 0.0,
+          "overlap": 0.89
+        },
+        {
+          "selected": [
+            3
+          ],
+          "target": [
+            29
+          ],
+          "kind": "cyl",
+          "gap": 0.5,
+          "overlap": 0.56
+        }
+      ],
+      "fit": "exact",
+      "motion": "revolute",
+      "dof": 1,
+      "clearance": 0.5,
+      "free_directions": [],
+      "stops": [],
+      "symmetry": 1,
+      "confidence": "high",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          -1.0,
+          0.0,
+          0.0,
+          98.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -32.2
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0,
+          -623.5
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip",
+      "part": "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip",
+      "target_faces": {
+        "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip": [
+          23,
+          31
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            1
+          ],
+          "target": [
+            23
+          ],
+          "kind": "cone",
+          "gap": 0.0,
+          "overlap": 0.89
+        },
+        {
+          "selected": [
+            3
+          ],
+          "target": [
+            31
+          ],
+          "kind": "cyl",
+          "gap": 0.5,
+          "overlap": 0.56
+        }
+      ],
+      "fit": "exact",
+      "motion": "revolute",
+      "dof": 1,
+      "clearance": 0.5,
+      "free_directions": [],
+      "stops": [],
+      "symmetry": 1,
+      "confidence": "high",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          -1.0,
+          0.0,
+          0.0,
+          211.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -32.2
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0,
+          -623.5
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip",
+      "part": "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip",
+      "target_faces": {
+        "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip": [
+          17,
+          25
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            1
+          ],
+          "target": [
+            25
+          ],
+          "kind": "cone",
+          "gap": -0.0,
+          "overlap": 0.89
+        },
+        {
+          "selected": [
+            3
+          ],
+          "target": [
+            17
+          ],
+          "kind": "cyl",
+          "gap": 0.5,
+          "overlap": 0.56
+        }
+      ],
+      "fit": "exact",
+      "motion": "revolute",
+      "dof": 1,
+      "clearance": 0.5,
+      "free_directions": [],
+      "stops": [],
+      "symmetry": 1,
+      "confidence": "high",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -140.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.5
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip",
+      "part": "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip",
+      "target_faces": {
+        "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip": [
+          19,
+          27
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            1
+          ],
+          "target": [
+            27
+          ],
+          "kind": "cone",
+          "gap": -0.0,
+          "overlap": 0.89
+        },
+        {
+          "selected": [
+            3
+          ],
+          "target": [
+            19
+          ],
+          "kind": "cyl",
+          "gap": 0.5,
+          "overlap": 0.56
+        }
+      ],
+      "fit": "exact",
+      "motion": "revolute",
+      "dof": 1,
+      "clearance": 0.5,
+      "free_directions": [],
+      "stops": [],
+      "symmetry": 1,
+      "confidence": "high",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          100.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -140.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.5
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "instance": "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip",
+      "part": "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip",
+      "target_faces": {
+        "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip": [
+          24,
+          32
+        ]
+      },
+      "selected_to_target": [
+        {
+          "selected": [
+            1
+          ],
+          "target": [
+            32
+          ],
+          "kind": "cone",
+          "gap": -0.0,
+          "overlap": 0.89
+        },
+        {
+          "selected": [
+            3
+          ],
+          "target": [
+            24
+          ],
+          "kind": "cyl",
+          "gap": 0.5,
+          "overlap": 0.56
+        }
+      ],
+      "fit": "exact",
+      "motion": "revolute",
+      "dof": 1,
+      "clearance": 0.5,
+      "free_directions": [],
+      "stops": [],
+      "symmetry": 1,
+      "confidence": "high",
+      "in_place": false,
+      "no_contact": [],
+      "world": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          100.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.5
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    }
+  ],
+  "in_place_contacts": {
+    "instance": "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip",
+    "part": "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip",
+    "target_faces": {
+      "MA-02 sliding motor plate, 5 mm, one lip folded up at the back; eight countersunk M8 holes, two dia 11 in the lip": [
+        22,
+        30
+      ]
+    },
+    "selected_to_target": [
+      {
+        "selected": [
+          3
+        ],
+        "target": [
+          22
+        ],
+        "kind": "cyl",
+        "gap": 0.5,
+        "overlap": 1.0
+      },
+      {
+        "selected": [
+          1
+        ],
+        "target": [
+          30
+        ],
+        "kind": "cone",
+        "gap": 0.3536,
+        "overlap": 0.89
+      }
+    ],
+    "fit": "exact",
+    "motion": "revolute",
+    "dof": 1,
+    "clearance": 0.5,
+    "free_directions": [],
+    "stops": [],
+    "symmetry": 1,
+    "confidence": "high",
+    "in_place": true,
+    "no_contact": [],
+    "world": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  },
+  "rejected": [],
+  "seconds": 0.6
+}

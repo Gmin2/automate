@@ -1,0 +1,50 @@
+{
+  "assembly": "/Users/mintu/coding/jobs/hanomi/assignment/grabcad/wm290v_sim_model_2026-11-16.step",
+  "selection": {
+    "part": "SIM belt SPZ",
+    "instance": "71/8/7/SIM belt SPZ",
+    "faces": [
+      8,
+      16,
+      12
+    ],
+    "surfaces": [
+      {
+        "faces": [
+          8
+        ],
+        "kind": "cone"
+      },
+      {
+        "faces": [
+          16
+        ],
+        "kind": "cone"
+      },
+      {
+        "faces": [
+          12
+        ],
+        "kind": "cyl"
+      }
+    ]
+  },
+  "gap_band_mm": [
+    -0.1,
+    1.0
+  ],
+  "params": {
+    "gap_rel": 0.05,
+    "gap_max": 1.0,
+    "gap_min": 0.05,
+    "interference": 0.1,
+    "exact": 0.01,
+    "angle": 0.5,
+    "overlap": 0.25,
+    "collide": 0.005
+  },
+  "matches": [],
+  "in_place_contacts": null,
+  "rejected": [],
+  "seconds": 21.9
+}
