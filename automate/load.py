@@ -26,6 +26,7 @@ class Part:
     shape: object
     faces: list = field(default_factory=list)
     body: list = field(default_factory=list)   # body index per face (0-based), for compounds holding several solids
+    solids: list = field(default_factory=list)  # the body shapes, indexed like body
 
 
 @dataclass
@@ -53,25 +54,23 @@ def _generic(name):
     return not name or name.startswith("=>") or name in GENERIC
 
 
-def _bodies(shape, faces):
-    """which solid (or free shell) each face belongs to"""
-    idx = {}
-    n = 0
+def _bodies(shape):
+    """which solid (or free shell) each face belongs to, plus those sub shapes in order"""
+    fmap = ShapeMap()
+    TopExp.MapShapes_s(shape, TopAbs_FACE, fmap)
+    idx, subs = {}, []
     for kind in (TopAbs_SOLID, TopAbs_SHELL):
         ex = TopExp_Explorer(shape, kind)
         while ex.More():
             sub = ex.Current()
-            new = False
-            for f in face_list(sub):
-                for i, g in enumerate(faces):
-                    if i not in idx and g.IsSame(f):
-                        idx[i] = n
-                        new = True
-                        break
+            new = [fmap.FindIndex(f) - 1 for f in face_list(sub)]
+            new = [i for i in new if i >= 0 and i not in idx]
             if new:
-                n += 1
+                for i in new:
+                    idx[i] = len(subs)
+                subs.append(sub)
             ex.Next()
-    return [idx.get(i, n) for i in range(len(faces))]
+    return [idx.get(i, len(subs)) for i in range(fmap.Extent())], subs
 
 
 def face_list(shape):
@@ -122,7 +121,8 @@ class Assembly:
                 named = [p for p in path if not _generic(p)]
                 name = named[-1] if named else "body"
                 name = re.sub(r"\.\d+$", "", name)
-            part = Part(entry, name, shape, faces, _bodies(shape, faces))
+            body, subs = _bodies(shape)
+            part = Part(entry, name, shape, faces, body, subs)
             self.parts[entry] = part
         iid = "/".join(path[1:]) or path[0]
         self.instances.append(Instance(iid, part, loc))

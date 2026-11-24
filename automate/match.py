@@ -10,7 +10,12 @@ from OCP.BRepTools import BRepTools
 from OCP.ElSLib import ElSLib
 from OCP.GeomAPI import GeomAPI_ProjectPointOnSurf
 from OCP.TopAbs import TopAbs_IN, TopAbs_ON
-from OCP.gp import gp_Pnt, gp_Pnt2d
+from OCP.BRepAlgoAPI import BRepAlgoAPI_Common
+from OCP.BRepGProp import BRepGProp
+from OCP.GProp import GProp_GProps
+from OCP.TopAbs import TopAbs_SOLID
+from OCP.TopLoc import TopLoc_Location
+from OCP.gp import gp_Pnt, gp_Pnt2d, gp_Trsf
 
 from . import pose
 from .faces import describe_part
@@ -25,6 +30,7 @@ class Params:
     exact: float = 0.01        # mm, |gap| under this is line-to-line
     angle: float = 0.5         # degrees
     overlap: float = 0.25      # fraction of selected samples that must land on the target face
+    collide: float = 0.005     # reject a pose if the solids overlap by more than this share of the smaller one
 
 
 @dataclass
@@ -135,6 +141,7 @@ class Matcher:
         self.asm = asm
         self.p = params or Params()
         self.cos = math.cos(math.radians(self.p.angle))
+        self.rejected = []
 
     def selection(self, inst, face_ids):
         _, surfs = describe_part(inst.part)
@@ -177,7 +184,7 @@ class Matcher:
             b = float(mated_dir(ti) @ mated_dir(tj))
             if "cyl" in (si.kind, sj.kind):
                 a, b = abs(a), abs(b)
-            if abs(a - b) > 1 - self.cos + 1e-3:
+            if abs(math.acos(max(-1, min(1, a))) - math.acos(max(-1, min(1, b)))) > math.radians(2 * self.p.angle):
                 return False
         if si.kind == sj.kind == "plane":
             c = float(si.n @ sj.n)
@@ -250,7 +257,8 @@ class Matcher:
             Ni, Nj = np.array([t.n for t in ci]), np.array([t.n for t in cj])
             di, dj = np.array([t.d for t in ci]), np.array([t.d for t in cj])
             c = float(si.n @ sj.n)
-            ok = np.abs(Ni @ Nj.T - c) <= 1 - self.cos + 1e-3
+            ang = np.degrees(np.arccos(np.clip(Ni @ Nj.T, -1, 1)))
+            ok = np.abs(ang - math.degrees(math.acos(max(-1, min(1, c))))) <= 2 * self.p.angle
             if c < -self.cos:
                 slack = -(di[:, None] + dj[None, :]) - (si.d + sj.d)
                 ok &= (slack >= 2 * lo - 1e-6) & (slack <= 2 * hi + 1e-6)
@@ -323,7 +331,7 @@ class Matcher:
             else:
                 vx = np.array([[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]])
                 R = np.eye(3) + vx + vx @ vx / (1 + c)
-        if np.abs(src @ R.T - dst).max() > 2 * (1 - self.cos) + 1e-3:
+        if np.abs(src @ R.T - dst).max() > math.radians(2 * self.p.angle):
             return None
         return R
 
@@ -350,48 +358,80 @@ class Matcher:
         """dof from the contact set, then seated vs sliding from stop faces"""
         k, label, trans, rots = pose.dof([t for _, t in m.targets])
         m.dof, m.motion, m.free = k, label, trans
-        lo = min(m.gaps)
         stops = []
-        if trans and not rots:
-            tag = lambda t: (getattr(t, "owner", None), tuple(t.ids))
-            used = {tag(t) for _, t in m.targets}
-            tpts = np.vstack([t.pts for _, t in m.targets])
-            blocked = True
-            for u in trans:
-                L = np.ptp(sel_pts @ u)
-                tu = tpts @ u
-                hit = None
-                for sgn in (1, -1):
-                    for c in body_surfs:
-                        if tag(c) in used or c.kind != "plane" or float(c.n @ (sgn * u)) > -self.cos:
-                            continue
-                        pos = float(np.mean(c.pts @ u))
-                        if tu.min() - L <= pos <= tu.max() + L and _footprint(sel_pts, c.pts, u) >= 0.2:
-                            hit = (c.ids, sgn)
-                            break
-                    if hit:
+        blocked = True
+        tag = lambda t: (getattr(t, "owner", None), tuple(t.ids))
+        used = {tag(t) for _, t in m.targets}
+        tpts = np.vstack([t.pts for _, t in m.targets])
+        for u in trans:
+            L = np.ptp(sel_pts @ u)
+            tu = tpts @ u
+            hit = None
+            for sgn in (1, -1):
+                for c in body_surfs:
+                    if tag(c) in used or c.kind != "plane" or float(c.n @ (sgn * u)) > -self.cos:
+                        continue
+                    # a stop closes off the far end of the mated faces, facing the oncoming part
+                    pos = float(np.mean(c.pts @ u))
+                    end = tu.max() if sgn > 0 else tu.min()
+                    if abs(pos - end) <= max(0.5, 0.1 * L) and _footprint(sel_pts, c.pts, u) >= 0.2:
+                        hit = (c.ids, sgn)
                         break
                 if hit:
-                    stops.append(hit)
-                else:
-                    blocked = False
-        else:
-            blocked = k == 0
+                    break
+            if hit:
+                stops.append(hit)
+            else:
+                blocked = False
         m.stops = stops
-        # exact: faces coincide, or the part is seated against a stop so the clearance is only there
-        # to get it in. sliding: a real gap and nothing stopping the motion
+        # sliding: something can still translate and no stop face catches it.
+        # free rotation only counts as sliding (a running fit) when there is real clearance;
         # a gap on a cone pair isnt clearance, the cone just isnt pushed fully home
-        line = all(abs(g) <= self.p.exact for g, (s, _) in zip(m.gaps, m.targets) if s.kind != "cone")
-        if lo < -self.p.exact:
+        clear = any(g > self.p.exact for g, (s, _) in zip(m.gaps, m.targets) if s.kind != "cone")
+        if min(m.gaps) < -self.p.exact:
             m.fit = "interference"
-        elif line or k == 0 or blocked:
-            m.fit = "exact"
-        else:
+        elif not blocked or (rots and clear):
             m.fit = "sliding"
+        else:
+            m.fit = "exact"
         m.clearance = max(m.gaps)
         return m
 
     # ---------- the two passes
+
+    def collides(self, sel_part, sel_body, T, part, body):
+        """overlap volume if the selected body placed by T runs into the target body, else 0"""
+        if not self.p.collide:
+            return 0
+        try:
+            a, b = sel_part.solids[sel_body], part.solids[body]
+        except IndexError:
+            return 0
+        if a.ShapeType() != TopAbs_SOLID or b.ShapeType() != TopAbs_SOLID:
+            return 0
+        tr = gp_Trsf()
+        tr.SetValues(*T[:3, :4].ravel())
+        common = BRepAlgoAPI_Common(a.Moved(TopLoc_Location(tr)), b)
+        if not common.IsDone():
+            return 0
+        v = _volume(common.Shape())
+        return v if v > self.p.collide * min(_volume(a, True), _volume(b, True)) else 0
+
+    def place(self, sel_part, sel, tgt, T, band, part, body):
+        """slide along a free direction until the solids stop colliding, keeping the faces on each other"""
+        _, _, trans, _ = pose.dof(tgt)
+        steps = [0.0]
+        if len(trans) == 1:
+            L = float(np.ptp(pose.apply(T, np.vstack([s.pts for s in sel])) @ trans[0])) or 1.0
+            steps += [sg * k * L / 8 for k in range(1, 9) for sg in (1, -1)]
+        for s in steps:
+            T2 = T.copy()
+            if s:
+                T2[:3, 3] += s * trans[0]
+            ok = self.verify(sel, tgt, T2, band)
+            if ok and not self.collides(sel_part, sel[0].body, T2, part, body):
+                return T2, ok
+        return None
 
     def pose_free(self, sel_inst, sel, band):
         results = []
@@ -402,24 +442,28 @@ class Matcher:
             for s in surfs:
                 bodies.setdefault(s.body, []).append(s)
             for body, targets in bodies.items():
-                found = {}
+                # every verified pose, grouped by the target faces it lands on. symmetric
+                # variants (a square key turned 90 deg, flipped end for end) share a group
+                groups = {}
                 for tgt in self.assignments(sel, targets, band):
                     for T in self.solve(sel, tgt):
                         ok = self.verify(sel, tgt, T, band)
-                        if not ok:
-                            continue
-                        key = frozenset(id(t) for t in tgt)
-                        gaps, cov = ok
-                        score = sum(abs(g) for g in gaps)
-                        if key in found:
-                            found[key][1] += 1
-                            if score >= found[key][0]:
-                                continue
-                            sym = found[key][1]
-                        else:
-                            sym = 1
-                        found[key] = [score, sym, tgt, T, gaps, cov]
-                for score, sym, tgt, T, gaps, cov in found.values():
+                        if ok:
+                            key = frozenset(id(t) for t in tgt)
+                            groups.setdefault(key, []).append((sum(abs(g) for g in ok[0]), tgt, T))
+                # the solid check is the slow bit, so only run it until one variant places
+                found = []
+                for variants in groups.values():
+                    variants.sort(key=lambda v: v[0])
+                    for _, tgt, T in variants:
+                        placed = self.place(sel_inst.part, sel, tgt, T, band, part, body)
+                        if placed:
+                            found.append((len(variants), tgt, placed[0], *placed[1]))
+                            break
+                    else:
+                        self.rejected.append((part.name, sorted(i for t in variants[0][1] for i in t.ids),
+                                              "solids collide in every pose"))
+                for sym, tgt, T, gaps, cov in found:
                     for inst in self.asm.instances:
                         if inst.part is not part:
                             continue
@@ -512,3 +556,17 @@ def _footprint(sel_pts, stop_pts, u):
     Q = np.c_[stop_pts @ a, stop_pts @ b]
     lo, hi = P.min(axis=0), P.max(axis=0)
     return float(np.all((Q >= lo) & (Q <= hi), axis=1).mean())
+
+
+_vol = {}
+
+
+def _volume(shape, cache=False):
+    if cache and id(shape) in _vol:
+        return _vol[id(shape)][1]
+    g = GProp_GProps()
+    BRepGProp.VolumeProperties_s(shape, g)
+    v = abs(g.Mass())
+    if cache:
+        _vol[id(shape)] = (shape, v)  # keep the shape alive so its id stays unique
+    return v
