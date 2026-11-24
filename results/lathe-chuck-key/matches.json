@@ -38,7 +38,7 @@
   },
   "gap_band_mm": [
     -0.1,
-    0.4786
+    0.39
   ],
   "params": {
     "gap_rel": 0.05,
@@ -481,5 +481,5 @@
     ]
   },
   "rejected": [],
-  "seconds": 16.9
+  "seconds": 18.2
 }

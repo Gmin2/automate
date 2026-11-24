@@ -11,7 +11,8 @@ results for every test case are in [results/](results/README.md).
 
 ## setup
 
-python 3.11 to 3.13. the only real dependency is OpenCascade through the `cadquery-ocp` wheels, no conda needed.
+tested with python 3.13 on macOS (pyproject asks for 3.11+). the only real dependency is OpenCascade through
+the `cadquery-ocp` wheels, no conda needed.
 
 ```sh
 python3.13 -m venv .venv
@@ -26,20 +27,23 @@ python3.13 -m venv .venv
 ```
 
 ```
-Key faces [2, 4, 16, 18] -> 3 match(es) in 18.7s
+Key faces [2, 4, 16, 18] -> 3 match(es) in 18.2s
   TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.1 (in place): faces {'TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.1': [4, 6, 8, 12]} | fit=exact motion=prismatic dof=1 gaps=[+0.200, +0.200, +0.200, +0.200] x8 sym conf=high
   TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.2: faces {'TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.2': [4, 6, 8, 12]} | fit=exact motion=prismatic dof=1 gaps=[+0.200, +0.200, +0.200, +0.200] x8 sym conf=high
   TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.3: faces {'TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.3': [4, 6, 8, 12]} | fit=exact motion=prismatic dof=1 gaps=[+0.200, +0.200, +0.200, +0.200] x8 sym conf=high
   touching now: TOS Svitavy 125.1/Assem1.1/Pinion M1.8 10T.1 (in place): ...
 ```
 
-most of the 18 s is reading the 22 MB file and describing all 8257 faces once. in the viewer the
-assembly stays loaded and a repeat search takes 0.1 to 2 s (the slow part is the solid collision check).
+a run took 15 to 22 s here. reading the 22 MB file is about 3 to 5 s and describing all 8257 faces about
+9 s, the search itself is the rest. in the viewer the assembly stays loaded, so a repeat search took
+0.1 s (belt) to about 2 s (key).
 
-- face ids are 1-based, in OpenCascade `TopExp.MapShapes` order on the part (same idea as FreeCAD `Face12`).
+- face ids are 1-based, in OpenCascade `TopExp.MapShapes` order on the part.
   `python -m automate faces <step> "<part>"` lists the faces of a part with type, size and normal.
 - the assignment gives the input as a separate STEP of the single part. pass it with `--part-step key.step`
-  and the face ids refer to that file. the tool finds the same part inside the assembly by its face list.
+  and the face ids refer to that file. the tool finds the same part inside the assembly by its face list
+  (checked with the key written out on its own: same 3 pinions). if no part has the same face list it
+  stops with an error.
 - `--instance` picks one copy when a part is used more than once.
 - every threshold is a flag: `--gap-rel --gap-max --gap-min --interference --exact --angle --overlap --collide`.
 
@@ -70,7 +74,8 @@ assembly stays loaded and a repeat search takes 0.1 to 2 s (the slow part is the
 ```
 
 give it one or more STEP files, switch between them from the file menu in the top bar. each opens the
-first time it is picked (the lathe takes about 15 s), then stays loaded.
+first time it is picked (the lathe took about 7 s), then stays loaded. the first search in a file also
+describes its faces (about 9 s on the lathe), later ones are quick.
 
 - click faces on one part to select them, click again to drop one. the inspector lists each face with its
   type and size (plane area, cylinder or cone diameter, cone angle, shaft or hole).
@@ -100,7 +105,7 @@ pnpm build                                     # rewrites web/dist
 
 ```sh
 scripts/fetch_external.sh        # the third party bench vice, it has no license so it isnt committed
-.venv/bin/python -m pytest -q    # 17 tests, ~50 s
+.venv/bin/python -m pytest -q    # 17 tests, one to two minutes
 ```
 
 the lathe tests look for `../assignment/WM290V_RedrawStart.stp`, or set `LATHE_STEP=/path/to/file`.
@@ -110,8 +115,9 @@ the sim model and motor mount from the grabcad page (login needed) are looked fo
 
 `fixtures/make_fixtures.py` rebuilds the synthetic assemblies (plain OCP, no extra deps): a 4 slot
 chuck with decoy pockets, a keyed shaft with two hubs, a dovetail slide with 0.2 mm clearance, a
-shoulder pin over a bolt circle and a ball stud with two sockets and an oversize decoy. floating parts
-have their geometry baked in at a random rotation so nothing leans on parts being axis aligned.
+shoulder pin over a bolt circle and a ball stud with two sockets and an oversize decoy. the chuck key,
+the spare hub, the shoulder pin and the ball stud have their geometry baked in at a random rotation, so
+the matcher cant lean on parts being axis aligned.
 
 ## layout
 
@@ -126,5 +132,5 @@ automate/cli.py      command line
 web/                 the viewer: react + three.js, built copy in web/dist
 fixtures/            synthetic assemblies + their expected answers (cases.json)
 tests/               pytest
-results/             json + screenshots for every case
+results/             json for every case, screenshots for the first 13
 ```

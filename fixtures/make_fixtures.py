@@ -137,7 +137,7 @@ def face_ids(shape, test):
 
 
 def chuck(out):
-    """four radial square key sockets. decoys: round hole, 11 mm square pocket, 10x12 pocket"""
+    """four radial square key sockets. decoys: a 10 mm round hole, a 12x12 pocket, a 10x13 pocket"""
     body = cyl(80, 40)
     for k in range(4):
         body = cut(body, bake(box(65, -5, 15, 20, 10, 10), rotz(90 * k)))
@@ -203,7 +203,7 @@ def vice(out):
 
 
 def pin_plate(out):
-    """six clearance holes on a bolt circle; decoys: a 10 mm hole and an 8.2 hole with no counterbore room"""
+    """six 8.2 mm clearance holes on a bolt circle, and a 10 mm centre hole as the decoy"""
     plate = box(-60, -60, 0, 120, 120, 10)
     for k in range(6):
         a = math.radians(60 * k)
