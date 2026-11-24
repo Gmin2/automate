@@ -9,13 +9,13 @@ import { setHover, toggleFace, useApp } from './store'
 THREE.Mesh.prototype.raycast = acceleratedRaycast
 ;(THREE.BufferGeometry.prototype as unknown as { computeBoundsTree: typeof computeBoundsTree }).computeBoundsTree = computeBoundsTree
 
-export const COLORS = {
-  base: '#d6d9de',
-  selected: '#ff7a00',
-  exact: '#22b455',
-  sliding: '#2f6bff',
-  interference: '#ec3b2f',
+// the faces take the transit accents; dark gets its own ground and brighter parts
+const PALETTE = {
+  light: { base: '#d9dce1', line: '#3d424a', selected: '#ff8d28', exact: '#34c759', sliding: '#0088ff', interference: '#ff383c' },
+  dark: { base: '#8b9099', line: '#15171a', selected: '#ff9a3d', exact: '#3ddc68', sliding: '#54b0fa', interference: '#ff5a5e' },
 } as const
+type Palette = (typeof PALETTE)['light'] | (typeof PALETTE)['dark']
+let COLORS: Palette = PALETTE.light
 
 const b64 = <T extends Float32Array | Uint32Array>(s: string, T: new (b: ArrayBuffer) => T) => {
   const bin = atob(s)
@@ -29,7 +29,7 @@ type Built = { group: THREE.Group; meshes: Map<string, THREE.Mesh>; parts: Map<s
 
 const noRay = () => {}
 const LINE = 0.8
-const lineMat = () => new THREE.LineBasicMaterial({ color: '#3d424a', transparent: true, opacity: LINE })
+const lineMat = () => new THREE.LineBasicMaterial({ color: COLORS.line, transparent: true, opacity: LINE })
 
 function build(scene: Scene): Built {
   const parts = new Map<string, Part>()
@@ -127,6 +127,8 @@ function Assembly({ scene }: { scene: Scene }) {
   const xray = useApp((s) => s.xray)
   const showGhosts = useApp((s) => s.ghosts)
   const edges = useApp((s) => s.edges)
+  const theme = useApp((s) => s.theme)
+  COLORS = PALETTE[theme]
   const hoverKey = useApp((s) => (s.hover ? `${s.hover.inst}\u0000${s.hover.face}` : ''))
   const paintRef = useRef(new Map<string, Map<number, string>>())
   const ghostGroup = useMemo(() => new THREE.Group(), [])
@@ -178,9 +180,13 @@ function Assembly({ scene }: { scene: Scene }) {
       m.visible = !hidden[id]
       m.raycast = op < 0.3 ? noRay : THREE.Mesh.prototype.raycast
       const l = lines.current.get(m)
-      if (l) (l.material as THREE.LineBasicMaterial).opacity = op < 1 ? op * 0.45 : LINE
+      if (l) {
+        const lm = l.material as THREE.LineBasicMaterial
+        lm.opacity = op < 1 ? op * 0.45 : LINE
+        lm.color.set(COLORS.line)
+      }
     }
-  }, [built, selection, result, active, hidden, xray, edges])
+  }, [built, selection, result, active, hidden, xray, edges, theme])
 
   // the face under the pointer, a shade darker
   useEffect(() => {
@@ -226,7 +232,7 @@ function Assembly({ scene }: { scene: Scene }) {
         g.children.forEach((l) => ((l as THREE.LineSegments).material as THREE.Material).dispose())
       })
     }
-  }, [built, result, selection.inst, showGhosts, active, ghostGroup])
+  }, [built, result, selection.inst, showGhosts, active, ghostGroup, theme])
 
   const pick = (e: ThreeEvent<PointerEvent | MouseEvent>) => {
     const m = e.object as THREE.Mesh
@@ -313,6 +319,16 @@ function CameraLight() {
   return null
 }
 
+function Lights() {
+  const dark = useApp((s) => s.theme === 'dark')
+  return (
+    <>
+      <hemisphereLight args={['#ffffff', dark ? '#3a3d42' : '#aeb3bb', dark ? 1.1 : 1.35]} />
+      <ambientLight intensity={dark ? 0.15 : 0.25} />
+    </>
+  )
+}
+
 export function Viewport() {
   const scene = useApp((s) => s.scene)
   return (
@@ -322,8 +338,7 @@ export function Viewport() {
       dpr={[1, 2]}
       onPointerMissed={() => setHover(null)}
     >
-      <hemisphereLight args={['#ffffff', '#aeb3bb', 1.35]} />
-      <ambientLight intensity={0.25} />
+      <Lights />
       <CameraLight />
       <CameraControls makeDefault smoothTime={0.32} draggingSmoothTime={0.08} dollyToCursor />
       {scene.state === 'ready' && <Assembly scene={scene.data} />}

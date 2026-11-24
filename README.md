@@ -79,12 +79,14 @@ first time it is picked (the lathe takes about 15 s), then stays loaded.
 - click a match card to fly to it and see the gap on each face pair and the face that stops the slide.
 - every tolerance is a slider. let go of one and the search runs again, so you can watch a fit appear or
   vanish (drag clearance under 2.6% and the chuck key stops fitting its 0.2 mm sockets).
-- the left side lists every part instance (search, hide, click to frame) and the saved example selections.
+- the left side lists every part instance (search, hide, click to frame), with whatever the last search touched
+  pinned on top, and a tab of saved example selections.
+- light and dark, the moon at the top right. keys: `f` frame, `x` x-ray, `g` ghosts, `e` feature lines.
 
-![countersunk screw head and shank, ghosted into all eight countersinks of the motor plate](docs/viewer-motor-mount.jpg)
+![dark: countersunk screw head and shank, ghosted into all eight countersinks of the motor plate](docs/viewer-motor-mount.jpg)
 
-the page is react + three.js (react three fiber), with tick sliders, toggles and section cards in a
-light editor style. it lives in `web/` and the built copy in `web/dist` is committed, so the
+the page is react + three.js (react three fiber) in a floating tool style: pills, ring cards, fill sliders,
+inter, small accent colours. it lives in `web/` and the built copy in `web/dist` is committed, so the
 python server is all you need. to work on it:
 
 ```sh

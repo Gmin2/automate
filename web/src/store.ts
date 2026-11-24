@@ -27,6 +27,8 @@ type State = {
   ghosts: boolean
   edges: boolean
   focus: Focus
+  theme: 'light' | 'dark'
+  started: number | null
 }
 
 export const useApp = create<State>(() => ({
@@ -48,7 +50,11 @@ export const useApp = create<State>(() => ({
   ghosts: true,
   edges: true,
   focus: { n: 0, instances: [], ghosts: [], all: true },
+  theme: localStorage.getItem('automate-theme') === 'dark' ? 'dark' : 'light',
+  started: null,
 }))
+
+document.documentElement.dataset.theme = useApp.getState().theme
 
 const set = useApp.setState
 const get = useApp.getState
@@ -68,7 +74,7 @@ export async function boot() {
 }
 
 export async function open(file: string) {
-  set({ file, scene: { state: 'loading' }, examples: [], selection: { inst: null, faces: [] }, faceInfo: {}, result: null, runError: null, active: null, hidden: {}, hover: null, xray: false })
+  set({ file, started: Date.now(), scene: { state: 'loading' }, examples: [], selection: { inst: null, faces: [] }, faceInfo: {}, result: null, runError: null, active: null, hidden: {}, hover: null, xray: false })
   const url = new URL(location.href)
   url.searchParams.set('file', file)
   history.replaceState(null, '', url)
@@ -122,7 +128,7 @@ export function pickExample(i: number) {
 export async function run() {
   const { file, selection, params } = get()
   if (!file || !selection.inst || !selection.faces.length || !params) return
-  set({ running: true, runError: null })
+  set({ running: true, runError: null, started: Date.now() })
   try {
     const result = await api.match(file, selection.inst, selection.faces, params)
     const now = get().selection
@@ -169,3 +175,12 @@ export function toggleHidden(id: string) {
 
 export const setView = (v: Partial<Pick<State, 'xray' | 'ghosts' | 'edges'>>) => set(v)
 export const setHover = (hover: State['hover']) => set({ hover })
+
+export function setTheme(theme: 'light' | 'dark') {
+  const html = document.documentElement
+  html.classList.add('tx-theming')
+  html.dataset.theme = theme
+  localStorage.setItem('automate-theme', theme)
+  set({ theme })
+  setTimeout(() => html.classList.remove('tx-theming'), 320)
+}

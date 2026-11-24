@@ -1,11 +1,12 @@
 import { useEffect } from 'react'
 import { short } from './api'
-import { Crosshairs, EyeOpen, Layers } from './icons'
-import { Inspector } from './Inspector'
+import { Live } from './bits'
+import { Left } from './Left'
+import { Right } from './Right'
 import { boot, focusAll, setView, useApp } from './store'
-import { TopBar } from './TopBar'
-import { Tree } from './Tree'
-import { cn, DarkTag, Key } from './ui'
+import { Top } from './Top'
+import { Glyph } from './tx/glyphs'
+import { Bar, Rule, Tool } from './tx/kit'
 import { Viewport } from './Viewport'
 
 function Tip() {
@@ -13,74 +14,83 @@ function Tip() {
   const sel = useApp((s) => s.selection)
   if (!hover) return null
   const picked = sel.inst === hover.inst && sel.faces.includes(hover.face)
+  const verb = picked ? 'Click to drop' : sel.inst && sel.inst !== hover.inst ? 'Click to start over' : 'Click to add'
   return (
-    <div className="pointer-events-none fixed z-40" style={{ left: hover.x + 14, top: hover.y + 12 }}>
-      <DarkTag>
-        <span className="max-w-[260px] truncate">{short(hover.inst)}</span>
-        <Key>#{hover.face}</Key>
-        <span className="text-[11px] opacity-60">{picked ? 'click to drop' : sel.inst && sel.inst !== hover.inst ? 'click to start over' : 'click to add'}</span>
-      </DarkTag>
+    <div className="canvas-tip" style={{ left: hover.x + 14, top: hover.y + 14 }} key={`${hover.inst}${hover.face}`}>
+      <b>{short(hover.inst)}</b>
+      <i>Face {hover.face}</i>
+      <i>· {verb}</i>
     </div>
   )
 }
 
-function Loading() {
+// what the stage shows while a file opens or when it cant
+function Wait() {
   const scene = useApp((s) => s.scene)
   const file = useApp((s) => s.file)
+  const started = useApp((s) => s.started)
   if (scene.state !== 'loading' && scene.state !== 'error') return null
   return (
-    <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-      <div className="w-[300px] rounded-[10px] border px-[16px] py-[14px]" style={{ borderColor: 'var(--studio-chrome-border)', backgroundColor: 'var(--studio-chrome-surface-raised)', boxShadow: '0 12px 32px -8px rgba(0,0,0,0.14), 0 2px 6px rgba(0,0,0,0.04)' }}>
-        <div className="flex items-center gap-[10px] text-[13px] font-medium">
-          {scene.state === 'loading' && <span className="spin inline-block h-[11px] w-[11px] rounded-full border-[1.5px] border-black border-t-transparent" />}
-          {scene.state === 'loading' ? 'Reading the assembly' : 'Could not open it'}
+    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
+      <div className="tx-card" style={{ width: 340, padding: '18px 18px 16px' }}>
+        <div style={{ width: 36, height: 36, borderRadius: 11, background: 'var(--tx-control)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: scene.state === 'error' ? 'var(--tx-red)' : 'var(--tx-faint)' }}>
+          <Glyph name={scene.state === 'error' ? 'warn' : 'cube'} size={18} />
         </div>
-        <div className="mt-[6px] text-[12px] leading-[16px]" style={{ color: '#8a8a8a' }}>
-          {scene.state === 'error' ? scene.error : `${file}: the first open reads and meshes every face, the big lathe takes about 15 s.`}
+        <div style={{ marginTop: 12, font: '600 15px/20px inherit', color: 'var(--tx-text)' }}>{scene.state === 'error' ? 'Could not open it' : 'Opening the assembly'}</div>
+        <div style={{ marginTop: 4, fontSize: 13, lineHeight: '19.5px', fontWeight: 400, color: 'var(--tx-body)' }}>
+          {scene.state === 'error' ? scene.error : <>{file}. The first open reads and meshes every face, the big lathe takes about 15&nbsp;s.</>}
         </div>
+        {scene.state === 'loading' && <div style={{ marginTop: 12 }}><Live word="Reading faces" since={started} /></div>}
       </div>
     </div>
   )
 }
 
-// the canvas's own bar, bottom centre: frame, x-ray, ghosts
-function ViewBar() {
+function Tools() {
   const xray = useApp((s) => s.xray)
   const ghosts = useApp((s) => s.ghosts)
+  const edges = useApp((s) => s.edges)
   const ready = useApp((s) => s.scene.state === 'ready')
   if (!ready) return null
-  const item = 'flex h-full items-center gap-[7px] px-[12px] font-[var(--font-text)] text-[12px] leading-none transition-colors hover:bg-[var(--studio-chrome-hover)]'
   return (
-    <div className="absolute bottom-[18px] left-1/2 flex h-[32px] -translate-x-1/2 items-stretch overflow-hidden rounded-[8px] border" style={{ borderColor: 'var(--studio-chrome-border)', backgroundColor: 'var(--studio-chrome-surface)', boxShadow: 'var(--studio-chrome-shadow)' }}>
-      <button type="button" onClick={focusAll} className={item} style={{ color: 'var(--studio-chrome-text)' }}>
-        <Crosshairs className="h-[12px] w-[12px]" />Frame
-      </button>
-      <button type="button" onClick={() => setView({ xray: !xray })} className={cn(item, 'border-l')} style={{ borderColor: 'var(--studio-chrome-border)', color: xray ? 'var(--studio-chrome-text)' : '#8a8a8a', backgroundColor: xray ? 'var(--studio-chrome-surface-raised)' : undefined }}>
-        <Layers className="h-[12px] w-[12px]" />X-ray
-      </button>
-      <button type="button" onClick={() => setView({ ghosts: !ghosts })} className={cn(item, 'border-l')} style={{ borderColor: 'var(--studio-chrome-border)', color: ghosts ? 'var(--studio-chrome-text)' : '#8a8a8a', backgroundColor: ghosts ? 'var(--studio-chrome-surface-raised)' : undefined }}>
-        <EyeOpen className="h-[12px] w-[12px]" />Ghosts
-      </button>
-    </div>
+    <Bar label="View">
+      <Tool icon="fit" label="Frame everything" shortcut="F" onClick={focusAll} />
+      <Rule />
+      <Tool icon="layers" label="X-ray the rest" shortcut="X" on={xray} onClick={() => setView({ xray: !xray })} />
+      <Tool icon="glass" label="Ghost at each match" shortcut="G" on={ghosts} onClick={() => setView({ ghosts: !ghosts })} />
+      <Tool icon="cubeWire" label="Feature lines" shortcut="E" on={edges} onClick={() => setView({ edges: !edges })} />
+    </Bar>
   )
 }
 
 export function App() {
   useEffect(() => { boot() }, [])
+  useEffect(() => {
+    const key = (e: KeyboardEvent) => {
+      if ((e.target as HTMLElement).closest('input, textarea')) return
+      const s = useApp.getState()
+      if (e.key === 'f') focusAll()
+      if (e.key === 'x') setView({ xray: !s.xray })
+      if (e.key === 'g') setView({ ghosts: !s.ghosts })
+      if (e.key === 'e') setView({ edges: !s.edges })
+    }
+    window.addEventListener('keydown', key)
+    return () => window.removeEventListener('keydown', key)
+  }, [])
   return (
-    <div className="relative h-full w-full font-[var(--font-text)]" style={{ backgroundColor: '#ffffff' }}>
-      <div className="grid h-full min-h-0 w-full overflow-hidden px-[20px] pt-[20px]" style={{ gridTemplateColumns: '264px minmax(0,1fr) 336px', gridTemplateRows: '35px 18px minmax(0,1fr)' }}>
-        <div className="relative z-40 col-span-2 row-start-1 min-w-0 pr-[20px]"><TopBar /></div>
-        <aside className="relative z-20 col-start-1 row-start-3 flex min-h-0 flex-col pb-[20px] pr-[16px]"><Tree /></aside>
-        <main className="relative col-start-2 row-start-3 min-h-0 min-w-0 overflow-hidden rounded-t-[10px]" style={{ background: 'radial-gradient(120% 90% at 50% 40%, #ffffff 0%, #f4f5f7 70%, #eceef1 100%)' }}>
-          <Viewport />
-          <Loading />
-          <ViewBar />
-        </main>
-        <aside className="relative z-20 col-start-3 row-span-3 row-start-1 min-h-0 pl-[20px]" style={{ marginTop: '-20px', height: 'calc(100% + 20px)', width: 'calc(100% + 20px)' }}>
-          <Inspector />
-        </aside>
+    <div className="tx" style={{ '--tx-left': '306px', '--tx-right': '326px' } as React.CSSProperties}>
+      <div className="tx-stage">
+        <div className="tx-page">
+          <div className="stage-card">
+            <Viewport />
+            <Wait />
+          </div>
+        </div>
       </div>
+      <Top />
+      <Left />
+      <Right />
+      <Tools />
       <Tip />
     </div>
   )

@@ -1,97 +1,91 @@
 @import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "./tx/tokens.css";
+@import "./tx/components.css";
 
-/* geist (vercel, ofl 1.1, public/fonts/Geist-OFL.txt) */
-@font-face {
-  font-family: "Studio Sans";
-  src: url("/fonts/Geist-Variable.woff2") format("woff2");
-  font-weight: 100 900;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Studio Mono";
-  src: url("/fonts/GeistMono-Variable.woff2") format("woff2");
-  font-weight: 100 900;
-  font-display: swap;
-}
-
+/* what a match is: the canvas paints faces with the same accents */
 :root {
-  --font-display: "Studio Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-text: "Studio Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-mono: "Studio Mono", "SFMono-Regular", Menlo, monospace;
-
-  --studio-chrome-surface: #fbfbfb;
-  --studio-chrome-surface-raised: #ffffff;
-  --studio-chrome-surface-subtle: #f6f6f6;
-  --studio-chrome-border: #f1f1f1;
-  --studio-chrome-icon-muted: #c4c4c4;
-  --studio-chrome-icon-idle: #5c5c5c;
-  --studio-chrome-icon-active: #38dd64;
-  --studio-chrome-text: #000000;
-  --studio-chrome-muted: #c4c4c4;
-  --studio-chrome-muted-soft: #b5b5b5;
-  --studio-chrome-hover: #f6f6f6;
-  --studio-chrome-highlight: #ededed;
-  --studio-chrome-active-surface: #000000;
-  --studio-chrome-active-text: #ffffff;
-  --studio-chrome-shadow: 0px 12px 24px 0px rgba(0, 0, 0, 0.04);
-
-  /* what a match is, the same colours the canvas paints faces with */
-  --fit-selected: #ff7a00;
-  --fit-exact: #22b455;
-  --fit-sliding: #2f6bff;
-  --fit-interference: #ec3b2f;
+  --fit-selected: var(--tx-orange);
+  --fit-exact: var(--tx-green);
+  --fit-sliding: var(--tx-blue);
+  --fit-interference: var(--tx-red);
+  --stage: #f4f4f5;
+}
+:root[data-theme='dark'] {
+  --stage: #0b0b0b;
 }
 
-@layer base {
-  html,
-  body,
-  #root {
-    height: 100%;
-    margin: 0;
-    overflow: hidden;
-  }
+html, body, #root { height: 100%; margin: 0; }
+.tx { font-family: 'Inter Variable', Inter, sans-serif; }
+.tx-shelf__head, .tx-slider__label, .tx-slider__value, .th__row { font-family: 'Inter Variable', Inter, sans-serif; }
 
-  * {
-    border-color: #e6e6e6;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  body {
-    background-color: #ffffff;
-    color: #0f0f0f;
-    font-family: var(--font-text);
-  }
-
-  button {
-    cursor: pointer;
-  }
+/* the work area: one big card the canvas fills */
+.stage-card {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--stage);
+  box-shadow: var(--tx-ring), var(--tx-inset);
 }
 
-.toggle-reveal-stack[data-state="open"] > .toggle-reveal-content > * {
-  transform-origin: top;
-  will-change: transform, opacity;
-  animation: 0.3s cubic-bezier(0.2, 0.85, 0.2, 1) parameter-reveal;
+/* the right column's tabs carry the panel, the cards stack under them */
+.side-stack { display: flex; flex-direction: column; gap: 10px; min-height: 0; flex: 1; }
+.side-stack > * { animation: side-in 250ms var(--tx-out) both; }
+@keyframes side-in { from { opacity: 0; transform: translateX(12px); } to { opacity: 1; transform: none; } }
+.tx-left .side-stack > * { animation-name: side-in-left; }
+@keyframes side-in-left { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: none; } }
+
+/* a search box at the top of a list card */
+.find {
+  display: flex; align-items: center; gap: 8px; height: 34px; margin: 0 0 6px; padding: 0 12px;
+  border-radius: 9999px; background: var(--tx-control); color: var(--tx-faint);
 }
-.toggle-reveal-stack[data-state="open"] > .toggle-reveal-content > :nth-child(2) { animation-delay: 16ms; }
-.toggle-reveal-stack[data-state="open"] > .toggle-reveal-content > :nth-child(3) { animation-delay: 32ms; }
-.toggle-reveal-stack[data-state="open"] > .toggle-reveal-content > :nth-child(4) { animation-delay: 48ms; }
+.find input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; font: inherit; color: var(--tx-text); }
+.find input::placeholder { color: var(--tx-muted); }
 
-@keyframes parameter-reveal {
-  0% { opacity: 0; transform: translateY(-4px) scaleY(0.995); }
-  to { opacity: 1; transform: translateY(0) scaleY(1); }
+/* a row's trailing action shows on hover */
+.tx-row .row-act { opacity: 0; transition: opacity 150ms ease; display: inline-flex; color: var(--tx-faint); }
+.tx-row:hover .row-act, .tx-row .row-act[data-on] { opacity: 1; }
+.tx-row[data-off] { opacity: 0.45; }
+
+/* the live line: a spinner, a word with light running across it, seconds so far */
+.live { display: inline-flex; align-items: center; gap: 8px; color: var(--tx-body); }
+.live__word {
+  background: linear-gradient(90deg, var(--tx-muted) 0%, var(--tx-text) 45%, var(--tx-muted) 90%);
+  background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: shimmer 1.6s linear infinite;
 }
-
-/* a section's body dropping in as it opens */
-.section-body > * { animation: 0.3s cubic-bezier(0.2, 0.85, 0.2, 1) parameter-reveal both; }
-
+.live__secs { color: var(--tx-faint); font-variant-numeric: tabular-nums; }
+@keyframes shimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+.spinner { width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid var(--tx-muted); border-top-color: transparent; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.spin { animation: spin 0.9s linear infinite; }
 
-@media (prefers-reduced-motion: reduce) {
-  .toggle-reveal-stack[data-state="open"] > .toggle-reveal-content > *,
-  .section-body > * { animation: none; }
+/* skeleton blocks in the shape of the rows that are coming */
+.skel { height: 12px; border-radius: 6px; background: linear-gradient(90deg, var(--tx-control) 0%, var(--tx-surface-3) 50%, var(--tx-control) 100%); background-size: 200% 100%; animation: shimmer 1.4s linear infinite; }
+
+/* the hover tip on the canvas */
+.canvas-tip {
+  position: fixed; z-index: 40; pointer-events: none; display: flex; align-items: center; gap: 8px;
+  height: 28px; padding: 0 10px; border-radius: 9999px; white-space: nowrap;
+  background: var(--tx-action); color: var(--tx-on-action); box-shadow: var(--tx-ring); font-size: 12px;
+  animation: tx-pop-in 140ms var(--tx-out);
 }
+.canvas-tip b { font-weight: 500; max-width: 240px; overflow: hidden; text-overflow: ellipsis; }
+.canvas-tip i { font-style: normal; opacity: 0.6; font-variant-numeric: tabular-nums; }
 
-.thin-scroll { scrollbar-width: thin; scrollbar-color: #e6e6e6 transparent; }
+/* a pill that only says something: status at the top right */
+.tx-pill--quiet { pointer-events: none; }
+
+/* match rows open into their detail */
+.match-detail { margin: 2px 8px 8px 28px; }
+.match-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.match-chips span { height: 20px; padding: 0 7px; border-radius: 9999px; background: var(--tx-control); color: var(--tx-faint); font-size: 11.5px; line-height: 20px; }
+.match-chips span[data-tone='place'] { background: rgba(97, 85, 245, 0.1); color: var(--tx-indigo); }
+.match-chips span[data-tone='warn'] { background: rgba(255, 141, 40, 0.12); color: #c2640f; }
+
+/* a short sentence where a list will be */
+.hint { padding: 6px 10px 10px; color: var(--tx-faint); font-size: 12.5px; line-height: 18px; font-weight: 400; }
+.hint b { color: var(--tx-body); font-weight: 500; }
+.grow-pill { flex: 1; justify-content: center; }
