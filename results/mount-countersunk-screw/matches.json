@@ -34,7 +34,8 @@
     "exact": 0.01,
     "angle": 0.5,
     "overlap": 0.25,
-    "collide": 0.005
+    "collide": 0.005,
+    "budget": 15.0
   },
   "matches": [
     {
@@ -669,5 +670,6 @@
     ]
   },
   "rejected": [],
-  "seconds": 0.6
+  "unchecked": 0,
+  "seconds": 0.5
 }

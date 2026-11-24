@@ -137,6 +137,11 @@ function Matches() {
             <b>{result.rejected.length}</b> more face {result.rejected.length === 1 ? 'match' : 'matches'} dropped, the solids would run into each other: {result.rejected.slice(0, 3).map((r) => `${short(r.part)} ${r.faces.join(',')}`).join(', ')}{result.rejected.length > 3 ? '…' : ''}
           </p>
         )}
+        {!!result.unchecked && (
+          <p className="hint">
+            <b>{result.unchecked}</b> {result.unchecked === 1 ? 'fit was' : 'fits were'} kept without the solid collision check, the time for it ran out. A single face fits almost anywhere, pick a few more to narrow it down.
+          </p>
+        )}
       </div>
       <footer className="tx-card__foot">
         <span>Band <b>{signed(result.gap_band_mm[0], 2)}</b> to <b>{signed(result.gap_band_mm[1], 2)}</b>&nbsp;mm</span>

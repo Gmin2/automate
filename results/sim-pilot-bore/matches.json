@@ -29,7 +29,8 @@
     "exact": 0.01,
     "angle": 0.5,
     "overlap": 0.25,
-    "collide": 0.005
+    "collide": 0.005,
+    "budget": 15.0
   },
   "matches": [
     {
@@ -437,5 +438,6 @@
       "why": "solids collide in every pose"
     }
   ],
-  "seconds": 28.6
+  "unchecked": 0,
+  "seconds": 29.8
 }

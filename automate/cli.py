@@ -85,6 +85,8 @@ def report(inst, ids, sel, band, found, here, out, path=None):
         print("  low confidence: these faces alone leave the part free in 2+ ways, so many things fit\n")
     if here:
         print(f"  touching now   {where(here)}")
+    if out["unchecked"]:
+        print(f"  not checked    {out['unchecked']} poses kept without a collision check, the {out['params']['budget']:g} s budget ran out")
     for r in out["rejected"]:
         print(f"  ruled out      {short(r['part'])} [{' '.join(map(str, r['faces']))}]  {r['why']}")
     if path:
@@ -138,6 +140,7 @@ def run(args):
         "matches": [to_json(x) for x in found],
         "in_place_contacts": to_json(here) if here else None,
         "rejected": [{"part": p, "faces": f, "why": w} for p, f, w in m.rejected],
+        "unchecked": m.unchecked,
         "seconds": round(time.time() - t0, 1),
     }
     text = json.dumps(out, indent=2)

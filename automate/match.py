@@ -1,5 +1,6 @@
 """find every place in an assembly where a group of selected faces mates"""
 import math
+import time
 from dataclasses import dataclass, field
 from types import SimpleNamespace
 
@@ -11,6 +12,9 @@ from OCP.ElSLib import ElSLib
 from OCP.GeomAPI import GeomAPI_ProjectPointOnSurf
 from OCP.TopAbs import TopAbs_IN, TopAbs_ON
 from OCP.BRepAlgoAPI import BRepAlgoAPI_Common
+from OCP.collections import List_TopoDS_Shape
+from OCP.Bnd import Bnd_Box
+from OCP.BRepBndLib import BRepBndLib
 from OCP.BRepGProp import BRepGProp
 from OCP.GProp import GProp_GProps
 from OCP.TopAbs import TopAbs_SOLID
@@ -31,6 +35,7 @@ class Params:
     angle: float = 0.5         # degrees
     overlap: float = 0.25      # fraction of selected samples that must land on the target face
     collide: float = 0.005     # reject a pose if the solids overlap by more than this share of the smaller one
+    budget: float = 15.0       # seconds of solid collision checks per search, then the rest are kept unchecked (0 = no limit)
 
 
 @dataclass
@@ -142,6 +147,8 @@ class Matcher:
         self.p = params or Params()
         self.cos = math.cos(math.radians(self.p.angle))
         self.rejected = []
+        self.spent = 0.0       # seconds in collision checks so far
+        self.unchecked = 0     # poses kept without a collision check once the budget ran out
 
     def selection(self, inst, face_ids):
         _, surfs = describe_part(inst.part)
@@ -421,12 +428,33 @@ class Matcher:
             return 0
         if a.ShapeType() != TopAbs_SOLID or b.ShapeType() != TopAbs_SOLID:
             return 0
+        # boxes that dont meet cant collide
+        (alo, ahi), (blo, bhi) = _box(a), _box(b)
+        corners = np.array([[x, y, z] for x in (alo[0], ahi[0]) for y in (alo[1], ahi[1]) for z in (alo[2], ahi[2])])
+        moved_pts = corners @ T[:3, :3].T + T[:3, 3]
+        if (moved_pts.max(axis=0) < blo).any() or (moved_pts.min(axis=0) > bhi).any():
+            return 0
+        if self.p.budget and self.spent > self.p.budget:
+            self.unchecked += 1
+            return 0
+        t0 = time.time()
         tr = gp_Trsf()
         tr.SetValues(*T[:3, :4].ravel())
-        common = BRepAlgoAPI_Common(a.Moved(TopLoc_Location(tr)), b)
+        # oriented boxes prune face pairs early and the boolean runs on every core. same volume,
+        # but a curved part like the chuck scroll plate goes from ~16 s to under 1 s
+        common = BRepAlgoAPI_Common()
+        args, tools = List_TopoDS_Shape(), List_TopoDS_Shape()
+        args.Append(a.Moved(TopLoc_Location(tr)))
+        tools.Append(b)
+        common.SetArguments(args)
+        common.SetTools(tools)
+        common.SetUseOBB(True)
+        common.SetRunParallel(True)
+        common.Build()
         if not common.IsDone():
             return 0
         v = _volume(common.Shape())
+        self.spent += time.time() - t0
         return v if v > self.p.collide * min(_volume(a, True), _volume(b, True)) else 0
 
     def place(self, sel_part, sel, tgt, T, band, part, body):
@@ -632,6 +660,20 @@ def _footprint(sel_pts, stop_pts, u):
 
 
 _vol = {}
+
+
+_boxes = {}
+
+
+def _box(shape):
+    """axis aligned box of a solid in its own frame, cached"""
+    k = id(shape)
+    if k not in _boxes:
+        b = Bnd_Box()
+        BRepBndLib.Add_s(shape, b)
+        lo, hi = b.CornerMin(), b.CornerMax()
+        _boxes[k] = (np.array([lo.X(), lo.Y(), lo.Z()]), np.array([hi.X(), hi.Y(), hi.Z()]))
+    return _boxes[k]
 
 
 def _volume(shape, cache=False):

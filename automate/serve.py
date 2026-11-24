@@ -40,8 +40,11 @@ class Model:
 
     def faces(self, inst_id):
         part = self.instance(inst_id).part
-        with self.lock:
-            fs, _ = describe_part(part)
+        if getattr(part, "_faces", None) is not None:
+            fs, _ = describe_part(part)  # already described, no need to wait behind a running search
+        else:
+            with self.lock:
+                fs, _ = describe_part(part)
         out = []
         for f in fs:
             d = {"id": f.idx, "kind": f.kind, "area": round(f.area, 2)}
@@ -68,6 +71,7 @@ class Model:
             "matches": [to_json(x) for x in found],
             "in_place_contacts": to_json(here) if here else None,
             "rejected": [{"part": p, "faces": f, "why": w} for p, f, w in m.rejected],
+            "unchecked": m.unchecked,
             "seconds": round(time.time() - t, 2),
         }
 

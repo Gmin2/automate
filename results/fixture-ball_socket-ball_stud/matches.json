@@ -27,7 +27,8 @@
     "exact": 0.01,
     "angle": 0.5,
     "overlap": 0.25,
-    "collide": 0.005
+    "collide": 0.005,
+    "budget": 15.0
   },
   "matches": [
     {
@@ -149,5 +150,6 @@
   ],
   "in_place_contacts": null,
   "rejected": [],
-  "seconds": 0.4
+  "unchecked": 0,
+  "seconds": 0.2
 }
