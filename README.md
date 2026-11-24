@@ -3,7 +3,7 @@
 pick a few faces on one part of a STEP assembly. this finds every other place in the assembly where
 those faces fit, which part each one is on, and whether its an exact fit or a sliding one.
 
-**try it:** https://automate.delightfulsky-d10b8c02.centralindia.azurecontainerapps.io
+**try it:** https://autometa-app.vercel.app
 (the lathe and the test parts. open examples, pick one, press find mates)
 
 ![the viewer: chuck key tip picked, all three pinion sockets found, a see-through key at each](docs/viewer-chuck-key.jpg)
@@ -127,7 +127,7 @@ click faces, press find mates. green is exact, blue is sliding. let go of a slid
 
 **deploy**
 
-`scripts/deploy_azure.sh` builds the docker image in azure and runs it on container apps. needs `az login` first.
+the backend runs on azure container apps: `scripts/deploy_azure.sh` builds the docker image there (needs `az login`). the page is on vercel, `web/vercel.json` sends `/api` on to azure. `cd web && vercel deploy --prod` ships a new page.
 
 **tests**
 

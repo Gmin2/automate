@@ -5,3 +5,4 @@ __pycache__/
 data/external/
 .DS_Store
 node_modules/
+.vercel
