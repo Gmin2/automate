@@ -23,7 +23,7 @@ function Selection() {
   const error = useApp((s) => s.runError)
   const n = sel.faces.length
   return (
-    <section className="tx-card" style={{ flex: 'none', maxHeight: '45%' }}>
+    <section className="tx-card sel-card" style={{ flex: 'none', maxHeight: '45%' }}>
       <header className="tx-card__head">
         <span className="tx-card__title">Selection</span>
         {n > 0 && <span className="tx-card__note">{n} {n === 1 ? 'face' : 'faces'}</span>}

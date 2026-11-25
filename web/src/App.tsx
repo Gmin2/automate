@@ -32,7 +32,7 @@ function Wait() {
   if (scene.state !== 'loading' && scene.state !== 'error') return null
   return (
     <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
-      <div className="tx-card" style={{ width: 340, padding: '18px 18px 16px' }}>
+      <div className="tx-card" style={{ width: 340, maxWidth: 'calc(100vw - 32px)', padding: '18px 18px 16px' }}>
         <div style={{ width: 36, height: 36, borderRadius: 11, background: 'var(--tx-control)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: scene.state === 'error' ? 'var(--tx-red)' : 'var(--tx-faint)' }}>
           <Glyph name={scene.state === 'error' ? 'warn' : 'cube'} size={18} />
         </div>

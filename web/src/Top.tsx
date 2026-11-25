@@ -73,17 +73,17 @@ export function Top() {
   return (
     <div className="tx-top">
       <div className="tx-group">
-        <div className="tx-pill tx-pill--quiet" style={{ color: 'var(--tx-text)', fontWeight: 600 }}><Glyph name="bolt" size={16} style={{ color: 'var(--tx-orange)' }} />Automate</div>
+        <div className="tx-pill tx-pill--quiet" style={{ color: 'var(--tx-text)', fontWeight: 600 }}><Glyph name="bolt" size={16} style={{ color: 'var(--tx-orange)' }} /><span className="brand-word">Automate</span></div>
         <Round icon="panel" on={left} label={left ? 'Shut the parts panel' : 'Open the parts panel'} tip={left ? 'Shut the side  [' : 'Open the side  ['} onClick={() => togglePanel('left')} />
         <FilePill />
-        <Stats />
+        <span className="phone-hide"><Stats /></span>
       </div>
       <span className="tx-top__push" />
       <div className="tx-group">
-        <Status />
+        <span className="phone-hide"><Status /></span>
         <Pill primary icon={again ? 'reset' : 'play'} disabled={!ready} onClick={run}>{again ? 'Search again' : 'Find mates'}</Pill>
         <Round icon="panelRight" on={right} label={right ? 'Shut the mates panel' : 'Open the mates panel'} tip={right ? 'Shut the side  ]' : 'Open the side  ]'} onClick={() => togglePanel('right')} />
-        <Round icon={theme === 'dark' ? 'sun' : 'moon'} label={theme === 'dark' ? 'Light' : 'Dark'} tip={theme === 'dark' ? 'Light' : 'Dark'} onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} />
+        <Round className="phone-hide" icon={theme === 'dark' ? 'sun' : 'moon'} label={theme === 'dark' ? 'Light' : 'Dark'} tip={theme === 'dark' ? 'Light' : 'Dark'} onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} />
       </div>
     </div>
   )

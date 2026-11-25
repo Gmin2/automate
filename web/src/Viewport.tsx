@@ -293,10 +293,18 @@ function Framer({ built, ghosts }: { built: Built; ghosts: THREE.Group }) {
       const sphere = box.getBoundingSphere(new THREE.Sphere())
       // the side panels float over the canvas: fit into the open middle, not the whole width
       const w = size.width
-      const { leftOpen, rightOpen } = useApp.getState()
-      const open = Math.max(w - (leftOpen ? PANEL_L : 0) - (rightOpen ? PANEL_R : 0), 320)
-      // a bounding sphere is loose round long parts, so it can come in a little
-      sphere.radius *= Math.min(w / open, 1.45) * 0.72
+      const { leftOpen, rightOpen, phone } = useApp.getState()
+      if (phone) {
+        // a sheet covers the bottom of the screen, fit into what is left above it
+        const h = size.height
+        const free = h - (leftOpen || rightOpen ? h * SHEET : 0)
+        // a phone is narrow, so the width limits the fit more than the height does
+        sphere.radius *= Math.min(h / free, 2.2) * (free === h ? 1.0 : 0.9)
+      } else {
+        const open = Math.max(w - (leftOpen ? PANEL_L : 0) - (rightOpen ? PANEL_R : 0), 320)
+        // a bounding sphere is loose round long parts, so it can come in a little
+        sphere.radius *= Math.min(w / open, 1.45) * 0.72
+      }
       const r = Math.max(sphere.radius, 1)
       camera.near = r / 200
       camera.far = r * 400
@@ -319,20 +327,27 @@ function Framer({ built, ghosts }: { built: Built; ghosts: THREE.Group }) {
 // how much of the canvas each open side column covers
 const PANEL_L = 312
 const PANEL_R = 342
+// share of the screen height a bottom sheet takes on a phone
+const SHEET = 0.52
 
 // keeps the picture centred in the space the panels leave, easing over as one opens or shuts
 function ViewShift() {
   const left = useApp((s) => s.leftOpen)
   const right = useApp((s) => s.rightOpen)
+  const phone = useApp((s) => s.phone)
   const shift = useRef(0)
+  const lift = useRef(0)
   useFrame(({ camera, size }) => {
     const cam = camera as THREE.PerspectiveCamera
-    const want = ((left ? PANEL_L : 0) - (right ? PANEL_R : 0)) / 2
-    const next = shift.current + (want - shift.current) * 0.14
-    shift.current = Math.abs(want - next) < 0.2 ? want : next
+    // side panels push the picture sideways, a phone sheet pushes it up
+    const want = phone ? 0 : ((left ? PANEL_L : 0) - (right ? PANEL_R : 0)) / 2
+    const wantUp = phone && (left || right) ? (size.height * SHEET) / 2 : 0
+    const ease = (cur: number, to: number) => { const n = cur + (to - cur) * 0.14; return Math.abs(to - n) < 0.2 ? to : n }
+    shift.current = ease(shift.current, want)
+    lift.current = ease(lift.current, wantUp)
     const v = cam.view
-    if (!v || Math.abs(v.offsetX + shift.current) > 0.01 || v.fullWidth !== size.width || v.fullHeight !== size.height) {
-      cam.setViewOffset(size.width, size.height, -shift.current, 0, size.width, size.height)
+    if (!v || Math.abs(v.offsetX + shift.current) > 0.01 || Math.abs(v.offsetY - lift.current) > 0.01 || v.fullWidth !== size.width || v.fullHeight !== size.height) {
+      cam.setViewOffset(size.width, size.height, -shift.current, lift.current, size.width, size.height)
     }
   })
   return null
