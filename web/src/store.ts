@@ -31,7 +31,11 @@ type State = {
   started: number | null
   leftOpen: boolean
   rightOpen: boolean
+  phone: boolean
 }
+
+// on a phone the side panels turn into one bottom sheet at a time
+const narrow = matchMedia('(max-width: 720px)')
 
 export const useApp = create<State>(() => ({
   files: [],
@@ -54,9 +58,18 @@ export const useApp = create<State>(() => ({
   focus: { n: 0, instances: [], ghosts: [], all: true },
   theme: localStorage.getItem('automate-theme') === 'dark' ? 'dark' : 'light',
   started: null,
-  leftOpen: localStorage.getItem('automate-left') !== 'shut',
-  rightOpen: localStorage.getItem('automate-right') !== 'shut',
+  leftOpen: !narrow.matches && localStorage.getItem('automate-left') !== 'shut',
+  rightOpen: !narrow.matches && localStorage.getItem('automate-right') !== 'shut',
+  phone: narrow.matches,
 }))
+
+narrow.addEventListener('change', (e) => {
+  useApp.setState(e.matches ? { phone: true, leftOpen: false, rightOpen: false } : {
+    phone: false,
+    leftOpen: localStorage.getItem('automate-left') !== 'shut',
+    rightOpen: localStorage.getItem('automate-right') !== 'shut',
+  })
+})
 
 document.documentElement.dataset.theme = useApp.getState().theme
 
@@ -125,6 +138,7 @@ export function pickExample(i: number) {
   const e = get().examples[i]
   if (!e) return
   set({ selection: { inst: e.instance, faces: e.faces }, faceInfo: {}, result: null, active: null })
+  if (get().phone) set({ leftOpen: false })
   loadFaces(e.instance)
   run()
 }
@@ -138,6 +152,7 @@ export async function run() {
     const now = get().selection
     if (now.inst !== selection.inst || now.faces.join() !== selection.faces.join()) return
     set({ result, active: null, xray: true })
+    if (get().phone) set({ leftOpen: false, rightOpen: true })
     const targets = new Set<string>()
     for (const m of result.matches) for (const k of Object.keys(m.target_faces)) targets.add(k)
     if (!targets.size && result.in_place_contacts) for (const k of Object.keys(result.in_place_contacts.target_faces)) targets.add(k)
@@ -192,6 +207,10 @@ export function setTheme(theme: 'light' | 'dark') {
 export function togglePanel(side: 'left' | 'right') {
   const k = side === 'left' ? 'leftOpen' : 'rightOpen'
   const open = !useApp.getState()[k]
+  if (get().phone) {
+    set({ leftOpen: side === 'left' && open, rightOpen: side === 'right' && open })
+    return
+  }
   localStorage.setItem(`automate-${side}`, open ? 'open' : 'shut')
   set({ [k]: open } as Partial<State>)
 }

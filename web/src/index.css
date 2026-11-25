@@ -122,3 +122,24 @@ html, body, #root { height: 100%; margin: 0; }
 .tx-left[data-shut] { transform: translateX(calc(-100% - 24px)); opacity: 0; pointer-events: none; }
 .tx-right[data-shut] { transform: translateX(calc(100% + 24px)); opacity: 0; pointer-events: none; }
 .tx-left[data-shut] > *, .tx-right[data-shut] > * { pointer-events: none; }
+
+/* phone: compact top bar, the side panels become one bottom sheet at a time */
+.phone-hide { display: contents; }
+@media (hover: none) { .canvas-tip { display: none; } }
+@media (max-width: 720px) {
+  .phone-hide { display: none; }
+  .brand-word { display: none; }
+  .tx-top { top: 10px; left: 10px; right: 10px; gap: 6px; }
+  .tx-top .tx-group { gap: 6px; }
+  .tx-top .tx-pill span[style*="max-width"] { max-width: 120px !important; }
+  .tx-left, .tx-right {
+    top: auto; left: 8px; right: 8px; bottom: 8px;
+    width: auto !important; height: 52vh; height: 52dvh;
+  }
+  .tx-left[data-shut], .tx-right[data-shut] { transform: translateY(calc(100% + 24px)); }
+  .tx-bar { bottom: max(12px, env(safe-area-inset-bottom)); transition: bottom 360ms var(--tx-out); }
+  .tx:has(.tx-left:not([data-shut])) .tx-bar,
+  .tx:has(.tx-right:not([data-shut])) .tx-bar { bottom: calc(52dvh + 16px); }
+  .tx-menu { max-width: calc(100vw - 20px); }
+  .sel-card { max-height: 28% !important; }
+}
